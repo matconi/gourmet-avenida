@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser
+from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
@@ -7,7 +7,7 @@ class User(AbstractUser):
 
     first_name = models.CharField("Primeiro Nome", max_length=50, blank=False, null=False)
     last_name = models.CharField("Último Nome", max_length=120, blank=True, null=True, default=None)
-    email = models.EmailField("Email", max_length=140, blank=False, null=False, unique=True)
+    email = models.EmailField("Email", max_length=320, blank=False, null=False, unique=True)
     password = models.CharField("Senha", max_length=240)
     attempts = models.PositiveSmallIntegerField(
         "Tentativas", default=0,
@@ -29,8 +29,8 @@ class User(AbstractUser):
         "Desmarque ao invés de excluir contas."
     )
 
-    date_joined = models.DateTimeField("Entrou em", blank=True, null=True)
-    last_login = models.DateTimeField("Último Login", blank=True, null=True)
+    date_joined = models.DateTimeField("Entrou em", blank=True, null=True, default=None)
+    last_login = models.DateTimeField("Último Login", blank=True, null=True, default=None)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "password"]
