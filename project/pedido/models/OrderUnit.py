@@ -11,7 +11,7 @@ class OrderUnit(models.Model):
     )
     
     def __str__(self) -> str:
-        return f"Item do pedido {self.order.pk}."
+        return f"Item {self.pk}"
 
     class Meta:
         verbose_name = 'Item do Pedido'
