@@ -6,8 +6,7 @@ class Category(AbstractName):
     slug = models.SlugField("Link", max_length=120)
     
     subcategory_of = models.ForeignKey("self", on_delete=models.SET_NULL, 
-        verbose_name='Subcategoria de ', db_column='subcategory_of_id',
-        blank=True, null=True
+        verbose_name='Subcategoria de ', blank=True, null=True
     )
 
     # def save(self):

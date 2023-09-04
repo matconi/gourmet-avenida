@@ -10,7 +10,7 @@ class Customer(models.Model):
     )
 
     user = models.OneToOneField("User", on_delete=models.RESTRICT, 
-        verbose_name='Usuário', db_column='user_id'
+        verbose_name='Usuário'
     )
     favorites = models.ManyToManyField("produto.Unit", blank=True, verbose_name='Favoritos')
 

@@ -7,7 +7,7 @@ class Product(AbstractName):
     slug = models.SlugField("Link", max_length=120)
 
     category = models.ForeignKey("Category", on_delete=models.RESTRICT, 
-        verbose_name="Categoria", db_column='category_id'
+        verbose_name="Categoria"
     )
 
     # def save(self):

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Nome')),
                 ('slug', models.SlugField(max_length=120, verbose_name='Link')),
-                ('subcategory_of', models.ForeignKey(blank=True, db_column='subcategory_of_id', null=True, on_delete=django.db.models.deletion.SET_NULL, to='produto.category', verbose_name='Subcategoria de ')),
+                ('subcategory_of', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='produto.category', verbose_name='Subcategoria de ')),
             ],
             options={
                 'verbose_name': 'Categoria',
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, verbose_name='Nome')),
                 ('description', models.CharField(max_length=400, verbose_name='Descrição')),
                 ('slug', models.SlugField(max_length=120, verbose_name='Link')),
-                ('category', models.ForeignKey(db_column='category_id', on_delete=django.db.models.deletion.RESTRICT, to='produto.category', verbose_name='Categoria')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='produto.category', verbose_name='Categoria')),
             ],
             options={
                 'verbose_name': 'Produto',
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Nome')),
-                ('variant', models.ForeignKey(db_column='variant_id', on_delete=django.db.models.deletion.RESTRICT, to='produto.variant', verbose_name='Variante')),
+                ('variant', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='produto.variant', verbose_name='Variante')),
             ],
             options={
                 'verbose_name': 'Variação',
@@ -77,7 +77,7 @@ class Migration(migrations.Migration):
                 ('promotional', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Preço promocional')),
                 ('stock', models.PositiveIntegerField(verbose_name='Estoque')),
                 ('booked', models.PositiveIntegerField(default=0, verbose_name='Reservado')),
-                ('product', models.ForeignKey(db_column='product_id', on_delete=django.db.models.deletion.RESTRICT, to='produto.product', verbose_name='Produto')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='produto.product', verbose_name='Produto')),
                 ('variations', models.ManyToManyField(blank=True, related_name='variations_units', to='produto.variation')),
             ],
             options={

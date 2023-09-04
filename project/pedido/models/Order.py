@@ -15,7 +15,7 @@ class Order(models.Model):
     total_quantity = models.PositiveIntegerField("Quantidade Total")
 
     customer = models.ForeignKey("usuario.Customer", on_delete=models.RESTRICT,
-        verbose_name='Cliente', db_column='customer_id'
+        verbose_name='Cliente'
     )
 
     def __str__(self) -> str:

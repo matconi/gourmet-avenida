@@ -4,10 +4,10 @@ class OrderUnit(models.Model):
     quantity = models.PositiveIntegerField("Quantidade", default=1)
 
     order = models.ForeignKey("Order", on_delete=models.CASCADE,
-        verbose_name='Pedido', db_column='order_id'
+        verbose_name='Pedido'
     )
     unit = models.ForeignKey("produto.Unit", on_delete=models.RESTRICT,
-        verbose_name='Unidade', db_column='unit_id'
+        verbose_name='Unidade'
     )
     
     def __str__(self) -> str:

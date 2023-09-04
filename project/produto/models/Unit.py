@@ -14,7 +14,7 @@ class Unit(AbstractName):
     booked = models.PositiveIntegerField("Reservado", default=0)
 
     product = models.ForeignKey("Product", on_delete=models.RESTRICT, 
-        verbose_name='Produto', db_column='product_id'
+        verbose_name='Produto'
     )
     variations = models.ManyToManyField("Variation", blank=True, related_name='variations_units')
 
