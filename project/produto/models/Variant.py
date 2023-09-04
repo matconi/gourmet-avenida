@@ -1,7 +1,7 @@
 from django.db import models
+from .abstract.AbstractName import AbstractName
 
-class Variant(models.Model):
-    name = models.CharField("Nome", max_length=45)
+class Variant(AbstractName):
 
     def __str__(self) -> str:
         return self.name

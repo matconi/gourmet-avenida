@@ -1,7 +1,7 @@
 from django.db import models
+from .abstract.AbstractName import AbstractName
 
-class Unit(models.Model):
-    name = models.CharField("Nome", max_length=100)
+class Unit(AbstractName):
     sku = models.CharField("Código", max_length=12, unique=True)
     image = models.ImageField("Imagem", upload_to='produtos')
 
@@ -20,6 +20,9 @@ class Unit(models.Model):
 
     def __avaliable(self) -> int:
         return self.stock - self.booked
+
+    def __quantity_price(self, quantity: int) -> float:
+        return self.price * quantity
 
     def __str__(self) -> str:
         return self.name

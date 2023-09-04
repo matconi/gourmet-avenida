@@ -1,12 +1,12 @@
 from django.db import models
 from django.utils.text import slugify
+from .abstract.AbstractName import AbstractName
 
-class Category(models.Model):
-    name = models.CharField("Nome", max_length=50)
-    slug = models.SlugField("Link", max_length=80)
+class Category(AbstractName):
+    slug = models.SlugField("Link", max_length=120)
     
-    supercategory = models.ForeignKey("self", on_delete=models.SET_NULL, 
-        verbose_name='Subcategoria de ', db_column='supercategory_id',
+    subcategory_of = models.ForeignKey("self", on_delete=models.SET_NULL, 
+        verbose_name='Subcategoria de ', db_column='subcategory_of_id',
         blank=True, null=True
     )
 
