@@ -17,6 +17,8 @@ services:
       - psql
   psql:
     image: postgres:15-alpine
+    ports:
+      - 5432:5432
     restart: always
     volumes:
       - ./data/postgres/data:/var/lib/postgresql/data/
