@@ -1,10 +1,9 @@
 from django.db import models
+from .abstract.AbstractName import AbstractName
 
-class Variation(models.Model):
-    name = models.CharField("Nome", max_length=45)
-
+class Variation(AbstractName):
     variant = models.ForeignKey("Variant", on_delete=models.RESTRICT,
-        verbose_name='Variante', db_column='variant_id'
+        verbose_name='Variante'
     )
 
     def __str__(self) -> str:
