@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(max_length=50, verbose_name='Primeiro Nome')),
                 ('last_name', models.CharField(blank=True, default=None, max_length=120, null=True, verbose_name='Último Nome')),
                 ('email', models.EmailField(max_length=320, unique=True, verbose_name='Email')),
-                ('password', models.CharField(max_length=240, verbose_name='Senha')),
+                ('password', models.CharField(max_length=240, editable=False, verbose_name='Senha')),
                 ('phone', models.CharField(max_length=14, verbose_name='Celular')),
                 ('attempts', models.PositiveSmallIntegerField(default=0, help_text='Tentativas de login com a senha incorreta. Caso ultrapasse o limite definido nas configurações o usuário precisará redefini-la', verbose_name='Tentativas')),
                 ('is_staff', models.BooleanField(default=False, help_text='Define se o usuário pode acessar o site Administrativo.', verbose_name='Administrador')),

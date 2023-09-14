@@ -9,9 +9,9 @@ class Category(AbstractName):
         verbose_name='Subcategoria de ', blank=True, null=True
     )
 
-    # def save(self):
-    #     self.slug = slugify(self.name)
-    #     super(Product, self).save()
+    def save(self):
+        self.slug = slugify(self.name)
+        super(Product, self).save()
 
     def __str__(self) -> str:
         return self.name

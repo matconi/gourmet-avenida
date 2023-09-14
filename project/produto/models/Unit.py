@@ -7,7 +7,7 @@ class Unit(AbstractName):
 
     price = models.DecimalField("Preço", max_digits=5, decimal_places=2)
     promotional = models.DecimalField("Preço promocional", max_digits=5, decimal_places=2, 
-       blank=True, null=True
+       blank=True, null=True, help_text='Preço acima do original que mostrará riscado.'
     )
 
     stock = models.PositiveIntegerField("Estoque")
@@ -16,7 +16,8 @@ class Unit(AbstractName):
     product = models.ForeignKey("Product", on_delete=models.RESTRICT, 
         verbose_name='Produto'
     )
-    variations = models.ManyToManyField("Variation", blank=True, related_name='variations_units')
+    variations = models.ManyToManyField("Variation", blank=True, related_name='variations_units', verbose_name='Variações')
+    showcase = models.BooleanField("Mostrar na vitrine", default=True)
 
     def __avaliable(self) -> int:
         return self.stock - self.booked

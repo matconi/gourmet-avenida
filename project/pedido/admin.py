@@ -7,7 +7,6 @@ class OrderUnitInline(admin.TabularInline):
     extra = 1
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['name']
     inlines = [
         OrderUnitInline
     ]
