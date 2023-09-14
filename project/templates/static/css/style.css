@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Passion+One&display=swap');
+
+* {
+    margin: none;
+    padding: none;
+    box-sizing: border-box;
+}
+
+.h1 {
+    font-size: 1em;  
+    font-family: Passion One, sans-serif;
+    font-variant: small-caps;
+    letter-spacing: .1em;
+    text-align: center;
+} 
+
+.h1, .p {
+    color: #A71BBC;
+}

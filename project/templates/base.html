@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+    {% include 'partials/_head.html' %}
+        {% block head %}{% endblock head %}
+    </head>
+
+    <body style="background-color: #f0f0f0; "> 
+        {% include 'partials/_nav.html' %}
+        <div class="container mt-4 mb-4">   
+            {% include 'partials/_messages.html' %}
+            <main>
+                {% block main %}{% endblock main %}
+            </main>
+        </div>
+
+        {% include 'partials/_footer.html' %}
+    </body>
+</html>
