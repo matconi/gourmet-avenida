@@ -1,5 +1,5 @@
 from produto.models.Product import Product
-from produto.models.Unit import Unit
+from django.shortcuts import get_object_or_404
 
-def get_all():
-    return Unit.objects.filter(showcase=True).all()
+def get_by_slug(slug: str) -> Product:
+    return get_object_or_404(Product, slug=slug)
