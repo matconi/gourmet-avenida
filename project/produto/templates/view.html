@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>{{ product.name }} - Gourmet Avenida</title>
+{% endblock head %}
+
+{% block main %}
+<div class="row">
+    <div class="col-lg">
+        <div class="row no-gutters">
+            <div class="col-lg-12">
+                <img id="unit-image" class="img-fluid" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg">
+        <div class="mt-4 mt-lg-0">
+            <h1 id="unit-name"></h1>
+            <p class="lead">
+                <span id="unit-price" class="lead product-price fs-3 text-success"></span>                 
+                <span id="unit-promotional" class="lead"></span>         
+            </p>
+            
+            <form action="#" method="GET" id="form-add-to-cart">
+                <div class="form-group product-select">                    
+                    <label style="margin-left: 60%" for="qty">
+                        <h5>Quantidade:</h5>
+                    </label>
+                    <select name="qty" class="form-control form-control-lg mb-5" style="width: 40%; margin-left: 60%" id="qty">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="text-left" style="width: 100%;">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" >
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        Adicionar ao carrinho
+                    </button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="mt-5 mb-5">
+            <article>
+                <h2>{{ product.name }}</h2>
+                <p>
+                    {{ product.description|linebreaks }}
+                </p>               
+            </article>
+        </div> 
+    </div>
+</div>
+{% endblock main %}
+
+{% block footerscript %}
+<script>
+    $(this).ready(() => {
+        const productSelect = document.querySelector('.product-select');      
+        function setSelectBox(variant, i) {
+            productSelect.insertAdjacentHTML('beforebegin', `
+                <label class="label" for="select-variacoes-${i}">
+                    <h4>${variant.name}</h4>
+                </label>
+                <select id="select-variacoes-${i}" name="vid" class="form-control form-control-lg mb-5 select-variacoes"></select>
+            `);  
+            return document.querySelector(`#select-variacoes-${i}`);
+        }
+    
+        function setOptionsInSelect(variation, selectBox) {             
+            selectBox.insertAdjacentHTML('beforeend', `
+                <option class="ids" value="${variation.id}">
+                    ${variation.name}
+                </option> 
+            `);
+        }
+    
+        fetch("{% url 'api:view_product' product.slug %}")
+        .then(response => response.json())
+        .then(data => {
+            const images = [];        
+            data.summary.variants.map((variant, i) => {
+                let variantLabels = $('.label').text();
+                
+                if (!variantLabels.includes(variant.name)) {                    
+                    selectBox = setSelectBox(variant, i);
+                       
+                    variant.variations.map((variation) => {
+                        setOptionsInSelect(variation, selectBox);
+                    });
+                    
+                }
+            });
+    
+            const units = [];
+            data.units.map(unit => {              
+                units.push(unit);
+            });
+           
+            getIndexedUnit(location.href.split('=')[1]); // WARN: spliting single URL param
+            $('.select-variacoes').change(chooseUnit);
+    
+            function getIndexedUnit(indexedUnit) {
+                if (indexedUnit !== undefined) {    
+                    const unit = units.find(unit => unit.id === parseInt(indexedUnit))
+    
+                    renderUnitData(unit);
+                    changeUnitVariant(unit.variations);
+                }
+            }
+        
+            function changeUnitVariant(valuesToSelect) {
+                const selectBoxes = document.querySelectorAll('.select-variacoes');
+                const ids = document.querySelectorAll('.ids');
+    
+                selectBoxes.forEach((selectBox, i) => {
+                    optionInSelect = Array.from(ids)
+                                            .find(option => option.value == valuesToSelect[i]);
+    
+                    optionInSelect.setAttribute("selected", "");
+                }); 
+            }
+    
+            function chooseUnit() {
+                const selectedOptions = getSelectedOptions();
+                
+                for (unit of units) {        
+                    if (unit.variations.sort().toString() === selectedOptions.toString()) {
+                        renderUnitData(unit);
+                        break;
+                    }
+                }
+            }
+    
+            function getSelectedOptions() {
+                let selectedOptions = [];
+    
+                for (selectBox of $('.select-variacoes')) {
+                    selectedOptions.push(selectBox.options[selectBox.selectedIndex].value);
+                }
+                return selectedOptions.sort();
+            }
+    
+            function renderUnitData(unit) {
+                const name = $('#unit-name');
+                const price = $('#unit-price');
+                const promotional = $('#unit-promotional');
+    
+                name.html(unit.name);
+                price.html(`R$ ${unit.price}`);
+        
+                if (unit.promotional === null) {
+                    $('.text-muted').remove();
+                } else {
+                    promotional.html(`
+                        <small class="pl-2 text-muted">
+                            <del>
+                                R$ ${unit.promotional}
+                            </del>
+                        </small>
+                    `);
+                }
+            }
+        });
+    });
+</script>
+{% endblock footerscript %}

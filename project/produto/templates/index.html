@@ -3,49 +3,43 @@
     <title>Produtos - Gourmet Avenida</title>
 {% endblock head %}
 
-    {% block main %}
-    <div class="row">
-        {% for unit in units %}
-            <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card">
-                    <a href="#">
-                        <img class="card-img-top" src="{{ unit.image.url }}" alt="{{ unit.name }}">
-                    </a>
-                
-                    <div class="card-body">
-                        <strong>
-                            <h5 class="card-title">{{ unit.name }}</h5>
-                        </strong>
-                
-                        <div class="container product-price-block text-center">
-                            <span class="product-price fs-5 text-success">
-                                R$ {{ unit.price }}
-                            </span>
-                            {% if unit.promotional %}
-                                <small class="pl-2 text-muted">
-                                    <del>
-                                        R$ {{ unit.promotional }}
-                                    </del>
-                                </small>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="card-footer bg-transparent border-top-light-custom text-center">
-                        <form action="#"> 
-                            <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
-                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                Adicionar
-                            </button>
-                        </form>
+{% block main %}
+<div class="row">
+    {% for unit in units %}
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card">
+                <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}">
+                    <img class="card-img-top" src="{{ unit.image.url }}" alt="{{ unit.name }}">
+                </a>
+            
+                <div class="card-body">
+                    <strong>
+                        <h5 class="card-title">{{ unit.name }}</h5>
+                    </strong>
+            
+                    <div class="container product-price-block text-center">
+                        <span class="product-price fs-5 text-success">
+                            R$ {{ unit.price }}
+                        </span>
+                        {% if unit.promotional %}
+                            <small class="pl-2 text-muted">
+                                <del>
+                                    R$ {{ unit.promotional }}
+                                </del>
+                            </small>
+                        {% endif %}
                     </div>
                 </div>
+                <div class="card-footer bg-transparent border-top-light-custom text-center">
+                    <form action="#"> 
+                        <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            Adicionar
+                        </button>
+                    </form>
+                </div>
             </div>
-            {% endfor %}
         </div>
-        
-        <div class="row mt-3">
-            <div class="col">
-                {% comment %} {% include 'partials/_pagination.html' %} {% endcomment %}
-            </div>    
-        </div>
-    {% endblock main %}
+        {% endfor %}
+    </div>
+{% endblock main %}
