@@ -4,9 +4,8 @@ from produto.models.Unit import Unit
 class ProductVariationsSerializer(serializers.Serializer):
     def to_representation(self, instance):
         representation = super(ProductVariationsSerializer, self).to_representation(instance)
-        print(instance)
         return {
-            "variants": [ 
+            "variants": [
                 {
                     "id": variant['variations__variant__id'],
                     "name": variant['variations__variant__name'],
@@ -30,4 +29,4 @@ class UnitsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ['id', 'name', 'price', 'promotional', 'variations']
+        fields = ['id', 'name', 'image', 'price', 'promotional', 'variations']
