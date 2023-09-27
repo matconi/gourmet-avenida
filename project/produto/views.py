@@ -15,7 +15,7 @@ def view(request, slug):
 def add_to_cart(request):
     if request.method == 'GET':
         unit_id_param =  request.GET.get('id')
-        quantity_param = request.GET.get('qty')
+        quantity_param = request.GET.get('qty') or '1'
 
         unit = unit_repository.get_or_404(unit_id_param)
 

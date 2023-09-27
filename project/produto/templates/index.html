@@ -10,28 +10,30 @@
             <div class="card">
                 <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}">
                     <img class="card-img-top" src="{{ unit.image.url }}" alt="{{ unit.name }}">
-                </a>
-            
-                <div class="card-body">
-                    <strong>
-                        <h5 class="card-title">{{ unit.name }}</h5>
-                    </strong>
-            
-                    <div class="container product-price-block text-center">
-                        <span class="product-price fs-5 text-success">
-                            R$ {{ unit.price }}
-                        </span>
-                        {% if unit.promotional %}
+                </a>              
+                    <div class="card-body">
+                        <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}">
+                            <strong>
+                                <h5 class="card-title">{{ unit.name }}</h5>
+                            </strong>
+                        </a>
+                        
+                        <div class="container product-price-block text-center">
+                            <span class="product-price fs-5 text-success">
+                                R$ {{ unit.price }}
+                            </span>
+                            {% if unit.promotional %}
                             <small class="pl-2 text-muted">
                                 <del>
                                     R$ {{ unit.promotional }}
                                 </del>
                             </small>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
                 <div class="card-footer bg-transparent border-top-light-custom text-center">
-                    <form action="#"> 
+                    <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
+                        <input type="hidden" name="id" value="{{ unit.id }}">
                         <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             Adicionar

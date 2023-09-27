@@ -11,7 +11,7 @@ class CartService:
             cart = self.request.session["cart"] = {}
         self.cart = cart
 
-    def add(self, unit: Unit, quantity: str='1') -> None:
+    def add(self, unit: Unit, quantity: str) -> None:
         unit_id = str(unit.id)
         quantity = int(quantity)
         quantity_in_cart = self.add_new_unit(unit, quantity, unit_id) \
