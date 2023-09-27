@@ -21,7 +21,7 @@ class ProductVariationsSerializer(serializers.Serializer):
                 } 
                 
                 for variant in instance
-            ],
+            ]
         }
 
 class UnitsSerializer(serializers.ModelSerializer):

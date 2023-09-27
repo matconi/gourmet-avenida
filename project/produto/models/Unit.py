@@ -19,11 +19,11 @@ class Unit(AbstractName):
     variations = models.ManyToManyField("Variation", blank=True, related_name='variations_units', verbose_name='Variações')
     showcase = models.BooleanField("Mostrar na vitrine", default=True)
 
-    def __avaliable(self) -> int:
+    def avaliable(self) -> int:
         return self.stock - self.booked
 
-    def __quantity_price(self, quantity: int) -> float:
-        return self.price * quantity
+    def quantity_price(self, quantity: int) -> float:
+        return float(self.price * quantity)
 
     def __str__(self) -> str:
         return self.name
