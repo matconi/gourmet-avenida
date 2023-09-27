@@ -33,7 +33,7 @@
                 <span id="unit-promotional" class="lead"></span>         
             </p>
             
-            <form action="#" method="GET" id="form-add-to-cart">
+            <form action="{% url 'produto:add_to_cart' %}" method="GET" id="form-add-to-cart">
                 <div class="form-group product-select">   
 
                     <label style="margin-left: 60%" for="qty">
@@ -52,6 +52,7 @@
                         <option value="10">10</option>
                     </select>
                 </div>
+                <input type="hidden" id="unit-id" name="id" value="">
                 <div class="text-left" style="width: 100%;">
                     <button type="submit" class="btn btn-primary btn-lg btn-block" >
                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -86,7 +87,7 @@
                 <label class="label" for="select-variacoes-${i}">
                     <h4>${variant.name}</h4>
                 </label>
-                <select id="select-variacoes-${i}" name="vid" class="form-control form-control-lg mb-5 select-variacoes"></select>
+                <select id="select-variacoes-${i}" class="form-control form-control-lg mb-5 select-variacoes"></select>
             `);  
             return document.querySelector(`#select-variacoes-${i}`);
         }
@@ -175,9 +176,11 @@
                 const name = $('#unit-name');
                 const price = $('#unit-price');
                 const promotional = $('#unit-promotional');
+                const unit_id = $('#unit-id');
     
                 name.html(unit.name);
                 price.html(`R$ ${unit.price}`);
+                unit_id.val(unit.id);
         
                 if (unit.promotional === null) {
                     $('.text-muted').remove();
