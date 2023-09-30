@@ -25,7 +25,11 @@ def add_to_cart(request):
         return redirect('produto:view', slug=unit.product.slug)        
 
 def cart(request):
-    context = {
-        "unit": request.session.get("cart", {})
-    }
-    return render(request, "cart.html")
+    if request.method == 'GET':
+        return render(request, "cart.html")
+
+def clear_cart(request):
+    if request.method == 'POST':
+        cart = CartService(request)
+        cart.clear()
+        return redirect('produto:cart')
