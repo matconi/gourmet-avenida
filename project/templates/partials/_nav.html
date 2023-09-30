@@ -42,7 +42,7 @@
                     {% if request.user.is_authenticated and request.session.cart %}
                     <li class="nav-item">
             
-                        <a class="nav-link nav-cart-link active" href="#">
+                        <a class="nav-link nav-cart-link active" href="{% url "produto:cart" %}">
                             <span class="nav-cart-text mr-1">
                                 Carrinho
                             </span>

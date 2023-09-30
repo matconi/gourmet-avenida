@@ -23,3 +23,9 @@ def add_to_cart(request):
         cart.add(unit, quantity_param)
 
         return redirect('produto:view', slug=unit.product.slug)        
+
+def cart(request):
+    context = {
+        "unit": request.session.get("cart", {})
+    }
+    return render(request, "cart.html")

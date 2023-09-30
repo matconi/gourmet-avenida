@@ -7,7 +7,7 @@ def empty_avaliable(request, unit: Unit) -> None:
     messages.warning(
         request, format_html(                       
         'Nenhuma unidade de "{}" disponível no momento. <a href="{}"> Meu Carrinho.</a>',
-        unit.name, reverse('produto:index')
+        unit.name, reverse('produto:cart')
         )
     )   
 
@@ -23,7 +23,7 @@ def all_avaliable_warn(request, unit: Unit) -> None:
         request, format_html(                       
             'Atualmente seu carrinho possui todas as unidades de "{}" disponíveis. '
             'Recomendamos que finalize o pedido para garantir o produto.<a href="{}"> Meu Carrinho.</a>',
-            unit.name, reverse('produto:index')
+            unit.name, reverse('produto:cart')
         )
     )
 
@@ -31,7 +31,7 @@ def added_to_cart(request, unit: Unit, quantity: int) -> None:
     messages.success(
         request, format_html(
             'produto "{}" adicionado {}x no Carrinho.<a href="{}"> Confira.</a>',
-            unit.name, quantity, reverse('produto:index')
+            unit.name, quantity, reverse('produto:cart')
         )   
     )
 
@@ -39,7 +39,7 @@ def not_enough_removed(request, unit: Unit) -> None:
     messages.warning(
         request, format_html(                       
             'Nenhuma unidade de "{}" disponível no momento. O produto foi removido do carrinho<a href="{}"> Confira.</a>',
-            unit.name, reverse('produto:index')
+            unit.name, reverse('produto:cart')
         )
     )
 

@@ -42,9 +42,9 @@ class CartService:
         quantity_price = unit.quantity_price(quantity_in_cart)
             
         self.cart[unit_id] = {
-            "unit_id": unit.id,
-            "unit_name": unit.name,
-            "unit_price": float(unit.price), 
+            "id": unit.id,
+            "name": unit.name,
+            "price": float(unit.price), 
             "quantity": quantity_in_cart,
             "quantity_price": quantity_price,
             "image": unit.image.url,
