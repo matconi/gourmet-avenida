@@ -73,6 +73,7 @@ coverage.xml
 *.mo
 *.pot
 
+/.vscode
 # Sphinx documentation
 docs/_build/
 

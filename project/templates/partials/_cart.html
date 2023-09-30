@@ -1,0 +1,41 @@
+{% load static %}
+
+<div class="table-responsive">
+    {% if request.session.cart %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Produto</th>        
+                    <th>QTD. x Preço</th>
+                    <th>SubTotal</th>
+                </tr>
+            </thead>
+        {% for unit in request.session.cart.values %}
+            <tbody>
+                <tr>
+                    <td class="d-lg-block">
+                        <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
+                            {{ unit.name }}
+                        </a>  
+                    </td>
+                
+                    <td>{{ unit.quantity }} x R$ {{ unit.price|floatformat:2 }}</td>
+                    <td>R$ {{ unit.quantity_price|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+
+            {% endfor %}
+            <div class="col-lg">   
+                <div class='table-responsive'>
+                    <tfoot class="table table-striped">
+                        <tr>
+                            <td colspan="3">Total: <strong>R$ 50,00</strong></td>
+                        </tr>
+                    </tfoot>
+                </div>
+            </div>
+        </table>
+    {% else %}
+        <p>Atualmente o seu Carrinho se encontra vazio.</p>
+    {% endif %}
+</div>

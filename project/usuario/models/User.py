@@ -9,7 +9,7 @@ class User(AbstractUser):
     first_name = models.CharField("Primeiro Nome", max_length=50, blank=False, null=False)
     last_name = models.CharField("Último Nome", max_length=120, blank=True, null=True, default=None)
     email = models.EmailField("Email", max_length=320, blank=False, null=False, unique=True)
-    password = models.CharField("Senha", max_length=240)
+    password = models.CharField("Senha", max_length=240, editable=False)
     phone = models.CharField("Celular", max_length=14)
     attempts = models.PositiveSmallIntegerField(
         "Tentativas", default=0,

@@ -78,7 +78,7 @@ class Migration(migrations.Migration):
                 ('stock', models.PositiveIntegerField(verbose_name='Estoque')),
                 ('booked', models.PositiveIntegerField(default=0, verbose_name='Reservado')),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='produto.product', verbose_name='Produto')),
-                ('variations', models.ManyToManyField(blank=True, related_name='variations_units', to='produto.variation')),
+                ('variations', models.ManyToManyField(blank=True, related_name='variations_units', to='produto.variation', verbose_name='Variações')),
             ],
             options={
                 'verbose_name': 'Unidade',
