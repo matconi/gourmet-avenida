@@ -33,3 +33,10 @@ def clear_cart(request):
         cart = CartService(request)
         cart.clear()
         return redirect('produto:cart')
+
+def remove_from_cart(request, pk: int):
+    if request.method == 'POST':
+        unit = unit_repository.get_or_404(pk)
+        cart = CartService(request)
+        cart.remove(pk, unit)
+        return redirect('produto:cart')

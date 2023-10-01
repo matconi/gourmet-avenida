@@ -12,22 +12,30 @@
             </thead>
         {% for unit in request.session.cart.values %}
             <tbody>
-                <tr>
-                    <td class="d-lg-block">
+                <tr height="30px">
+                    <td class="fs-6" class="d-lg-block">
                         <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
                             {{ unit.name }}
                         </a>  
                     </td>
                 
-                    <td>{{ unit.quantity }} x R$ {{ unit.price|floatformat:2 }}</td>
-                    <td>R$ {{ unit.quantity_price|floatformat:2 }}</td>
+                    <td class="fs-6">{{ unit.quantity }} x R$ {{ unit.price|floatformat:2 }}</td>
+                    <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
+                    <td>
+                        <form action="{% url 'produto:remove_from_cart' unit.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn" title="Remover">
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
 
             {% endfor %}
             <div class="col-lg">   
                 <div class='table-responsive'>
-                    <tfoot class="table table-striped">
+                    <tfoot>
                         <tr>
                             <td colspan="3">Total: <strong>R$ 50,00</strong></td>
                         </tr>
@@ -36,6 +44,6 @@
             </div>
         </table>
     {% else %}
-        <p>Atualmente o seu Carrinho se encontra vazio.</p>
+        <p class="lead">Atualmente o seu Carrinho se encontra vazio.</p>
     {% endif %}
 </div>

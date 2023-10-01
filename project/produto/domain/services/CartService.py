@@ -14,9 +14,9 @@ class CartService:
     def add(self, unit: Unit, quantity: str) -> None:
         unit_id = str(unit.id)
         quantity = int(quantity)
-        quantity_in_cart = self.add_new_unit(unit, quantity, unit_id) \
+        quantity_in_cart = self.__add_new_unit(unit, quantity, unit_id) \
             if unit_id not in self.cart \
-            else self.add_existing_unit(unit, quantity, unit_id)
+            else self.__add_existing_unit(unit, quantity, unit_id)
 
         if quantity_in_cart > 0:
             self.__added_success(quantity_in_cart, unit)
@@ -28,7 +28,7 @@ class CartService:
         if quantity_in_cart == unit.avaliable():
             messages_service.all_avaliable_warn(self.request, unit)  
 
-    def add_new_unit(self, unit: Unit, quantity: int, unit_id: str) -> int:
+    def __add_new_unit(self, unit: Unit, quantity: int, unit_id: str) -> int:
         quantity_in_cart = quantity
         avaliable = unit.avaliable()
         if avaliable == 0:
@@ -52,7 +52,7 @@ class CartService:
         }
         return quantity_in_cart
 
-    def add_existing_unit(self, unit: Unit, quantity: int, unit_id: str) -> int:
+    def __add_existing_unit(self, unit: Unit, quantity: int, unit_id: str) -> int:
         quantity_in_cart = int(self.cart[unit_id]["quantity"])
         quantity_price = float(self.cart[unit_id]["quantity_price"])
         
@@ -102,9 +102,12 @@ class CartService:
     def save(self):
         self.request.session.modified = True
 
-    def remove(unit_id: str) -> None:
-        del self.cart[unit_id]
+    def remove(self, unit_id: int, unit: Unit) -> None:
+        del self.cart[str(unit_id)]
+        self.save()
+        messages_service.removed_unit(self.request, unit)
 
     def clear(self) -> None:
         del self.request.session["cart"]
         self.save()
+        messages_service.cleaned_cart(self.request)
