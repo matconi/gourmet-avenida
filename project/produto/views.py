@@ -22,7 +22,17 @@ def add_to_cart(request):
         cart = CartService(request)
         cart.add(unit, quantity_param)
 
-        return redirect('produto:view', slug=unit.product.slug)        
+        return redirect('produto:view', slug=unit.product.slug)
+
+def add_one_to_cart(request, pk: int):
+    if request.method == 'GET':
+        unit = unit_repository.get_or_404(pk)
+        is_increment = request.GET.get('o') == '1'
+
+        cart = CartService(request)
+        cart.add(unit, 1 if is_increment else -1)
+
+        return redirect('produto:cart')  
 
 def cart(request):
     if request.method == 'GET':

@@ -14,20 +14,20 @@ class CartService:
     def add(self, unit: Unit, quantity: str) -> None:
         unit_id = str(unit.id)
         quantity = int(quantity)
-        quantity_in_cart = self.__add_new_unit(unit, quantity, unit_id) \
+        quantity_added = self.__add_new_unit(unit, quantity, unit_id) \
             if unit_id not in self.cart \
             else self.__add_existing_unit(unit, quantity, unit_id)
 
-        if quantity_in_cart > 0:
-            self.__added_success(quantity_in_cart, unit)
+        if quantity_added > 0:
+            self.__added_success(quantity_added, unit)
 
     def __added_success(self, quantity_in_cart: int, unit: Unit) -> None:
         self.save()
         messages_service.added_to_cart(self.request, unit, quantity_in_cart)
 
         if quantity_in_cart == unit.avaliable():
-            messages_service.all_avaliable_warn(self.request, unit)  
-
+            messages_service.all_avaliable_warn(self.request, unit)
+  
     def __add_new_unit(self, unit: Unit, quantity: int, unit_id: str) -> int:
         quantity_in_cart = quantity
         avaliable = unit.avaliable()
@@ -83,9 +83,9 @@ class CartService:
             self.save()
             raise ValidationError("No avaliable product now")
 
-        elif quantity_in_cart == avaliable: 
+        elif quantity_in_cart == avaliable:
             messages_service.all_avaliable_warn(self.request, unit)
-            raise ValidationError("All avaliable products now")
+            raise ValidationError("All avaliable product now")
 
         elif quantity_in_cart > avaliable:
             over_avaliable = quantity_in_cart - avaliable
@@ -97,9 +97,8 @@ class CartService:
               
             self.cart[unit_id]["quantity"] = quantity_in_cart
             self.cart[unit_id]["quantity_price"] = quantity_price
-            raise ValidationError("More products than avaliable now")
 
-    def save(self):
+    def save(self) -> None:
         self.request.session.modified = True
 
     def remove(self, unit_id: int, unit: Unit) -> None:

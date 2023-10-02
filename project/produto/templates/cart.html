@@ -14,12 +14,12 @@
 </div>
 {% if request.session.cart %}
     <div class="row m-auto">    
-        <div class="col-11">
+        <div class="col-10">
             <a class="btn btn-lg btn-block btn-success" href="#">
                 Reservar
             </a>
         </div>
-        <div class="col">
+        <div class="col-1">
             <form action="{% url 'produto:clear_cart' %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-lg btn-block btn-danger" title="Esvaziar carrinho">

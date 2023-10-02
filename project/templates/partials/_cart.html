@@ -6,20 +6,40 @@
             <thead>
                 <tr>
                     <th>Produto</th>        
-                    <th>QTD. x Preço</th>
+                    <th>Qtd.</th>
+                    <th>Preço</th>
                     <th>SubTotal</th>
                 </tr>
             </thead>
         {% for unit in request.session.cart.values %}
             <tbody>
-                <tr height="30px">
+                <tr>
                     <td class="fs-6" class="d-lg-block">
                         <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
                             {{ unit.name }}
                         </a>  
                     </td>
                 
-                    <td class="fs-6">{{ unit.quantity }} x R$ {{ unit.price|floatformat:2 }}</td>
+                    <td class="fs-6">
+                        {% if unit.quantity > 1 %}
+                            <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
+                                <button class="btn btn-outline-light" style="scale: .8;">
+                                    <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
+                                </button>
+                            </a>
+                        {% endif %}
+                        <span class="p-2">{{ unit.quantity }}</span>
+                        <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
+                            <button class="btn btn-outline-light" style="scale: .8;">
+                                <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
+                            </button>
+                        </a>
+                    </td>
+
+                    <td class="fs-6">
+                        R$ {{ unit.price|floatformat:2 }}
+                    </td>
+
                     <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
                     <td>
                         <form action="{% url 'produto:remove_from_cart' unit.id %}" method="POST">
