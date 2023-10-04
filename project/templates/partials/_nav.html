@@ -1,3 +1,5 @@
+{% load pipe %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="{% url 'produto:index' %}">
@@ -15,11 +17,8 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link nav-cart-link active" href="{% url 'produto:cart' %}">
-                        <span class="nav-cart-text mr-1">
-                            Carrinho
-                        </span>
                         <span class="nav-cart-count mr-1">
-                            <strong>6x</strong>
+                            <strong>{{ request.session.cart|total_in_cart }}x</strong>
                         </span>
                         <span class="nav-cart-icon mr-2">
                             <i class="fas fa-shopping-cart"></i>

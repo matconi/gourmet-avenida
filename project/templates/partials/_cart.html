@@ -1,39 +1,43 @@
 {% load static %}
+{% load pipe %}
 
 <div class="table-responsive">
     {% if request.session.cart %}
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Produto</th>        
-                    <th>Qtd.</th>
+                    <th>Quantidade</th>
                     <th>Preço</th>
                     <th>SubTotal</th>
+                    <th></th>
                 </tr>
             </thead>
-        {% for unit in request.session.cart.values %}
             <tbody>
+            {% for unit in request.session.cart.values %}
                 <tr>
-                    <td class="fs-6" class="d-lg-block">
+                    <td class="fs-6">
                         <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
                             {{ unit.name }}
                         </a>  
                     </td>
                 
                     <td class="fs-6">
-                        {% if unit.quantity > 1 %}
-                            <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
+                        <div class="d-flex justify-content-center">
+                            {% if unit.quantity > 1 %}
+                                <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
+                                    <button class="btn btn-outline-light" style="scale: .8;">
+                                        <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
+                                    </button>
+                                </a>
+                            {% endif %}
+                            <span class="p-2">{{ unit.quantity }}</span>
+                            <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
                                 <button class="btn btn-outline-light" style="scale: .8;">
-                                    <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
+                                    <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
                                 </button>
                             </a>
-                        {% endif %}
-                        <span class="p-2">{{ unit.quantity }}</span>
-                        <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
-                            <button class="btn btn-outline-light" style="scale: .8;">
-                                <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
-                            </button>
-                        </a>
+                        </div>
                     </td>
 
                     <td class="fs-6">
@@ -50,17 +54,15 @@
                         </form>
                     </td>
                 </tr>
+            {% endfor %}
             </tbody>
 
-            {% endfor %}
             <div class="col-lg">   
-                <div class='table-responsive'>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3">Total: <strong>R$ 50,00</strong></td>
-                        </tr>
-                    </tfoot>
-                </div>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">Total: <strong>R$ {{ request.session.cart|total_price_in_cart|floatformat:2 }}</strong></td>
+                    </tr>
+                </tfoot>
             </div>
         </table>
     {% else %}
