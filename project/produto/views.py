@@ -44,8 +44,9 @@ def clear_cart(request):
         cart.clear()
         return redirect('produto:cart')
 
-def remove_from_cart(request, pk: int):
+def remove_from_cart(request):
     if request.method == 'POST':
+        pk = request.POST.get('id')
         unit = unit_repository.get_or_404(pk)
         cart = CartService(request)
         cart.remove(pk, unit)

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block head %}
     <title>Meu carrinho - Gourmet Avenida</title>
 {% endblock head %}
@@ -15,17 +16,14 @@
 {% if request.session.cart %}
     <div class="row m-auto">    
         <div class="col-10">
-            <a class="btn btn-lg btn-block btn-success" href="#">
+            <button type="button" class="btn btn-lg btn-block btn-success" data-bs-toggle="modal" data-bs-target="#bookModal">
                 Reservar
-            </a>
+            </button>
         </div>
         <div class="col-1">
-            <form action="{% url 'produto:clear_cart' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-lg btn-block btn-danger" title="Esvaziar carrinho">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </form>
+            <button type="button" class="btn btn-lg btn-block btn-danger" title="Esvaziar carrinho" data-bs-toggle="modal" data-bs-target="#clearModal">
+                <i class="fa-solid fa-trash"></i>
+            </button>
         </div>
     </div>
 {% else %}
@@ -33,4 +31,51 @@
         <a class="nav-link" href="{% url 'produto:index' %}">Produtos</a>
     </button>
 {% endif %}
+
+<div class="modal fade" id="clearModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Esvaziar Carrinho?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja remover todos os produtos do carrinho?</p>
+        </div>
+        <div class="modal-footer">
+            <form action="{% url 'produto:clear_cart' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bookModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Reservar produtos?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja reservar os produtos do carrinho?</p>
+        </div>
+        <div class="modal-footer">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Sim</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+        </div>
+        </div>
+    </div>
+</div>
+
 {% endblock main %}
+
+{% block footerscript %}
+<script src="{% static 'js/unit-modal.js' %}"></script>
+{% endblock footerscript %}

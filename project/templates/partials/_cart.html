@@ -1,4 +1,3 @@
-{% load static %}
 {% load pipe %}
 
 <div class="table-responsive">
@@ -46,12 +45,11 @@
 
                     <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
                     <td>
-                        <form action="{% url 'produto:remove_from_cart' unit.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn" title="Remover">
-                                <i class="fa-solid fa-trash text-danger"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="btn text-danger" title="Remover"
+                            data-bs-toggle="modal" data-bs-target="#removeModal" 
+                            data-unit-id="{{ unit.id }}" data-unit-name="{{ unit.name }}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             {% endfor %}
@@ -69,3 +67,26 @@
         <p class="lead">Atualmente o seu Carrinho se encontra vazio.</p>
     {% endif %}
 </div>
+
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Remover <span class="unit-name"></span>?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja remover o produto "<span class="unit-name"></span>" do carrinho?</p>
+        </div>
+        <div class="modal-footer">
+            <form action="{% url 'produto:remove_from_cart' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="unit-id" name="id" value="">
+                <button type="submit" class="btn btn-danger">Sim</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+        </div>
+        </div>
+    </div>
+</div>
+
