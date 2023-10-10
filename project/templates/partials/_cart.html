@@ -1,41 +1,92 @@
-{% load static %}
+{% load pipe %}
 
 <div class="table-responsive">
     {% if request.session.cart %}
-        <table class="table">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Produto</th>        
-                    <th>QTD. x Preço</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
                     <th>SubTotal</th>
+                    <th></th>
                 </tr>
             </thead>
-        {% for unit in request.session.cart.values %}
             <tbody>
+            {% for unit in request.session.cart.values %}
                 <tr>
-                    <td class="d-lg-block">
+                    <td class="fs-6">
                         <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
                             {{ unit.name }}
                         </a>  
                     </td>
                 
-                    <td>{{ unit.quantity }} x R$ {{ unit.price|floatformat:2 }}</td>
-                    <td>R$ {{ unit.quantity_price|floatformat:2 }}</td>
+                    <td class="fs-6">
+                        <div class="d-flex justify-content-center">
+                            {% if unit.quantity > 1 %}
+                                <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
+                                    <button class="btn btn-outline-light" style="scale: .8;">
+                                        <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
+                                    </button>
+                                </a>
+                            {% endif %}
+                            <span class="p-2">{{ unit.quantity }}</span>
+                            <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
+                                <button class="btn btn-outline-light" style="scale: .8;">
+                                    <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
+                                </button>
+                            </a>
+                        </div>
+                    </td>
+
+                    <td class="fs-6">
+                        R$ {{ unit.price|floatformat:2 }}
+                    </td>
+
+                    <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
+                    <td>
+                        <button type="button" class="btn text-danger" title="Remover"
+                            data-bs-toggle="modal" data-bs-target="#removeModal" 
+                            data-unit-id="{{ unit.id }}" data-unit-name="{{ unit.name }}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
+            {% endfor %}
             </tbody>
 
-            {% endfor %}
             <div class="col-lg">   
-                <div class='table-responsive'>
-                    <tfoot class="table table-striped">
-                        <tr>
-                            <td colspan="3">Total: <strong>R$ 50,00</strong></td>
-                        </tr>
-                    </tfoot>
-                </div>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">Total: <strong>R$ {{ request.session.cart|total_price_in_cart|floatformat:2 }}</strong></td>
+                    </tr>
+                </tfoot>
             </div>
         </table>
     {% else %}
-        <p>Atualmente o seu Carrinho se encontra vazio.</p>
+        <p class="lead">Atualmente o seu Carrinho se encontra vazio.</p>
     {% endif %}
 </div>
+
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Remover <span class="unit-name"></span>?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja remover o produto "<span class="unit-name"></span>" do carrinho?</p>
+        </div>
+        <div class="modal-footer">
+            <form action="{% url 'produto:remove_from_cart' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="unit-id" name="id" value="">
+                <button type="submit" class="btn btn-danger">Sim</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+        </div>
+        </div>
+    </div>
+</div>
+

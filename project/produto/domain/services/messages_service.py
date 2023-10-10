@@ -45,7 +45,17 @@ def not_enough_removed(request, unit: Unit) -> None:
 
 def over_avaliable(request, unit: Unit, over_avaliable: int) -> None:
     messages.warning(
-        self.request,
+        request,
         f'Atualmente seu carrinho possui mais unidades de "{unit.name}" que o disponível. '
         f'Reduzimos {over_avaliable}x do seu carrinho.'   
     ) 
+
+def cleaned_cart(request) -> None:
+    messages.success(
+        request, 'Carrinho esvaziado com sucesso.'
+    )
+
+def removed_unit(request, unit: Unit) -> None:
+    messages.success(
+        request, f'O produto "{unit.name}" for removido com sucesso.'
+    )
