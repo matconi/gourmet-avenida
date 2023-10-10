@@ -40,7 +40,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["first_name", "password"]
 
     def __str__(self) -> str:
-        return self.get_full_name()
+        return self.get_full_name().replace("None", "")
 
     class Meta:
         verbose_name = 'Usuário'

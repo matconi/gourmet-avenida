@@ -64,7 +64,7 @@
             <p>Tem certeza que deseja reservar os produtos do carrinho?</p>
         </div>
         <div class="modal-footer">
-            <form action="" method="POST">
+            <form action="{% url 'pedido:save' %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success">Sim</button>
             </form>
