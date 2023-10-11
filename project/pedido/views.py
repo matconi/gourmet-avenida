@@ -21,7 +21,7 @@ def save(request):
         order = order_repository.create_order(request, cart)     
         order_unit_repository.create_order_units(order, cart)
         
-        del self.request.session["cart"]
+        del request.session["cart"]
 
         return redirect('produto:cart')
             
