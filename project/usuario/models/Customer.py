@@ -15,7 +15,7 @@ class Customer(models.Model):
     favorites = models.ManyToManyField("produto.Unit", blank=True, verbose_name='Favoritos')
 
     def __str__(self) -> str:
-        return self.user.get_full_name()
+        return self.user.get_name()
 
     class Meta:
         verbose_name = 'Cliente'

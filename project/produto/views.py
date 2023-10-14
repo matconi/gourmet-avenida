@@ -5,12 +5,12 @@ from .domain.services.CartService import CartService
 def index(request):
     if request.method == 'GET':
         units = unit_repository.get_showcase()
-        return render(request, 'index.html', {"units": units})
+        return render(request, 'produto/index.html', {"units": units})
 
 def view(request, slug):
     if request.method == 'GET':
         product = product_repository.get_by_slug(slug)
-        return render(request, 'view.html', {"product": product})
+        return render(request, 'produto/view.html', {"product": product})
 
 def add_to_cart(request):
     if request.method == 'GET':
@@ -36,7 +36,7 @@ def add_one_to_cart(request, pk: int):
 
 def cart(request):
     if request.method == 'GET':
-        return render(request, "cart.html")
+        return render(request, "produto/cart.html")
 
 def clear_cart(request):
     if request.method == 'POST':

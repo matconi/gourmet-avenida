@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+  <title>{% trans "Signup" %} - Gourmet Avenida</title>
+{% endblock %}
+
+{% block main %}
+<h1>Nova Conta</h1>
+
+<p class="lead">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+<div class="row">
+  <div class="p-4 col-11 col-lg-10 col-xxl-8 m-xxl-auto rounded shadow bg-light">
+    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+      {% csrf_token %}
+      {{ form|crispy }}
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <button type="submit" class="btn btn-primary w-50">Cadastrar &raquo;</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

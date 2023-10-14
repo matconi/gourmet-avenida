@@ -91,6 +91,7 @@ local_settings.py
 db.sqlite3
 
 # Project
-gourmetavenida
-urls.*
+project/gourmetavenida/settings*
+project/gourmetavenida/asgi*
+project/gourmetavenida/wsgi*
 __localcode

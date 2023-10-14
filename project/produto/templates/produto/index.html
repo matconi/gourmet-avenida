@@ -6,20 +6,20 @@
 {% block main %}
 <div class="row">
     {% for unit in units %}
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card">
+        <div class="col-6 col-sm-4 col-lg-3 mb-4">
+            <div class="card shadow-sm">
                 <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}">
                     <img class="card-img-top" src="{{ unit.image.url }}" alt="{{ unit.name }}">
                 </a>              
                     <div class="card-body">
-                        <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}">
+                        <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}" class="nav-link">
                             <strong>
-                                <h5 class="card-title">{{ unit.name }}</h5>
+                                <h5 class="card-title fs-6">{{ unit.name }}</h5>
                             </strong>
                         </a>
                         
-                        <div class="container product-price-block text-center">
-                            <span class="product-price fs-5 text-success">
+                        <div class="product-price-block text-center">
+                            <span class="product-price text-success">
                                 R$ {{ unit.price }}
                             </span>
                             {% if unit.promotional %}
