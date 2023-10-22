@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
 from .manager.UserManager import CustomUserManager
+from django.utils import timezone
 
 class User(AbstractUser):
     username = username_validator = None
@@ -10,7 +11,7 @@ class User(AbstractUser):
     last_name = models.CharField("Último Nome", max_length=120, blank=True, null=True, default=None)
     email = models.EmailField("Email", max_length=320, blank=False, null=False, unique=True)
     password = models.CharField("Senha", max_length=240, editable=False)
-    phone = models.CharField("Celular", max_length=14)
+    phone = models.CharField("Celular", max_length=14, null=True, default=None)
     attempts = models.PositiveSmallIntegerField(
         "Tentativas", default=0,
         help_text="Tentativas de login com a senha incorreta. "
@@ -31,7 +32,7 @@ class User(AbstractUser):
         "Desmarque ao invés de excluir contas."
     )
 
-    date_joined = models.DateTimeField("Entrou em", blank=True, null=True, default=None)
+    date_joined = models.DateTimeField("Entrou em", default=timezone.now)
     last_login = models.DateTimeField("Último Login", blank=True, null=True, default=None)
 
     objects = CustomUserManager()
