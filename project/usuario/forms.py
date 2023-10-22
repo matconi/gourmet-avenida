@@ -4,6 +4,13 @@ from .models.Customer import Customer
 from allauth.account.forms import PasswordField
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from allauth.socialaccount.forms import SignupForm as SocialSignupForm
+
+def get_password_pattern() -> RegexValidator:
+    return RegexValidator(
+        r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)((?=.*[\W_]))*.*$',
+        'A senha deve conter pelo menos 1 número, 1 letra maiúscula e 1 minúscula, totalizando no mínimo 8 caracteres.'
+    )
 
 class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
@@ -11,12 +18,7 @@ class CustomSignupForm(SignupForm):
         self.fields['password1'] = PasswordField(
             label='Senha', autocomplete="new-password",
             help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas",
-            validators=[
-                RegexValidator(
-                    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)((?=.*[\W_]))*.*$',
-                    'A senha deve conter pelo menos 1 número, 1 letra maiúscula e 1 minúscula, totalizando no mínimo 8 caracteres.'
-                )
-            ]
+            validators=[get_password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
            {"placeholder": "Repetir"}
