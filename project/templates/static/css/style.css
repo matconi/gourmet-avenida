@@ -19,3 +19,7 @@
 .h1, .p {
     color: #A71BBC;
 }
+
+.list-none {
+    list-style: none !important;
+}
