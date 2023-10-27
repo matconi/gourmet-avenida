@@ -9,7 +9,7 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             return
 
         try:
-            local_user: User = user_repository.get_by_email(user)
+            local_user: User = user_repository.get_by_email(user.email)
             sociallogin.connect(request, local_user)
         except User.DoesNotExist:
             pass

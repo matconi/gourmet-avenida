@@ -9,3 +9,9 @@ def uncomplete_register(request) -> None:
             reverse('usuario:profile')
         ) 
     )
+
+def updated_profile(request) -> None:
+    messages.success(
+        request, 
+        "Perfil alterado com sucesso."
+    )

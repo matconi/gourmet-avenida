@@ -1,4 +1,4 @@
 from usuario.models.User import User
 
-def get_by_email(user: User) -> User:
-    return User.objects.get(email=user.email)
+def get_by_email(email: str) -> User:
+    return User.objects.get(email=email)

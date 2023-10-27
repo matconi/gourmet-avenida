@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm
+from .domain.services import messages_service
 
 @login_required
 def profile(request):
@@ -21,5 +22,12 @@ def profile(request):
             "user": user
         }
         return render(request, "usuario/profile.html", context)
+        
     elif request.method == 'POST':
-        pass
+        form = ProfileForm(request.POST, instance=user)
+
+        if form.is_valid():
+            form.save()
+            messages_service.updated_profile(request)
+        
+        return redirect('usuario:profile')
