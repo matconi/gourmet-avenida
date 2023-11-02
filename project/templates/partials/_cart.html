@@ -13,46 +13,46 @@
                 </tr>
             </thead>
             <tbody>
-            {% for unit in request.session.cart.values %}
-                <tr>
-                    <td class="fs-6">
-                        <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
-                            {{ unit.name }}
-                        </a>  
-                    </td>
-                
-                    <td class="fs-6">
-                        <div class="d-flex justify-content-center">
-                            {% if unit.quantity > 1 %}
-                                <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
+                {% for unit in request.session.cart.values %}
+                    <tr>
+                        <td class="fs-6">
+                            <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
+                                {{ unit.name }}
+                            </a>  
+                        </td>
+                    
+                        <td class="fs-6">
+                            <div class="d-flex justify-content-center">
+                                {% if unit.quantity > 1 %}
+                                    <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
+                                        <button class="btn btn-outline-light" style="scale: .8;">
+                                            <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
+                                        </button>
+                                    </a>
+                                {% endif %}
+                                <span class="p-2">{{ unit.quantity }}</span>
+                                <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
                                     <button class="btn btn-outline-light" style="scale: .8;">
-                                        <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
+                                        <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
                                     </button>
                                 </a>
-                            {% endif %}
-                            <span class="p-2">{{ unit.quantity }}</span>
-                            <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
-                                <button class="btn btn-outline-light" style="scale: .8;">
-                                    <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
-                                </button>
-                            </a>
-                        </div>
-                    </td>
+                            </div>
+                        </td>
 
-                    <td class="fs-6">
-                        R$ {{ unit.price|floatformat:2 }}
-                    </td>
+                        <td class="fs-6">
+                            R$ {{ unit.price|floatformat:2 }}
+                        </td>
 
-                    <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
-                    <td>
-                        <button type="button" class="btn text-danger" title="Remover"
-                            data-bs-toggle="modal" data-bs-target="#removeModal" 
-                            data-unit-id="{{ unit.id }}" data-unit-name="{{ unit.name }}">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            {% endfor %}
+                        <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
+                        <td>
+                            <button type="button" class="btn text-danger" title="Remover"
+                                data-bs-toggle="modal" data-bs-target="#removeModal" 
+                                data-unit-id="{{ unit.id }}" data-unit-name="{{ unit.name }}">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
 
             <div class="col-lg">   
