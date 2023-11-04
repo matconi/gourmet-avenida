@@ -14,5 +14,5 @@ def create_order(request, cart: dict) -> Order:
         customer=customer_repository.get_by_user(request.user)
     )
 
-def get_user_orders(user) -> List[Order]:
-    return Order.objects.filter(customer__user=user).prefetch_related('order_units__unit').order_by('-date_time')
+def get_user_orders(user, kwargs: dict) -> List[Order]:
+    return Order.objects.filter(customer__user=user, **kwargs).prefetch_related('order_units__unit__product').order_by('-date_time')

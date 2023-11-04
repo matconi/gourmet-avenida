@@ -8,94 +8,136 @@
 {% block main %}
     <div class="row mt-3">
         <div class="col">
-            <h2>Pedidos</h2>
-            <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
-
-            <div class="accordion pb-2" id="accordion">
-                {% for order in page_obj %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button collapsed bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ order.id }}" aria-expanded="true" aria-controls="collapseOne">    
-                                <div class="p-2">
-                                    {% if order.status == 'F' %}
-                                        <span class="badge bg-success" title="Pedido finalizado">
-                                            <i class="fa-regular fa-circle-check"></i>
-                                            {{ order.get_status_display }}
-                                        </span> 
-                                    {% elif order.status == 'B' %}
-                                        <span class="badge bg-primary" title="Pedido reservado"> 
-                                            <i class="fa-solid fa-book-bookmark"></i>
-                                            {{ order.get_status_display }}
-                                        </span>            
-                                    {% elif order.status == 'E' %}
-                                        <span class="badge bg-warning" title="Pedido expirado">
-                                            <i class="fa-solid fa-triangle-exclamation"></i>
-                                            {{ order.get_status_display }}
-                                        </span> 
-                                    {% elif order.status == 'C' %}
-                                        <span class="badge bg-error" title="Pedido consumido">
-                                            <i class="fa-solid fa-triangle-exclamation"></i>
-                                            {{ order.get_status_display }}
-                                        </span> 
-                                    {% endif %}
-                                </div>
-                                <caption>{{ order.date_time.date }} - <span> Total: <strong>R$ {{ order.total_price|floatformat:2 }}</strong></span></caption>
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
-                            <div class="accordion-body">
-                                <div class="table-responsive">      
-                                    <table class="table table-hover">
-                                        # <strong>{{ order.id }}</strong>
-                                        <thead>
-                                            <tr>
-                                                <th>Produto</th>        
-                                                <th>Quantidade</th>
-                                                <th>Preço</th>
-                                                <th>Subtotal</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for order_unit in order.order_units.all %}
-                                                <tr>
-                                                    <td class="fs-6">
-                                                        <a  href="">
-                                                            {{ order_unit.unit.name }}
-                                                        </a>  
-                                                    </td>     
-                                                    <td class="fs-6">
-                                                        <div class="d-flex justify-content-center">
-                                                            <span class="p-2">{{ order_unit.quantity }}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td class="fs-6">
-                                                        R$ {{ order_unit.unit.price|floatformat:2 }}
-                                                    </td>
-                                                    <td class="fs-6">
-                                                        R$ {{ order_unit.quantity_price|floatformat:2 }}
-                                                    </td>
-                                                </tr>
-                                            {% empty %}
-                                                <p class="lead">
-                                                    Nenhum item relacionado ao pedido.
-                                                </p>
-                                            {% endfor %}
-                                        </tbody>  
-                                    </table>
+            <section>
+                <h2>Pedidos</h2>
+                <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
+                <section>
+                    <div class="accordion mb-2" id="accordion-filter">
+                        <div class="accordion-item">
+                            <h4 class="accordion-header " id="headingFilter">
+                                <button class="accordion-button collapsed bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-filter" aria-expanded="true" aria-controls="collapseFilter">
+                                    <i class="fa-solid fa-filter"></i> Filtros
+                                </button>
+                            </h4>
+                            <div id="collapse-filter" class="accordion-collapse collapse" aria-labelledby="headingFilter" data-bs-parent="#accordion-filter">
+                                <div class="accordion-body">
+                                    <form id="filter-form" action="" method="GET">
+                                        <div class="row">
+                                            <div class="col mt-2">
+                                                <label for="unit" class="form-label">Produto</label>
+                                                <input type="text" class="form-control" name="unit" id="unit" placeholder="Pesquisar..." value="{{ request.GET.unit }}">
+                                                <label for="start-date" class="form-label">De:</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="start_date" id="start-date" placeholder="DD/MM/AAAA" value="{{ request.GET.start_date }}">
+                                                    <button class="btn btn-sm btn-outline-primary" type="button" id="copy-date" title="Mesmo dia">
+                                                        <i class="fa-solid fa-clone"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col mt-2">
+                                                <label for="status" class="form-label">Status</label>
+                                                <select name="status" id="status" class="form-select">
+                                                    <option value="">Todos</option>
+                                                    <option value="F">Finalizado</option>
+                                                    <option value="B">Reservado</option>
+                                                    <option value="E">Expirado</option>
+                                                </select>
+                                                <label for="end-date" class="form-label">Até:</label>
+                                                <input type="text" class="form-control" name="end_date" id="end-date" placeholder="DD/MM/AAAA" value="{{ request.GET.end_date }}">
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary w-25 mt-3" id="filter-btn" type="submit">Filtrar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                {% empty %}
-                    <p class="lead">                    
-                        Nenhum pedido encontrado.
-                    </p>
-                {% endfor %}
-            </div>            
-            {% include 'partials/_pagination.html' %}
+                </section>
+                <section>
+                    <div class="accordion pb-2" id="accordion">
+                        {% for order in page_obj %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ order.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                        <div class="p-2">
+                                            {% if order.status == 'F' %}
+                                                <span class="badge bg-success" title="Pedido finalizado">
+                                                    <i class="fa-regular fa-circle-check"></i>
+                                                    {{ order.get_status_display }}
+                                                </span>
+                                            {% elif order.status == 'B' %}
+                                                <span class="badge bg-primary" title="Pedido reservado">
+                                                    <i class="fa-solid fa-book-bookmark"></i>
+                                                    {{ order.get_status_display }}
+                                                </span>
+                                            {% elif order.status == 'E' %}
+                                                <span class="badge bg-warning" title="Pedido expirado">
+                                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                                    {{ order.get_status_display }}
+                                                </span>
+                                            {% elif order.status == 'C' %}
+                                                <span class="badge bg-error" title="Pedido consumido">
+                                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                                    {{ order.get_status_display }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <caption>{{ order.date_time.date }} - <span> Total: <strong>R$ {{ order.total_price|floatformat:2 }}</strong></span></caption>
+                                    </button>
+                                </h2>
+                                <div id="collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
+                                    <div class="accordion-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                # <strong>{{ order.id }}</strong>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produto</th>
+                                                        <th>Quantidade</th>
+                                                        <th>Preço</th>
+                                                        <th>Subtotal</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for order_unit in order.order_units.all %}
+                                                        <tr>
+                                                            <td class="fs-6">
+                                                                <a href="{% url 'produto:view' order_unit.unit.product.slug %}?uid={{ order_unit.unit.id }}">
+                                                                    {{ order_unit.unit.name }}
+                                                                </a>
+                                                            </td>
+                                                            <td class="fs-6">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <span class="p-2">{{ order_unit.quantity }}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td class="fs-6">
+                                                                R$ {{ order_unit.unit.price|floatformat:2 }}
+                                                            </td>
+                                                            <td class="fs-6">
+                                                                R$ {{ order_unit.quantity_price|floatformat:2 }}
+                                                            </td>
+                                                        </tr>
+                                                    {% empty %}
+                                                        <p class="lead">
+                                                            Nenhum item relacionado ao pedido.
+                                                        </p>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="lead">
+                                Nenhum pedido encontrado.
+                            </p>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% include 'partials/_pagination.html' %}
+            </section>
         </div>       
     </div>
 {% endblock main %}
-
-{% block footerscript %}
-{% endblock footerscript %}

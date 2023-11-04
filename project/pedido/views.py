@@ -8,7 +8,7 @@ from .domain.services import messages_service, order_service
 from .domain.repositories import order_repository, order_unit_repository
 from produto.domain.repositories import unit_repository
 from django.contrib.auth.decorators import login_required
-from gourmetavenida.utils import paginate
+from gourmetavenida.utils import paginate, is_ajax
 
 @login_required
 def save(request):
@@ -31,13 +31,13 @@ def save(request):
 
 @login_required
 def index(request):
-    if request.method == 'GET':
-        orders = order_repository.get_user_orders(request.user)
-        page_obj = paginate(request, orders)
+    if request.method == 'GET':      
+        kwargs = order_service.filter_orders(request)
+
+        orders = order_repository.get_user_orders(request.user, kwargs)
 
         context = {
-           "page_obj": page_obj,
+           "page_obj": paginate(request, orders),
         }
 
         return render(request, 'pedido/index.html', context)
-            
