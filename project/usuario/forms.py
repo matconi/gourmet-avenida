@@ -1,9 +1,8 @@
 from django import forms
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, ChangePasswordForm, SetPasswordForm
 from .models.Customer import Customer
 from allauth.account.forms import PasswordField
 from django.core.validators import RegexValidator, ValidationError
-from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from .models.User import User
 from .domain.repositories import user_repository
 
@@ -103,3 +102,28 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'phone')
+
+class CustomChangePasswordForm(ChangePasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomChangePasswordForm, self).__init__(*args, **kwargs)
+        self.fields['password1'] = PasswordField(
+            label='Nova Senha', autocomplete="new-password",
+            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas",
+            validators=[get_password_pattern()]
+        )
+        self.fields['password2'].widget.attrs.update(
+           {"placeholder": "Repetir"}
+        )
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomSetPasswordForm, self).__init__(*args, **kwargs)
+        self.fields['password1'] = PasswordField(
+            label='Senha', autocomplete="new-password",
+            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas",
+            validators=[get_password_pattern()]
+        )
+        self.fields['password2'].widget.attrs.update(
+           {"placeholder": "Repetir"}
+        )
+
