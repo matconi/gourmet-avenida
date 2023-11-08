@@ -1,6 +1,6 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from .domain.repositories import user_repository
-from .models.User import User
+from usuario.domain.repositories import user_repository
+from usuario.models.User import User
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin): 
