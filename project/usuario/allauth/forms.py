@@ -1,9 +1,10 @@
 from django import forms
-from allauth.account.forms import SignupForm, ChangePasswordForm, SetPasswordForm, ResetPasswordKeyForm
+from allauth.account.forms import SignupForm, ChangePasswordForm, SetPasswordForm, ResetPasswordForm, ResetPasswordKeyForm
 from usuario.models.Customer import Customer
 from allauth.account.forms import PasswordField
 from django.core.validators import RegexValidator
 from usuario.models.User import User
+from usuario.domain.repositories import user_repository
 
 def get_password_pattern() -> RegexValidator:
     return RegexValidator(
@@ -63,7 +64,7 @@ class CustomChangePasswordForm(ChangePasswordForm):
         super(CustomChangePasswordForm, self).__init__(*args, **kwargs)
         self.fields['password1'] = PasswordField(
             label='Nova Senha', autocomplete="new-password",
-            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas",
+            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
             validators=[get_password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
@@ -75,19 +76,29 @@ class CustomSetPasswordForm(SetPasswordForm):
         super(CustomSetPasswordForm, self).__init__(*args, **kwargs)
         self.fields['password1'] = PasswordField(
             label='Senha', autocomplete="new-password",
-            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas",
+            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
             validators=[get_password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
            {"placeholder": "Repetir"}
         )
 
+class CustomResetPasswordForm(ResetPasswordForm):
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        try:
+            self.users = [user_repository.get_by_email_and_status(email)]
+        except User.DoesNotExist:
+            raise forms.ValidationError(f'Usuário não encontrado com e-mail "{email}".')
+        return email
+
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
     def __init__(self, *args, **kwargs):
         super(CustomResetPasswordKeyForm, self).__init__(*args, **kwargs)
         self.fields['password1'] = PasswordField(
             label='Nova Senha', autocomplete="new-password",
-            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas",
+            help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
             validators=[get_password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(

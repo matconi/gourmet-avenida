@@ -40,8 +40,8 @@ class ProfileForm(forms.ModelForm):
         email = self.cleaned_data.get('email')
         
         if email != self.instance.email:
-            if user_repository.get_by_email(email):
-                raise forms.ValidationError('Um usuário já foi registrado com este endereço de e-mail')
+            if user_repository.exists_by_email(email):
+                raise forms.ValidationError('Um usuário já foi registrado com este endereço de e-mail.')
         return email
 
     class Meta:

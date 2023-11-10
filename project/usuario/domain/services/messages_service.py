@@ -15,3 +15,9 @@ def updated_profile(request) -> None:
         request, 
         "Perfil alterado com sucesso."
     )
+
+def password_reset_done(request) -> None:
+    messages.success(
+        request,
+        "Email de redefinição de senha enviado com sucesso."
+    )
