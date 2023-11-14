@@ -4,44 +4,11 @@
 {% endblock head %}
 
 {% block main %}
-<div class="row">
-    {% for unit in units %}
-        <div class="col-6 col-sm-4 col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}">
-                    <img class="card-img-top" src="{{ unit.image.url }}" alt="{{ unit.name }}">
-                </a>              
-                    <div class="card-body">
-                        <a href="{% url 'produto:view' unit.product.slug %}?uid={{ unit.id }}" class="nav-link">
-                            <strong>
-                                <h5 class="card-title fs-6">{{ unit.name }}</h5>
-                            </strong>
-                        </a>
-                        
-                        <div class="product-price-block text-center">
-                            <span class="product-price text-success">
-                                R$ {{ unit.price }}
-                            </span>
-                            {% if unit.promotional %}
-                            <small class="pl-2 text-muted">
-                                <del>
-                                    R$ {{ unit.promotional }}
-                                </del>
-                            </small>
-                            {% endif %}
-                        </div>
-                    </div>
-                <div class="card-footer bg-transparent border-top-light-custom text-center">
-                    <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
-                        <input type="hidden" name="id" value="{{ unit.id }}">
-                        <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
-                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            Adicionar
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="row">
+        {% for unit in units %}
+            <div class="col-6 col-sm-4 col-lg-3 mb-4">
+                {% include 'components/product_card.html' %}
+            </div>    
         {% endfor %}
     </div>
 {% endblock main %}
