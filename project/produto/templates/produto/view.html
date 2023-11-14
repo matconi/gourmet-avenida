@@ -100,7 +100,7 @@
             `);
         }
     
-        fetch("{% url 'api:view_product' product.slug %}")
+        fetch("{% url 'api_produto:view_product' product.slug %}")
         .then(response => response.json())
         .then(data => {
             data.summary.variants.map((variant, i) => {

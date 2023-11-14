@@ -39,5 +39,6 @@ urlpatterns = [
 if settings.SOCIALACCOUNT_ENABLED:
     urlpatterns += default_urlpatterns(GoogleProvider)
     urlpatterns += [
-        path("social/connections/", sa_views.connections, name="socialaccount_connections")
+        path("social/connections/", sa_views.connections, name="socialaccount_connections"),
+        path("login/error/", sa_views.login_error, name="socialaccount_login_error")
     ]
