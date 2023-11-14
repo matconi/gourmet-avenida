@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm
 from .domain.services import messages_service
+from pedido.domain.repositories import order_unit_repository
 
 @login_required
 def profile(request):
@@ -31,3 +32,11 @@ def profile(request):
             messages_service.updated_profile(request)
         
         return redirect('usuario:profile')
+
+def home(request):
+    if request.method == 'GET':
+        week_trends = order_unit_repository.get_week_trends()
+        context = {
+            "week_trends": week_trends
+        }
+        return render(request, 'usuario/home.html', context)
