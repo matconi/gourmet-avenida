@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm
 from .domain.services import messages_service
 from pedido.domain.repositories import order_unit_repository
+from produto.domain.repositories import unit_repository
 
 @login_required
 def profile(request):
@@ -36,7 +37,10 @@ def profile(request):
 def home(request):
     if request.method == 'GET':
         week_trends = order_unit_repository.get_week_trends()
+        releases = unit_repository.get_releases()
+
         context = {
-            "week_trends": week_trends
+            "week_trends": week_trends,
+            "releases": releases
         }
         return render(request, 'usuario/home.html', context)

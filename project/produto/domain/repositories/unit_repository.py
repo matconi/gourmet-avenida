@@ -1,7 +1,9 @@
 from typing import List
 from produto.models.Unit import Unit
 from django.shortcuts import get_object_or_404
-from django.db.models import F 
+from datetime import timedelta
+from django.utils import timezone
+from django.db.models import F
 
 def get_showcase() -> List[Unit]:
     return (
@@ -18,3 +20,12 @@ def get_by_id(id: int) -> Unit:
 
 def get_all_by_id(id_list: List[int]) -> List[Unit]:
     return Unit.objects.filter(id__in=id_list).all()
+
+def get_releases() -> List[Unit]: 
+    last_month = (timezone.now() - timedelta(days=31)).date()
+     
+    return (
+        Unit.objects.filter(released__gte=last_month)
+        .annotate(uid=F('id'), product_slug=F('product__slug'))
+        .order_by('-released')[:10]
+    )

@@ -13,29 +13,50 @@
         <div class="container">
             <p class="lead fs-4 text-center">
                 Olá, <strong>{{ request.user.first_name }}</strong>, atualmente a sua conta é:<br>
-                <strong class="fs-1">R$ {{ request.user.user_customer.bill|get_bill }}</strong>
+                <strong class="fs-1">R$ {{ request.user.user_customer.bill|get_bill }}</strong><br>
+                <a class="fs-6 text-secondary nav-link pt-2" href="#">
+                    Ver pagamentos
+                </a>
             </p>
         </div>
     {% endif %}
 
-    <h1>Em Alta</h1>
-    {% if week_trends %}
-        <p class="lead">Os 10 mais vendidos da semana.</p>
-        <div class="wrapper">
-            <i id="left" class="icon fa-solid fa-angle-left"></i>
-            <ul class="carousel">
-                {% for unit in week_trends %}
-                    <li class="card">
-                        <p class="m-2"><span class="fw-bold ">{{ forloop.counter }}°</span> <small class="float-end">{{ unit.total_sold }} vendido(s)</small></p>
+    <section>
+        <h1>Em Alta</h1>
+        {% if week_trends %}
+            <p class="lead">Os 10 mais vendidos da semana.</p>
+            <div class="trends-wrapper">
+                <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                <ul class="trends-carousel">
+                    {% for unit in week_trends %}
+                        <li class="trends-card">
+                            <p class="m-2"><span class="fw-bold ">{{ forloop.counter }}°</span> <small class="float-end">{{ unit.total_sold }} vendido(s)</small></p>
+                            {% include 'components/product_card.html' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <i id="right" class="arrow fa-solid fa-angle-right"></i>
+            </div>
+        {% else %}
+            <p class="lead">Nenhum produto vendido na semana.</p>
+        {% endif %}
+    </section>
+
+    <section>
+        <h1>Novo</h1>
+        <p class="lead">Lançados no último mês.</p>
+        <div class="releases-wrapper">
+            <i id="left" class="arrow fa-solid fa-angle-left"></i>
+            <ul class="releases-carousel">
+                {% for unit in releases %}
+                    <li class="releases-card">
                         {% include 'components/product_card.html' %}
                     </li>
                 {% endfor %}
             </ul>
-            <i id="right" class="icon fa-solid fa-angle-right"></i>
+            <i id="right" class="arrow fa-solid fa-angle-right"></i>
         </div>
-    {% else %}
-        <p class="lead">Nenhum produto vendido na semana.</p>
-    {% endif %}
+    </section>
 {% endblock main %}
 
 {% block footerscript %}
