@@ -1,13 +1,15 @@
 /* containers */
 .trends-wrapper,
-.releases-wrapper {
+.releases-wrapper,
+.again-wrapper {
   max-width: 1100px;
   width: 100%;
   position: relative;
 }
 
 .trends-wrapper .trends-carousel, 
-.releases-wrapper .releases-carousel {
+.releases-wrapper .releases-carousel,
+.again-wrapper .again-carousel {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: calc((100% / 3) - 12px);
@@ -21,7 +23,8 @@
 
 /* arrows */
 .trends-wrapper .arrow, 
-.releases-wrapper .arrow {
+.releases-wrapper .arrow,
+.again-wrapper .arrow  {
   z-index: 2;
   top: 50%;
   height: 150px;
@@ -39,47 +42,56 @@
 }
 
 .trends-wrapper .arrow:active, 
-.releases-wrapper .arrow:active {
+.releases-wrapper .arrow:active,
+.again-wrapper .arrow:active {
   transform: translateY(-50%) scale(0.85);
 }
 .trends-wrapper .arrow:first-child, 
-.releases-wrapper .arrow:first-child {
+.releases-wrapper .arrow:first-child,
+.again-wrapper .arrow:first-child {
   left: -22px;
 }
 .trends-wrapper .arrow:last-child, 
-.releases-wrapper .arrow:last-child {
+.releases-wrapper .arrow:last-child,
+.again-wrapper .arrow:last-child {
   right: -22px;
 }
 
 /* scroll */
 .trends-carousel::-webkit-scrollbar, 
-.releases-carousel::-webkit-scrollbar {
+.releases-carousel::-webkit-scrollbar,
+.again-carousel::-webkit-scrollbar {
   display: none;
 }
 .trends-carousel.no-transition, 
-.releases-carousel.no-transition {
+.releases-carousel.no-transition,
+.again-carousel.no-transition {
   scroll-behavior: auto;
 }
 .trends-carousel.dragging, 
-.releases-carousel.dragging {
+.releases-carousel.dragging,
+.again-carousel.dragging {
   scroll-snap-type: none;
   scroll-behavior: auto;
 }
 .trends-carousel.dragging .trends-card, 
-.releases-carousel.dragging .releases-card {
+.releases-carousel.dragging .releases-card,
+.again-carousel.dragging .again-card {
   cursor: grab;
   user-select: none;
 } 
 
 /* container style */
 .trends-carousel :where(.trends-card), 
-.releases-carousel :where(.releases-card) {
+.releases-carousel :where(.releases-card),
+.again-carousel :where(.again-card) {
   display: block;
   justify-content: center;
   align-items: center;
 }
 .trends-carousel .trends-card, 
-.releases-carousel .releases-card {
+.releases-carousel .releases-card,
+.again-carousel .again-card {
   scroll-snap-align: start;
   height: 335px;
   list-style: none;
@@ -91,13 +103,15 @@
 /* media queries */
 @media screen and (max-width: 900px) {
   .trends-wrapper .trends-carousel, 
-  .releases-wrapper .releases-carousel {
+  .releases-wrapper .releases-carousel,
+  .again-wrapper .again-carousel {
     grid-auto-columns: calc((100% / 2) - 9px);
   }
 }
 @media screen and (max-width: 600px) {
   .trends-wrapper .trends-carousel, 
-  .releases-wrapper .releases-carousel {
+  .releases-wrapper .releases-carousel,
+  .again-wrapper .again-carousel {
     grid-auto-columns: 100%;
   }
 }

@@ -38,9 +38,11 @@ def home(request):
     if request.method == 'GET':
         week_trends = order_unit_repository.get_week_trends()
         releases = unit_repository.get_releases()
+        again = order_unit_repository.get_again(request.user.user_customer)
 
         context = {
             "week_trends": week_trends,
-            "releases": releases
+            "releases": releases,
+            "again": again
         }
         return render(request, 'usuario/home.html', context)

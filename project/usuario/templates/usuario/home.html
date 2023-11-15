@@ -57,6 +57,22 @@
             <i id="right" class="arrow fa-solid fa-angle-right"></i>
         </div>
     </section>
+
+    <section>
+        <h1>Aproveitar Novamennte</h1>
+        <p class="lead">Os mais consumidos pro você nos últimos 45 dias.</p>
+        <div class="again-wrapper">
+            <i id="left" class="arrow fa-solid fa-angle-left"></i>
+            <ul class="again-carousel">
+                {% for unit in again %}
+                    <li class="again-card">
+                        {% include 'components/product_card.html' %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <i id="right" class="arrow fa-solid fa-angle-right"></i>
+        </div>
+    </section>
 {% endblock main %}
 
 {% block footerscript %}

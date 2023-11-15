@@ -40,4 +40,5 @@ function handle(carouselClass, cardClass, arrowClass) {
 window.onload = () => {
     handle(".trends-carousel", ".trends-card", ".trends-wrapper .arrow")
     handle(".releases-carousel", ".releases-card", ".releases-wrapper .arrow")
+    handle(".again-carousel", ".again-card", ".again-wrapper .arrow")
 }
