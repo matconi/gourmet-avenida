@@ -14,7 +14,7 @@
             <p class="lead fs-4 text-center">
                 Olá, <strong>{{ request.user.first_name }}</strong>, atualmente a sua conta é:<br>
                 <strong class="fs-1">R$ {{ request.user.user_customer.bill|get_bill }}</strong><br>
-                <a class="fs-6 text-secondary nav-link pt-2" href="#">
+                <a class="fs-6 text-secondary nav-link pt-2 d-inline" href="{% url 'usuario:payments' %}">
                     Ver pagamentos
                 </a>
             </p>
@@ -44,35 +44,45 @@
 
     <section>
         <h1>Novo</h1>
-        <p class="lead">Lançados no último mês.</p>
-        <div class="releases-wrapper">
-            <i id="left" class="arrow fa-solid fa-angle-left"></i>
-            <ul class="releases-carousel">
-                {% for unit in releases %}
-                    <li class="releases-card">
-                        {% include 'components/product_card.html' %}
-                    </li>
-                {% endfor %}
-            </ul>
-            <i id="right" class="arrow fa-solid fa-angle-right"></i>
-        </div>
+        {% if releases %}
+            <p class="lead">Lançados no último mês.</p>
+            <div class="releases-wrapper">
+                <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                <ul class="releases-carousel">
+                    {% for unit in releases %}
+                        <li class="releases-card">
+                            {% include 'components/product_card.html' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <i id="right" class="arrow fa-solid fa-angle-right"></i>
+            </div>
+        {% else %}
+            <p class="lead">Nenhum produto lançado no último mês.</p>
+        {% endif %}
     </section>
 
-    <section>
-        <h1>Aproveitar Novamennte</h1>
-        <p class="lead">Os mais consumidos pro você nos últimos 45 dias.</p>
-        <div class="again-wrapper">
-            <i id="left" class="arrow fa-solid fa-angle-left"></i>
-            <ul class="again-carousel">
-                {% for unit in again %}
-                    <li class="again-card">
-                        {% include 'components/product_card.html' %}
-                    </li>
-                {% endfor %}
-            </ul>
-            <i id="right" class="arrow fa-solid fa-angle-right"></i>
-        </div>
-    </section>
+    {% if request.user.is_authenticated %}
+        <section>
+            <h1>Aproveitar Novamente</h1>
+            {% if again %}
+                <p class="lead">Os mais consumidos por você nos últimos 45 dias.</p>
+                <div class="again-wrapper">
+                    <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                    <ul class="again-carousel">
+                        {% for unit in again %}
+                            <li class="again-card">
+                                {% include 'components/product_card.html' %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                </div>
+            {% else %}
+                <p class="lead">Nenhum produto consumido por você nos últimos 45 dias.</p>
+            {% endif %}
+        </section>
+    {% endif %}
 {% endblock main %}
 
 {% block footerscript %}
