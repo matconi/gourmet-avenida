@@ -6,13 +6,15 @@
 
 
 {% block main %}
-<div class="row mt-3">
-    <div class="col">
-        <h2>Carrinho de compras</h2>
-        <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
-        {% include 'components/cart.html' %}
+<section>
+    <div class="row mt-3">
+        <div class="col">
+            <h2>Carrinho de compras</h2>
+            <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
+            {% include 'components/cart.html' %}
+        </div>
     </div>
-</div>
+</section>
 {% if request.session.cart %}
     <div class="row m-auto">    
         <div class="col-10">

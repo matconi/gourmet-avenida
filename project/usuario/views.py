@@ -7,6 +7,7 @@ from produto.domain.repositories import unit_repository
 from gourmetavenida.utils import paginate
 from .domain.services import payment_service
 from .domain.repositories import payment_repository
+from produto.domain.repositories import unit_repository
 
 @login_required
 def profile(request):
@@ -64,3 +65,9 @@ def payments(request):
            "page_obj": paginate(request, payments)
         }
         return render(request, 'usuario/payments.html', context)
+
+@login_required
+def favorites(request):
+    if request.method == 'GET':
+        units = unit_repository.get_customer_favorites(request.user.user_customer)
+        return render(request, 'usuario/favorites.html', {"units": units})
