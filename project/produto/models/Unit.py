@@ -1,5 +1,6 @@
 from django.db import models
 from .abstract.AbstractName import AbstractName
+from django.utils import timezone
 
 class Unit(AbstractName):
     sku = models.CharField("Código", max_length=12, unique=True)
@@ -18,6 +19,7 @@ class Unit(AbstractName):
     )
     variations = models.ManyToManyField("Variation", blank=True, related_name='variations_units', verbose_name='Variações')
     showcase = models.BooleanField("Mostrar na vitrine", default=True)
+    released = models.DateTimeField("Lançado em", default=timezone.now)
 
     def avaliable(self) -> int:
         return self.stock - self.booked

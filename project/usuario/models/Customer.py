@@ -10,9 +10,9 @@ class Customer(models.Model):
     )
 
     user = models.OneToOneField("User", on_delete=models.RESTRICT, 
-        verbose_name='Usuário'
+        verbose_name='Usuário', related_name='user_customer'
     )
-    favorites = models.ManyToManyField("produto.Unit", blank=True, verbose_name='Favoritos')
+    favorites = models.ManyToManyField("produto.Unit", blank=True, verbose_name='Favoritos', related_name='unit_favorite')
 
     def __str__(self) -> str:
         return self.user.get_name()
