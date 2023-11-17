@@ -25,3 +25,6 @@ class Order(models.Model):
         verbose_name = 'Pedido'
         verbose_name_plural = 'Pedidos'
         db_table = 'pedido_orders'
+        permissions = [
+            ("self_orders", "Can view self orders")
+        ]
