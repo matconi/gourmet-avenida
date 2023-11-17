@@ -7,10 +7,11 @@ from pedido.models.OrderUnit import OrderUnit
 from .domain.services import messages_service, order_service
 from .domain.repositories import order_repository, order_unit_repository
 from produto.domain.repositories import unit_repository
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from gourmetavenida.utils import paginate, is_ajax
 
 @login_required
+@permission_required('pedido.self_orders', raise_exception=True)
 def save(request):
     if request.method == 'POST':
         cart = request.session.get('cart')
@@ -30,6 +31,7 @@ def save(request):
         return redirect('produto:cart')
 
 @login_required
+@permission_required('pedido.self_orders', raise_exception=True)
 def index(request):
     if request.method == 'GET':      
         kwargs = order_service.filter_orders(request)

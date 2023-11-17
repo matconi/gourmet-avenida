@@ -13,11 +13,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto">
                 {% if request.user.is_authenticated %}
-                    <li title="Favoritos">
-                        <a class="nav-link text-warning" href="{% url 'usuario:favorites' %}"><i class="fa-solid fa-star"></i>
-                            <span class="d-inline d-lg-none">Favoritos</span>
-                        </a>
-                    </li>    
+                    {% if perms.usuario.favorites %}
+                        <li title="Favoritos">
+                            <a class="nav-link text-warning" href="{% url 'usuario:favorites' %}"><i class="fa-solid fa-star"></i>
+                                <span class="d-inline d-lg-none">Favoritos</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Perfil">
                             <i class="fa-solid fa-user"></i>
@@ -33,12 +35,16 @@
                                         {% endif %}
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'pedido:index' %}">Pedidos</a>      
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'usuario:payments' %}">Pagamentos</a>      
-                                </li>
+                                {% if perms.pedido.self_orders %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'pedido:index' %}">Pedidos</a>      
+                                    </li>
+                                {% endif %}
+                                {% if perms.usuario.payments %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'usuario:payments' %}">Pagamentos</a>      
+                                    </li>
+                                {% endif %}
                             <li><a class="dropdown-item text-danger" href="{% url 'account_logout' %}">Sair</a></li>
                         </ul>
                     </li>

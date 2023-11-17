@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from .forms import ProfileForm
 from .domain.services import messages_service
 from pedido.domain.repositories import order_unit_repository
@@ -48,13 +48,14 @@ def home(request):
             "releases": releases
         }
 
-        if request.user.is_authenticated:
+        if request.user.has_perm('add_order'):
             again = order_unit_repository.get_again(request.user.user_customer)
             context["again"] = again
 
         return render(request, 'usuario/home.html', context)
 
 @login_required
+@permission_required('usuario.payments', raise_exception=True)
 def payments(request):
     if request.method == 'GET':
         kwargs = payment_service.filter_payments(request)
@@ -67,6 +68,7 @@ def payments(request):
         return render(request, 'usuario/payments.html', context)
 
 @login_required
+@permission_required('usuario.favorites', raise_exception=True)
 def favorites(request):
     if request.method == 'GET':
         units = unit_repository.get_customer_favorites(request.user.user_customer)

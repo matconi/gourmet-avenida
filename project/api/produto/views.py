@@ -1,10 +1,12 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth.decorators import login_required
 
 from api.produto.serializers import UnitsSerializer, ProductVariationsSerializer
 from api.produto.domain.repositories import unit_repository
 
 @api_view(['GET'])
+@login_required
 def view_product(request, slug):  
     units = unit_repository.get_units_variations(slug)
    

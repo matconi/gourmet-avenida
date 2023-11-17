@@ -20,17 +20,21 @@
                         Contas Sociais
                     </button>
                 </a>
-                <a href="{% url 'pedido:index' %}"class="text-decoration-none">
-                    <button class="btn btn-outline-primary m-2">
-                        Pedidos
-                    </button>
-                </a>
-                <a href="{% url 'usuario:favorites' %}"class="text-decoration-none">
-                    <button class="btn btn-outline-warning m-2">
-                        <i class="fa-solid fa-star"></i>
-                        Favoritos
-                    </button>
-                </a>
+                {% if perms.pedido.self_orders %}
+                    <a href="{% url 'pedido:index' %}"class="text-decoration-none">
+                        <button class="btn btn-outline-primary m-2">
+                            Pedidos
+                        </button>
+                    </a>
+                {% endif %}
+                {% if perms.usuario.favorites %}
+                    <a href="{% url 'usuario:favorites' %}"class="text-decoration-none">
+                        <button class="btn btn-outline-warning m-2">
+                            <i class="fa-solid fa-star"></i>
+                            Favoritos
+                        </button>
+                    </a>
+                {% endif %}
                 <a href="{% url 'account_change_password' %}" class="text-decoration-none">
                     <button class="btn btn-outline-danger m-2">
                         <i class="fa-solid fa-key"></i>
