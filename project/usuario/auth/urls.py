@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from allauth.account import views
 from allauth.socialaccount import views as sa_views
-from usuario.allauth import views as custom_views
+from usuario.auth import views as custom_views
 from django.conf import settings
 from allauth.socialaccount.providers.oauth2.urls import default_urlpatterns
 from allauth.socialaccount.providers.google.provider import GoogleProvider

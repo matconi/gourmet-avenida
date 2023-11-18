@@ -3,6 +3,7 @@ from .models.Customer import Customer
 from django.core.validators import ValidationError
 from .models.User import User
 from .domain.repositories import user_repository
+from .domain.services import user_service
 
 class ProfileForm(forms.ModelForm):   
     email = forms.CharField(max_length=320, label='Email', required=True,
@@ -40,8 +41,7 @@ class ProfileForm(forms.ModelForm):
         email = self.cleaned_data.get('email')
         
         if email != self.instance.email:
-            if user_repository.exists_by_email(email):
-                raise forms.ValidationError('Um usuário já foi registrado com este endereço de e-mail.')
+            user_service.email_in_use(email)
         return email
 
     class Meta:

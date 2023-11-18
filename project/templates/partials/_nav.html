@@ -29,11 +29,7 @@
                             <p class="lead text-center fs-6 fw-bold">{{ request.user.first_name }}
                                 <hr class="w-75 m-auto"></p>
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'usuario:profile' %}">Meu Perfil
-                                        {% if not request.user.phone %}
-                                            <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
-                                        {% endif %}
-                                    </a>
+                                    <a class="dropdown-item" href="{% url 'usuario:profile' %}">Meu Perfil</a>
                                 </li>
                                 {% if perms.pedido.self_orders %}
                                     <li>

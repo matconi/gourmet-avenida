@@ -1,16 +1,22 @@
 from django import forms
-from allauth.account.forms import SignupForm, ChangePasswordForm, SetPasswordForm, ResetPasswordForm, ResetPasswordKeyForm
+from allauth.account.forms import LoginForm, SignupForm, ChangePasswordForm, SetPasswordForm, ResetPasswordForm, ResetPasswordKeyForm
 from usuario.models.Customer import Customer
 from allauth.account.forms import PasswordField
 from django.core.validators import RegexValidator
-from usuario.models.User import User
+from usuario.models import User
 from usuario.domain.repositories import user_repository
+from usuario.domain.services import user_service
 
 def get_password_pattern() -> RegexValidator:
     return RegexValidator(
         r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)((?=.*[\W_]))*.*$",
         'A senha deve conter pelo menos 1 número, 1 letra maiúscula e 1 minúscula, totalizando no mínimo 8 caracteres.'
     )
+
+class CustomLoginForm(LoginForm):
+    def clean_login(self):     
+        user_service.block_user_by_password_err(self.cleaned_data["login"])
+        return super(CustomLoginForm, self).clean_login()
 
 class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
@@ -56,7 +62,6 @@ class CustomSignupForm(SignupForm):
         user.last_name = self.cleaned_data['last_name']
         user.phone = self.cleaned_data['phone']
         user.save()
-        customer = Customer.objects.create(user=user)
         return user
 
 class CustomChangePasswordForm(ChangePasswordForm):

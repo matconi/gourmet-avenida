@@ -5,4 +5,4 @@ class UsuarioConfig(AppConfig):
     name = 'usuario'
 
     def ready(self):
-        import usuario.allauth.signals
+        import usuario.auth.signals

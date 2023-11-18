@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from gourmetavenida.utils import paginate, is_ajax
 
 @login_required
-@permission_required('pedido.self_orders', raise_exception=True)
+@permission_required('pedido.add_order', raise_exception=True)
 def save(request):
     if request.method == 'POST':
         cart = request.session.get('cart')
