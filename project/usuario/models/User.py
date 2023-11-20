@@ -40,12 +40,14 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "password"]
 
+    CUSTOMER_ROLE = 1
+
     def __str__(self) -> str:
         return self.get_name()
 
     def get_name(self) -> str:
         return self.get_full_name().replace("None", "") 
-
+    
     class Meta:
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
