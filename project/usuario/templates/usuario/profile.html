@@ -8,6 +8,10 @@
     <div class="row">
         <div class="col-lg mt-3">
             <h1>Meu Perfil</h1> 
+            {% if not perms.pedido.add_order %}
+                <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
+                <small class="text-danger">Complete o cadastro para poder reservar produtos.</small>
+            {% endif %}
             <form method="POST" action="{% url 'usuario:profile' %}" class="mb-4">
             {% csrf_token %}
                 {{ form|crispy }}
@@ -19,17 +23,21 @@
                         Contas Sociais
                     </button>
                 </a>
-                <a href="{% url 'pedido:index' %}"class="text-decoration-none">
-                    <button class="btn btn-outline-primary m-2">
-                        Pedidos
-                    </button>
-                </a>
-                <a href="{% url 'usuario:favorites' %}"class="text-decoration-none">
-                    <button class="btn btn-outline-warning m-2">
-                        <i class="fa-solid fa-star"></i>
-                        Favoritos
-                    </button>
-                </a>
+                {% if perms.pedido.self_orders %}
+                    <a href="{% url 'pedido:index' %}"class="text-decoration-none">
+                        <button class="btn btn-outline-primary m-2">
+                            Pedidos
+                        </button>
+                    </a>
+                {% endif %}
+                {% if perms.usuario.favorites %}
+                    <a href="{% url 'usuario:favorites' %}"class="text-decoration-none">
+                        <button class="btn btn-outline-warning m-2">
+                            <i class="fa-solid fa-star"></i>
+                            Favoritos
+                        </button>
+                    </a>
+                {% endif %}
                 <a href="{% url 'account_change_password' %}" class="text-decoration-none">
                     <button class="btn btn-outline-danger m-2">
                         <i class="fa-solid fa-key"></i>

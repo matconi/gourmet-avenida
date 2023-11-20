@@ -11,6 +11,8 @@
                 <div class="col-6 col-sm-4 col-lg-3 mb-4">
                     {% include 'components/product_card.html' %}
                 </div>
+            {% empty %}
+                <p class="lead">Nenhum favorito adicionado.<p>
             {% endfor %}
         </div>
     </section>

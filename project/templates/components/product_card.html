@@ -24,13 +24,15 @@
             {% endif %}
         </div>
     </div>
-    <div class="card-footer bg-transparent border-top-light-custom text-center">
-        <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
-            <input type="hidden" name="id" value="{{ unit.uid }}">
-            <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                Adicionar
-            </button>
-        </form>
-    </div>
+    {% if perms.produto.add_to_cart %}
+        <div class="card-footer bg-transparent border-top-light-custom text-center">
+            <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
+                <input type="hidden" name="id" value="{{ unit.uid }}">
+                <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    Adicionar
+                </button>
+            </form>
+        </div>
+    {% endif %}
 </div>
