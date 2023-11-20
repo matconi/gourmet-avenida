@@ -5,7 +5,7 @@
         {% block head %}{% endblock head %}
     </head>
 
-    <body style="background-color: #f0f0f0; "> 
+    <body class="d-flex flex-column min-vh-100" style="background-color: #f0f0f0;"> 
         {% include 'partials/_nav.html' %}
         <div class="container mt-4 mb-4">   
             {% include 'partials/_messages.html' %}
@@ -13,7 +13,6 @@
                 {% block main %}{% endblock main %}
             </main>
         </div>
-
         {% include 'partials/_footer.html' %}
         {% block footerscript %}{% endblock footerscript %}
     </body>

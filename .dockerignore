@@ -5,6 +5,9 @@
 *.css.map
 *.egg-info
 *.sql.gz
+*.git
+*.md
+*.*ignore
 .cache
 .project
 .idea
@@ -22,3 +25,4 @@ logs
 stats
 Dockerfile
 __localcode/
+img/

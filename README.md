@@ -6,10 +6,34 @@ O sistema conta com três módulos principais: **Produto, Pedido e Usuário**, a
 # Funcionalidades (não administrativas)
 
 ## Módulo Produto 
+- Visualizar produtos na vitrine.
+- Visualizar produto e suas variações.
+- Adicionar ao carrinho.
+- Visualizar carrinho.
+- Limpar ou remover um item do carrinho.
+
+### Vatagens
+- O cliente pode rapidamente encontrar os produtos e verificar sua disponibilidade.
 
 ## Módulo Pedido
+- Realizar pedido(reservar).
+- Visualizar pedidos.
 
-## Módulo Usuário 
+### Vatagens
+- O cliente pode reservar seus produtos e acompanhar o status do pedido, bem como visualizar o histórico de pedidos.
+
+## Módulo Usuário
+- Criar conta.
+- Fazer login com a conta ou pelo Google.
+- Visualizar e editar perfil.
+- Visualizar contas sociais conectadas.
+- Alterar senha pelo perfil ou por email.
+- Visualizar favoritos.
+
+### Vatagens
+- Ao entrar pelo Google, o usuário pode acessar com um único clique sem se procupar em lembrar de senhas.
+- A home traz os produtos mais vendidos, mais recentes e recomendados baseado nos mais comprados pelo cliente, além de mostrar a conta para usuários autorizados.
+- Os favoritos facilitam ainda mais a encontrar os produtos mais queridos e estão acessíveis em qualquer página pela navegação principal.
 
 # Modelagem Relacional
 As tabelas não destacadas são criadas automaticamente pelo Django.

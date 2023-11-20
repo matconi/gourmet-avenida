@@ -4,6 +4,12 @@
 {% endblock head %}
 
 {% block main %}
+    {% if not perms.pedido.add_order %}
+        <p>
+            <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
+            <small class="text-danger">Entre em contato com o administrador para poder reservar produtos.</small>
+        </p>
+    {% endif %}
     <section>
         <div class="row">
             {% for unit in units %}

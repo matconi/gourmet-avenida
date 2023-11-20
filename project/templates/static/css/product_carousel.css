@@ -93,7 +93,7 @@
 .releases-carousel .releases-card,
 .again-carousel .again-card {
   scroll-snap-align: start;
-  height: 335px;
+  height: inherit;
   list-style: none;
   background: #fff;
   flex-direction: column;
