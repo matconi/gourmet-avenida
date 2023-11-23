@@ -3,15 +3,11 @@ from django.utils.text import slugify
 from .abstract.AbstractName import AbstractName
 
 class Category(AbstractName):
-    slug = models.SlugField("Link", max_length=120)
+    slug = models.SlugField(max_length=120, editable=False)
     
-    subcategory_of = models.ForeignKey("self", on_delete=models.SET_NULL, 
-        verbose_name='Subcategoria de ', blank=True, null=True
-    )
-
     def save(self):
         self.slug = slugify(self.name)
-        super(Product, self).save()
+        super(Category, self).save()
 
     def __str__(self) -> str:
         return self.name
