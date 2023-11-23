@@ -29,7 +29,8 @@ def get_week_trends() -> List[OrderUnit]:
             name=F('unit__name'), 
             image=F('unit__image'), 
             price=F('unit__price'), 
-            promotional=F('unit__promotional'), 
+            promotional=F('unit__promotional'),
+            category_slug=F('unit__product__category__slug'),
             product_slug=F('unit__product__slug')
         )
         .annotate(total_sold=Sum('quantity'))
@@ -46,7 +47,8 @@ def get_again(customer: Customer) -> List[Unit]:
             name=F('unit__name'), 
             image=F('unit__image'), 
             price=F('unit__price'), 
-            promotional=F('unit__promotional'), 
+            promotional=F('unit__promotional'),
+            category_slug=F('unit__product__category__slug'),
             product_slug=F('unit__product__slug')
         )
         .annotate(total_sold=Sum('quantity'))

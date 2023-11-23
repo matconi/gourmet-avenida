@@ -99,7 +99,7 @@
                                                 {% for order_unit in order.order_units.all %}
                                                     <tr>
                                                         <td class="fs-6">
-                                                            <a href="{% url 'produto:view' order_unit.unit.product.slug %}?uid={{ order_unit.unit.id }}">
+                                                            <a href="{% url 'produto:view' order_unit.unit.product.category.slug order_unit.unit.product.slug %}?uid={{ order_unit.unit.id }}">
                                                                 {{ order_unit.unit.name }}
                                                             </a>
                                                         </td>

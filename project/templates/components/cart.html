@@ -16,7 +16,7 @@
                 {% for unit in request.session.cart.values %}
                     <tr>
                         <td class="fs-6">
-                            <a  href="{% url 'produto:view' unit.slug %}?uid={{ unit.id }}">
+                            <a  href="{% url 'produto:view' unit.category unit.slug %}?uid={{ unit.id }}">
                                 {{ unit.name }}
                             </a>  
                         </td>

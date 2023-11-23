@@ -1,18 +1,31 @@
 from django.shortcuts import render, redirect
-from .domain.repositories import product_repository, unit_repository
+from .domain.repositories import product_repository, unit_repository, category_repository
 from .domain.services.CartService import CartService
 from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
 def index(request):
     if request.method == 'GET':
-        units = unit_repository.get_showcase()
+        units = unit_repository.get_index()
         return render(request, 'produto/index.html', {"units": units})
 
 @login_required
-def view(request, slug):
+def index_category(request, category_slug):
     if request.method == 'GET':
-        product = product_repository.get_by_slug(slug)
+        category_selected = category_repository.get_by_slug(category_slug)
+        units = unit_repository.get_index_category(category_slug)
+
+        context = {
+            "units": units,
+            "category_selected": category_selected
+        }
+
+        return render(request, 'produto/index_category.html', context)
+
+@login_required
+def view(request, category_slug, unit_slug):
+    if request.method == 'GET':
+        product = product_repository.get_by_slug(unit_slug)
         return render(request, 'produto/view.html', {"product": product})
 
 @login_required
@@ -27,7 +40,7 @@ def add_to_cart(request):
         cart = CartService(request)
         cart.add(unit, quantity_param)
 
-        return redirect('produto:view', slug=unit.product.slug)
+        return redirect('produto:view', category_slug=unit.product.category.slug, unit_slug=unit.product.slug)
 
 @login_required
 @permission_required('produto.add_one_to_cart', raise_exception=True)

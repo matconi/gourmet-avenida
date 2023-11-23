@@ -1,0 +1,9 @@
+{% extends 'produto/index.html' %}
+{% block breadcrumb %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'produto:index' %}">Início</a></li>
+      <li class="breadcrumb-item active">{{ category_selected.name }}</li>
+    </ol>
+  </nav>
+{% endblock breadcrumb %}

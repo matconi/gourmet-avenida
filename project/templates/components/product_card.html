@@ -1,15 +1,13 @@
 {% load static %}
 
 <div class="card shadow-sm">
-    <a href="{% url 'produto:view' unit.product_slug %}?uid={{ unit.uid }}">        
+    <a href="{% url 'produto:view' unit.category_slug unit.product_slug %}?uid={{ unit.uid }}">        
         <img class="card-img-top d-block w-100" src="{% get_media_prefix %}{{ unit.image }}" alt="{{ unit.name }}">             
     </a>              
     <div class="card-body">
-        <a href="{% url 'produto:view' unit.product_slug %}?uid={{ unit.uid }}" class="nav-link">
-            <strong>
-                <h5 class="card-title fs-6">{{ unit.name }}</h5>
-            </strong>
-        </a>
+        <strong>
+            <h5 class="card-title fs-6">{{ unit.name }}</h5>
+        </strong>
         
         <div class="product-price-block text-center">
             <span class="product-price text-success">
@@ -28,7 +26,7 @@
         <div class="card-footer bg-transparent border-top-light-custom text-center">
             <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
                 <input type="hidden" name="id" value="{{ unit.uid }}">
-                <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 btn-block">
+                <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                     Adicionar
                 </button>

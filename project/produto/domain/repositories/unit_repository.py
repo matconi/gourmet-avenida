@@ -6,12 +6,18 @@ from django.utils import timezone
 from django.db.models import F
 from usuario.models.Customer import Customer
 
-def get_showcase() -> List[Unit]:
+def get_showcase(kwargs: dict={}) -> List[Unit]:
     return (
-        Unit.objects.filter(showcase=True)
-        .annotate(uid=F('id'), product_slug=F('product__slug'))
+        Unit.objects.filter(showcase=True, **kwargs)
+        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .select_related('product')
     )
+
+def get_index() -> List[Unit]:
+    return get_showcase()
+
+def get_index_category(category: str) -> List[Unit]:
+    return get_showcase({"product__category__slug": category})
 
 def get_or_404(id: int) -> Unit:
     return get_object_or_404(Unit, id=id)
@@ -27,7 +33,7 @@ def get_releases() -> List[Unit]:
      
     return (
         Unit.objects.filter(released__gte=last_month)
-        .annotate(uid=F('id'), product_slug=F('product__slug'))
+        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .order_by('-released')[:10]
     )
 
