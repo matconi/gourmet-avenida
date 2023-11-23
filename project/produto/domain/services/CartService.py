@@ -48,7 +48,8 @@ class CartService:
             "quantity": quantity_in_cart,
             "quantity_price": quantity_price,
             "image": unit.image.url,
-            "slug": unit.product.slug
+            "slug": unit.product.slug,
+            "category": unit.product.category.slug
         }
         return quantity_in_cart
 
