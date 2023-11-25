@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block head %}
     <title>Produtos - Gourmet Avenida</title>
 {% endblock head %}
@@ -6,16 +7,15 @@
 {% block main %}
     {% if not perms.pedido.add_order %}
         <p>
-            <i class="fa-solid fa-circle-exclamation text-warning"></i>
-            <small class="text-danger">Entre em contato com o administrador para poder reservar produtos.</small>
+            <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
+            <small class="text-danger">Entre em contato com o administrador para reservar produtos.</small>
         </p>
-    {% endif %}  
-    {% block breadcrumb %}
-    {% endblock breadcrumb %}     
+    {% endif %}
+    {% block breadcrumb %}{% endblock breadcrumb %}
     <section>
-        <div class="row">
-            {% for unit in units %}
-                <div class="col-6 col-sm-4 col-lg-3 mb-4">
+        <div class="row" id="content">
+            {% for unit in units_loaded %}
+                <div class="single-content col-6 col-sm-4 col-lg-3 mb-4">
                     {% include 'components/product_card.html' %}
                 </div>
             {% empty %}
@@ -23,4 +23,27 @@
             {% endfor %}
         </div>
     </section>
+
+    {% if units_loaded %}
+        <div class="row">
+            <div class="col-6 col-lg-4 m-auto">    
+                <button class="btn btn-outline-primary opacity-75 w-100" type="button" id="load-more-btn">
+                    <span class="sr-only">Carregando...</span>
+                    Carregar mais
+                </button>
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary opacity-75 d-none" role="status" id="spinner">
+                    <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    {% endif %}
+    <div class="d-none" role="alert" id="no-more-alert">
+       <p class="lead">Todos os produtos foram carregados.</p>
+    </div>
 {% endblock main %}
+{% block footerscript %}
+    {{ json_data|json_script:"json-data" }}
+    <script src="{% static 'js/load-more-products.js' %}"></script>
+{% endblock footerscript %}
