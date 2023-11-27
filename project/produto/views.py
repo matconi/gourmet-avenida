@@ -11,7 +11,6 @@ def index(request):
         units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
 
         json_data = {
-            "total_units": len(units),
             "load_more_url": reverse('api_produto:load_more'),
             "add_to_cart_url": reverse('produto:add_to_cart'),
             "add_to_cart_permission": request.user.has_perm('produto.add_to_cart')
@@ -32,7 +31,6 @@ def index_category(request, category_slug):
         units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
 
         json_data = {
-            "total_units": len(units),
             "load_more_url": reverse('api_produto:load_more_category', args=[category_selected.slug]),
             "add_to_cart_url": reverse('produto:add_to_cart'),
             "add_to_cart_permission": request.user.has_perm('produto.add_to_cart')

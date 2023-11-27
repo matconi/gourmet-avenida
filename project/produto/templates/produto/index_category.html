@@ -6,9 +6,9 @@
 {% block breadcrumb %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa-solid fa-home"></i></a></li>
-      <li class="breadcrumb-item"><a href="{% url 'produto:index' %}">Produtos</a></li>
-      <li class="breadcrumb-item active">{{ category_selected.name }}</li>
+      <li class="breadcrumb-item" title="Início"><a href="{% url 'home' %}" class="text-decoration-none"><i class="fa-solid fa-home"></i></a></li>
+      <li class="breadcrumb-item"><a href="{% url 'produto:index' %}" class="text-decoration-none">Produtos</a></li>
+      <li class="breadcrumb-item active"><a href="" class="text-decoration-none text-secondary">{{ category_selected.name }}</a></li>
     </ol>
   </nav>
 {% endblock breadcrumb %}

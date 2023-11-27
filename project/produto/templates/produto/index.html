@@ -11,7 +11,23 @@
             <small class="text-danger">Entre em contato com o administrador para reservar produtos.</small>
         </p>
     {% endif %}
-    {% block breadcrumb %}{% endblock breadcrumb %}
+    {% block breadcrumb %}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item" title="Início"><a href="{% url 'home' %}"><i class="fa-solid fa-home"></i></a></li>
+          <li class="breadcrumb-item active"><a href="" class="text-decoration-none text-secondary">Produtos</a></li>
+        </ol>
+      </nav>
+    {% endblock breadcrumb %}
+    {% if units_loaded %}
+        <form class="row">
+            <div class="mt-4 mb-4 d-flex col-11 col-md-8 col-lg-6">
+                <input class="form-control me-2" name="q" type="text" placeholder="Pesquisar..." aria-label="Pesquisar">
+                <button class="btn btn-outline-secondary" id="filter-form" type="button" title="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </form>
+    {% endif %}
+    
     <section>
         <div class="row" id="content">
             {% for unit in units_loaded %}

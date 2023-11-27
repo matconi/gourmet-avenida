@@ -4,7 +4,8 @@ $(this).ready(() => {
     const jsonData = JSON.parse($('#json-data').text());
     const alert = $('#no-more-alert');
     
-    function loadMore() {
+    function loadMore(is_reload) {     
+        reloadCardsOnFilter(is_reload);
         const currentItensCount = $('.single-content').length;
         const contentContainer = $("#content");
 
@@ -12,7 +13,8 @@ $(this).ready(() => {
             url: jsonData.load_more_url,
             type: 'GET',
             data: {
-                'offset': currentItensCount
+                'offset': currentItensCount,
+                'q': $('[name="q"]').val()
             },
             beforeSend: () => {
                 loadMoreBtn.addClass('d-none');
@@ -20,16 +22,23 @@ $(this).ready(() => {
             },
             success: response => {
                 spinner.addClass('d-none');
-                
-                response.map(unit => {
+
+                response.units.map(unit => {
                     renderCard(contentContainer, unit);
                     renderPromotional(unit);
                     renderCardFooter(unit, jsonData);
                 });
-
-                renderNoMoreAlert(currentItensCount, jsonData, loadMoreBtn);
+                const totalUnits = getTotalUnits(is_reload, currentItensCount, response);
+                renderNoMoreAlert(currentItensCount, totalUnits, loadMoreBtn);
             }
         });
+    }
+
+    function reloadCardsOnFilter(is_reload) {
+        if (is_reload) {
+            $('.single-content').remove();
+        }
+        alert.addClass('d-none');
     }
 
     function renderCard(contentContainer, unit) {
@@ -93,13 +102,21 @@ $(this).ready(() => {
         }
     }
 
-    function renderNoMoreAlert(currentItensCount, jsonData, loadMoreBtn) {
-        if (currentItensCount == jsonData.total_units) {
+    function getTotalUnits(is_reload, currentItensCount, response) {
+        if (is_reload) {
+            return response.added_units
+        }
+        return currentItensCount + response.added_units
+    }
+
+    function renderNoMoreAlert(currentItensCount, totalUnits, loadMoreBtn) {
+        if (currentItensCount == totalUnits) {
             alert.removeClass('d-none');
         } else {
             loadMoreBtn.removeClass('d-none');
         }
     }
 
-    loadMoreBtn.click(loadMore);
+    loadMoreBtn.click(() => loadMore(false));
+    $('#filter-form').click(() => loadMore(true));
 });

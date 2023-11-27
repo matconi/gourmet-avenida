@@ -6,20 +6,22 @@
     </a>
     <div class="card-body d-flex flex-column">
         <strong>
-            <h5 class="card-title fs-6">{{ unit.name }}</h5>
+            <h5 class="card-title fs-6 text-center">{{ unit.name }}</h5>
         </strong>
         
         <div class="product-price-block text-center">
-            <span class="product-price text-success">
-                R$ {{ unit.price }}
-            </span>
-            {% if unit.promotional %}
-                <small class="pl-2 text-muted">
-                    <del>
-                        R$ {{ unit.promotional }}
-                    </del>
-                </small>
-            {% endif %}
+            <p>
+                <span class="product-price text-success">
+                    R$ {{ unit.price }}
+                </span>
+                {% if unit.promotional %}
+                    <small class="pl-2 text-muted">
+                        <del>
+                            R$ {{ unit.promotional }}
+                        </del>
+                    </small>
+                {% endif %}
+            </p>
         </div>
     </div>
     {% if perms.produto.add_to_cart %}
