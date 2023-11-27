@@ -29,21 +29,9 @@ $(this).ready(() => {
         return selectedOptions.sort();
     }
 
-    function chooseUnit() {
-        const selectedOptions = getSelectedOptions();
-        
-        for (unit of units) {        
-            if (unit.variations.sort().toString() === selectedOptions.toString()) {
-                renderUnitData(unit);
-                break;
-            }
-        }
-    }
-
     fetch(jsonData.view_product_url)
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         data.summary.variants.map((variant, i) => {
             let variantLabels = $('.label').text();
             
@@ -56,16 +44,17 @@ $(this).ready(() => {
                 
             }
         });
-
+        
         const units = [];
         const images = document.querySelector('.carousel-inner');
-        data.units.map((unit, i) => {              
-            units.push(unit); 
+        data.units.map(unit => {              
+            units.push(unit);
             renderImages(images, unit);
         });
+
         removeImageArrows(units);
         getIndexedUnit(location.href.split('=')[1]); // WARN: spliting single URL param
-
+        $('.select-variacoes').change(() => chooseUnit());
 
         function getIndexedUnit(indexedUnit) {
             if (indexedUnit !== undefined) {
@@ -78,29 +67,23 @@ $(this).ready(() => {
                 changeUnitVariant(units[0].variations);
             }
         }
-    
-        function changeUnitVariant(valuesToSelect) {
-            const selectBoxes = document.querySelectorAll('.select-variacoes');
-            const ids = document.querySelectorAll('.ids');
-
-            selectBoxes.forEach((selectBox, i) => {
-                optionInSelect = Array.from(ids)
-                                        .find(option => option.value == valuesToSelect[i]);
-
-                optionInSelect.setAttribute("selected", "");
-            }); 
-        }
 
         function renderUnitData(unit) {
             const name = $('#unit-name');
             const price = $('#unit-price');
-            const promotional = $('#unit-promotional');
             const unit_id = $('#unit-id');
 
             name.html(unit.name);
             price.html(`R$ ${unit.price}`);
             unit_id.val(unit.id);
     
+            renderPromotional(unit);
+            setActiveImage(unit);
+        }
+
+        function renderPromotional(unit) {
+            const promotional = $('#unit-promotional');
+
             if (unit.promotional === null) {
                 $('.text-muted').remove();
             } else {
@@ -114,10 +97,15 @@ $(this).ready(() => {
             }
         }
 
+        function setActiveImage(unit) {
+            $('.image-item').removeClass('active');
+            $(`#image-${unit.id}`).parent().addClass('active');
+        }
+
         function renderImages(carousel, unit) {
             carousel.insertAdjacentHTML('beforeend', `
-                <div class="carousel-item">
-                    <img src="${unit.image}" class="d-block w-100" alt="${unit.name}">
+                <div class="carousel-item image-item">
+                    <img src="${unit.image}" class="d-block w-100" id="image-${unit.id}" alt="${unit.name}">
                 </div>
             `);
         }
@@ -128,11 +116,32 @@ $(this).ready(() => {
                 $('.carousel-control-next').remove();
             }
         }
+
+        function changeUnitVariant(valuesToSelect) {
+            const selectBoxes = document.querySelectorAll('.select-variacoes');
+            const ids = document.querySelectorAll('.ids');
+
+            selectBoxes.forEach((selectBox, i) => {
+                optionInSelect = Array.from(ids)
+                                        .find(option => option.value == valuesToSelect[i]);
+
+                optionInSelect.setAttribute("selected", "");
+            }); 
+        }
+
+        function chooseUnit() {
+            const selectedOptions = getSelectedOptions();
+
+            for (unit of units) {        
+                if (unit.variations.sort().toString() === selectedOptions.toString()) {
+                    renderUnitData(unit);
+                    break;
+                }
+            }
+        }
     });
 
     const carousel = $("#images-carousel").carousel();
     $(".carousel-control-prev").click(() => carousel.carousel("prev"));
     $(".carousel-control-next").click(() => carousel.carousel("next"));
-
-    $('.select-variacoes').change(() => chooseUnit());
 });

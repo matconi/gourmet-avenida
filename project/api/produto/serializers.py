@@ -1,5 +1,5 @@
-from rest_framework import routers, serializers, viewsets
-from produto.models import Unit, Product, Category
+from rest_framework import serializers
+from produto.models import Unit
 
 class ProductVariationsSerializer(serializers.Serializer):
     def to_representation(self, instance):

@@ -9,8 +9,8 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item" title="Início"><a href="{% url 'home' %}" class="text-decoration-none"><i class="fa-solid fa-home"></i></a></li>
             <li class="breadcrumb-item"><a href="{% url 'produto:index' %}" class="text-decoration-none">Produtos</a></li>
-            <li class="breadcrumb-item"><a href="" class="text-decoration-none">{{ category_selected.name }}aqui</a></li>
-            <li class="breadcrumb-item active"><a href="" class="text-decoration-none text-secondary">Bota</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'produto:index_category' product.category.slug %}" class="text-decoration-none" id="category-link">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active"><a href="" class="text-decoration-none text-secondary" id="product-link">{{ product.name }}</a></li>
         </ol>
     </nav>
     <div class="row">
