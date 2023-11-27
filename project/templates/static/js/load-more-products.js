@@ -119,4 +119,20 @@ $(this).ready(() => {
 
     loadMoreBtn.click(() => loadMore(false));
     $('#filter-form').click(() => loadMore(true));
+
+    
+    const backToTopBtn = $('#back-to-top');
+    $(window).scroll(() => {
+        if ($(this).scrollTop() > 100) {
+            backToTopBtn.removeClass('d-none');
+            backToTopBtn.fadeIn();
+        } else {
+            backToTopBtn.fadeOut();
+        }
+    });
+
+    backToTopBtn.click(() => {
+        $('html, body').animate({scrollTop : 0}, 100);
+        return false;
+    });
 });

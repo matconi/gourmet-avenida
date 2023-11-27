@@ -30,7 +30,8 @@
                 {% if request.user.is_authenticated %}
                     {% if perms.usuario.favorites %}
                         <li title="Favoritos">
-                            <a class="nav-link text-warning" href="{% url 'usuario:favorites' %}"><i class="fa-solid fa-star"></i>
+                            <a class="nav-link text-warning" href="{% url 'usuario:favorites' %}">
+                                <i class="fa-solid fa-star"></i>
                                 <span class="d-inline d-lg-none">Favoritos</span>
                             </a>
                         </li>
