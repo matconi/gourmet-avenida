@@ -2,22 +2,44 @@ from django.shortcuts import render, redirect
 from .domain.repositories import product_repository, unit_repository, category_repository
 from .domain.services.CartService import CartService
 from django.contrib.auth.decorators import login_required, permission_required
+from django.urls import reverse
 
 @login_required
 def index(request):
     if request.method == 'GET':
         units = unit_repository.get_index()
-        return render(request, 'produto/index.html', {"units": units})
+        units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
+
+        json_data = {
+            "load_more_url": reverse('api_produto:load_more'),
+            "add_to_cart_url": reverse('produto:add_to_cart'),
+            "add_to_cart_permission": request.user.has_perm('produto.add_to_cart')
+        }
+
+        context = {
+            "units_loaded": units_loaded, 
+            "json_data": json_data
+        }
+
+        return render(request, 'produto/index.html', context)
 
 @login_required
 def index_category(request, category_slug):
     if request.method == 'GET':
         category_selected = category_repository.get_by_slug(category_slug)
         units = unit_repository.get_index_category(category_slug)
+        units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
+
+        json_data = {
+            "load_more_url": reverse('api_produto:load_more_category', args=[category_selected.slug]),
+            "add_to_cart_url": reverse('produto:add_to_cart'),
+            "add_to_cart_permission": request.user.has_perm('produto.add_to_cart')
+        }
 
         context = {
-            "units": units,
-            "category_selected": category_selected
+            "units_loaded": units_loaded,
+            "category_selected": category_selected,
+            "json_data": json_data
         }
 
         return render(request, 'produto/index_category.html', context)

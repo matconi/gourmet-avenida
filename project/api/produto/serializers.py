@@ -1,5 +1,5 @@
 from rest_framework import routers, serializers, viewsets
-from produto.models.Unit import Unit
+from produto.models import Unit, Product, Category
 
 class ProductVariationsSerializer(serializers.Serializer):
     def to_representation(self, instance):
@@ -29,4 +29,22 @@ class UnitsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ['id', 'name', 'image', 'price', 'promotional', 'variations']
+        fields = ('id', 'name', 'image', 'price', 'promotional', 'variations',)
+
+class ShowcaseSerializer(serializers.ModelSerializer):
+    uid = serializers.SerializerMethodField()
+    category_slug = serializers.SerializerMethodField()
+    product_slug = serializers.SerializerMethodField()
+
+    def get_uid(self, unit):
+        return unit.id
+        
+    def get_product_slug(self, unit):
+        return unit.product.slug
+
+    def get_category_slug(self, unit):
+        return unit.product.category.slug
+
+    class Meta:
+        model = Unit
+        fields = ('uid', 'name', 'image', 'price', 'promotional', 'category_slug', 'product_slug',)

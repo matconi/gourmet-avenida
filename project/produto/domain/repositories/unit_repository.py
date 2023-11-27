@@ -6,18 +6,20 @@ from django.utils import timezone
 from django.db.models import F
 from usuario.models.Customer import Customer
 
-def get_showcase(kwargs: dict={}) -> List[Unit]:
+def get_showcase(kwargs: dict) -> List[Unit]:
     return (
         Unit.objects.filter(showcase=True, **kwargs)
         .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
-        .select_related('product')
+        .select_related('product__category')
     )
 
-def get_index() -> List[Unit]:
-    return get_showcase()
+def get_index(kwargs: dict={}) -> List[Unit]:
+    return get_showcase(kwargs)
 
-def get_index_category(category: str) -> List[Unit]:
-    return get_showcase({"product__category__slug": category})
+def get_index_category(category_slug: str, kwargs: dict={}) -> List[Unit]:
+    conditions = {"product__category__slug": category_slug}
+    conditions.update(kwargs)
+    return get_showcase(conditions)
 
 def get_or_404(id: int) -> Unit:
     return get_object_or_404(Unit, id=id)
@@ -43,3 +45,5 @@ def get_customer_favorites(customer: Customer) -> List[Unit]:
         .annotate(uid=F('id'), product_slug=F('product__slug'))
         .all()
     )
+
+CARDS_PER_VIEW = 16
