@@ -2,6 +2,7 @@
 {% load static %}
 {% block head %}
     <title>{{ product.name }} - Gourmet Avenida</title>
+    <link rel="stylesheet" href="{% static 'css/product-carousel.css' %}">
 {% endblock head %}
 
 {% block main %}
@@ -88,12 +89,28 @@
         <div class="col-lg-12">
             <div class="mt-5 mb-5">
                 <article>
-                    <h2>{{ product.name }}</h2>
-                    <p>
-                        {{ product.description|linebreaks }}
-                    </p>               
+                    <h1>{{ product.name }}</h1>
+                    {{ product.description|linebreaks }}
                 </article>
             </div> 
+            <section>
+                <h2 class="fs-3">Produtos relacionados</h2>
+                {% if units_category %}
+                    <div class="units-category-wrapper">
+                        <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                        <ul class="units-category-carousel">
+                            {% for unit in units_category %}
+                                <li class="units-category-card">
+                                    {% include 'components/product_card.html' %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                    </div>
+                {% else %}
+                    <p class="lead">Nenhum produto lançado no último mês.</p>
+                {% endif %}
+            </section>
         </div>
     </div>
 {% endblock main %}
@@ -101,4 +118,5 @@
 {% block footerscript %}
     {{ json_data|json_script:"json-data" }}
     <script src="{% static 'js/view-product.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/product-carousel.js' %}"></script>
 {% endblock footerscript %}
