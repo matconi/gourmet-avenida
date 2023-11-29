@@ -105,7 +105,7 @@ $(this).ready(() => {
         function renderImages(carousel, unit) {
             carousel.insertAdjacentHTML('beforeend', `
                 <div class="carousel-item image-item">
-                    <img src="${unit.image}" class="d-block w-100" id="image-${unit.id}" alt="${unit.name}">
+                    <img src="${unit.image_lg}" class="d-block w-100" id="image-${unit.id}" alt="${unit.name}">
                 </div>
             `);
         }

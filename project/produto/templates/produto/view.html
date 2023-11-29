@@ -93,24 +93,22 @@
                     {{ product.description|linebreaks }}
                 </article>
             </div> 
-            <section>
-                <h2 class="fs-3">Produtos relacionados</h2>
-                {% if units_category %}
+            {% if units_category %}
+                <section>
+                    <h2 class="fs-3">Produtos relacionados</h2>
                     <div class="units-category-wrapper">
                         <i id="left" class="arrow fa-solid fa-angle-left"></i>
-                        <ul class="units-category-carousel">
-                            {% for unit in units_category %}
-                                <li class="units-category-card">
-                                    {% include 'components/product_card.html' %}
-                                </li>
-                            {% endfor %}
-                        </ul>
+                            <ul class="units-category-carousel">
+                                {% for unit in units_category %}
+                                    <li class="units-category-card">
+                                        {% include 'components/product_card.html' %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
                         <i id="right" class="arrow fa-solid fa-angle-right"></i>
                     </div>
-                {% else %}
-                    <p class="lead">Nenhum produto lançado no último mês.</p>
-                {% endif %}
-            </section>
+                </section>
+            {% endif %}
         </div>
     </div>
 {% endblock main %}

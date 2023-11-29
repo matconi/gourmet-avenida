@@ -46,7 +46,7 @@ $(this).ready(() => {
             <div class="single-content col-6 col-sm-4 col-lg-3 mb-4">
                 <div class="card shadow-sm">
                     <a href="${unit.category_slug}/${unit.product_slug}?uid=${unit.uid}">        
-                        <img class="card-img-top d-block w-100" src="${unit.image}" alt="${unit.name}">  
+                        <img class="card-img-top d-block w-100" src="${unit.image_sm}" alt="${unit.name}">  
                     </a>           
                     <div class="card-body d-flex flex-column">
                         <strong>
