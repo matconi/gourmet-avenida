@@ -29,7 +29,7 @@ class UnitsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'image', 'price', 'promotional', 'variations',)
+        fields = ('id', 'name', 'image_lg', 'price', 'promotional', 'variations',)
 
 class ShowcaseSerializer(serializers.ModelSerializer):
     uid = serializers.SerializerMethodField()
@@ -47,4 +47,4 @@ class ShowcaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Unit
-        fields = ('uid', 'name', 'image', 'price', 'promotional', 'category_slug', 'product_slug',)
+        fields = ('uid', 'name', 'image_sm', 'price', 'promotional', 'category_slug', 'product_slug',)

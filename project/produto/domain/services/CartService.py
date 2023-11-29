@@ -47,7 +47,6 @@ class CartService:
             "price": float(unit.price), 
             "quantity": quantity_in_cart,
             "quantity_price": quantity_price,
-            "image": unit.image.url,
             "slug": unit.product.slug,
             "category": unit.product.category.slug
         }
