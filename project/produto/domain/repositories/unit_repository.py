@@ -21,6 +21,13 @@ def get_index_category(category_slug: str, kwargs: dict={}) -> List[Unit]:
     conditions.update(kwargs)
     return get_showcase(conditions)
 
+def get_related_category(category_slug: str, product_id) -> List[Unit]:
+    return (
+        Unit.objects.filter(product__category__slug=category_slug)
+        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
+        .exclude(product__id=product_id)
+    )
+
 def get_or_404(id: int) -> Unit:
     return get_object_or_404(Unit, id=id)
 

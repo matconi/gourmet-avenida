@@ -48,7 +48,18 @@ def index_category(request, category_slug):
 def view(request, category_slug, unit_slug):
     if request.method == 'GET':
         product = product_repository.get_by_slug(unit_slug)
-        return render(request, 'produto/view.html', {"product": product})
+        units_category = unit_repository.get_related_category(category_slug, product.id)[0:10]
+        json_data = {
+            "view_product_url": reverse('api_produto:view_product', args=[product.slug])
+        }
+
+        context = {
+            "product": product,
+            "units_category": units_category,
+            "json_data": json_data    
+        }
+
+        return render(request, 'produto/view.html', context)
 
 @login_required
 @permission_required('produto.add_to_cart', raise_exception=True)

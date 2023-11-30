@@ -5,27 +5,50 @@
 {% endblock head %}
 
 {% block main %}
+
     {% if not perms.pedido.add_order %}
         <p>
             <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
             <small class="text-danger">Entre em contato com o administrador para reservar produtos.</small>
         </p>
     {% endif %}
-    {% block breadcrumb %}
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item" title="Início"><a href="{% url 'home' %}"><i class="fa-solid fa-home"></i></a></li>
-          <li class="breadcrumb-item active"><a href="" class="text-decoration-none text-secondary">Produtos</a></li>
-        </ol>
-      </nav>
-    {% endblock breadcrumb %}
-    {% if units_loaded %}
-        <form class="row">
-            <div class="mt-4 mb-4 d-flex col-11 col-md-8 col-lg-6">
-                <input class="form-control me-2" name="q" type="text" placeholder="Pesquisar..." aria-label="Pesquisar">
-                <button class="btn btn-outline-secondary" id="filter-form" type="button" title="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+    <header>
+        {% block breadcrumb %}
+            <div class="row container">
+                <div class="col-11">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item" title="Início"><a href="{% url 'home' %}"><i class="fa-solid fa-home"></i></a></li>
+                            <li class="breadcrumb-item active"><a href="" class="text-decoration-none text-secondary">Produtos</a></li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-1">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for category in categories %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'produto:index_category' category.slug %}">{{ category.name }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </form>
+        {% endblock breadcrumb %}
+    </header>
+    {% if units_loaded %}
+        <div class="row">
+            <form class="col-11 col-md-8 col-lg-6">
+                <div class="mt-4 mb-4 d-flex">
+                    <input class="form-control me-2" name="q" type="text" placeholder="Pesquisar..." aria-label="Pesquisar">
+                    <button class="btn btn-outline-primary" id="filter-form" type="button" title="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
     {% endif %}
     
     <section>
@@ -58,6 +81,9 @@
     <div class="d-none" role="alert" id="no-more-alert">
        <p class="lead">Todos os produtos foram carregados.</p>
     </div>
+    <button id="back-to-top" class="btn btn-lg border border-2 border-primary btn-light mt-4 mr-4 float-end d-none opacity-75" style="border-radius: 50% !important;" title="Voltar ao Topo">
+        <i class="fa-solid fa-chevron-up text-primary"></i>
+    </button>
 {% endblock main %}
 {% block footerscript %}
     {{ json_data|json_script:"json-data" }}

@@ -4,7 +4,9 @@ from django.utils import timezone
 
 class Unit(AbstractName):
     sku = models.CharField("Código", max_length=12, unique=True)
-    image = models.ImageField("Imagem", upload_to='produtos')
+
+    image_lg = models.ImageField("Imagem", upload_to='produtos/lg/')
+    image_sm = models.ImageField(editable=False, upload_to='produtos/sm/')
 
     price = models.DecimalField("Preço", max_digits=5, decimal_places=2)
     promotional = models.DecimalField("Preço promocional", max_digits=5, decimal_places=2, 
