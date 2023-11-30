@@ -74,7 +74,7 @@ $(this).ready(() => {
             const unit_id = $('#unit-id');
 
             name.html(unit.name);
-            price.html(`R$ ${unit.price}`);
+            price.html(`R$ ${unit.price.replace('.', ',')}`);
             unit_id.val(unit.id);
     
             renderPromotional(unit);
@@ -90,7 +90,7 @@ $(this).ready(() => {
                 promotional.html(`
                     <small class="pl-2 text-muted">
                         <del>
-                            R$ ${unit.promotional}
+                            R$ ${unit.promotional.replace('.', ',')}
                         </del>
                     </small>
                 `);
