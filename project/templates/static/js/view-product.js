@@ -2,6 +2,23 @@ $(this).ready(() => {
     const productSelect = document.querySelector('.product-select'); 
     const jsonData = JSON.parse($('#json-data').text());
     
+    function loadOptions(data) {
+        if (data.options) { 
+            data.options.variants.map((variant, i) => {
+                let variantLabels = $('.label').text();
+                
+                if (!variantLabels.includes(variant.name)) {                    
+                    const selectBox = setSelectBox(variant, i);
+                    
+                    variant.variations.map((variation) => {
+                        setOptionsInSelect(variation, selectBox);
+                    });
+                    
+                }
+            });
+        }
+    }
+
     function setSelectBox(variant, i) {
         productSelect.insertAdjacentHTML('beforebegin', `
             <label class="label" for="select-variacoes-${i}">
@@ -32,19 +49,8 @@ $(this).ready(() => {
     fetch(jsonData.view_product_url)
     .then(response => response.json())
     .then(data => {
-        data.summary.variants.map((variant, i) => {
-            let variantLabels = $('.label').text();
-            
-            if (!variantLabels.includes(variant.name)) {                    
-                const selectBox = setSelectBox(variant, i);
-                
-                variant.variations.map((variation) => {
-                    setOptionsInSelect(variation, selectBox);
-                });
-                
-            }
-        });
-        
+        loadOptions(data);
+
         const units = [];
         const images = document.querySelector('.carousel-inner');
         data.units.map(unit => {              
@@ -55,6 +61,7 @@ $(this).ready(() => {
         removeImageArrows(units);
         getIndexedUnit(location.href.split('=')[1]); // WARN: spliting single URL param
         $('.select-variacoes').change(() => chooseUnit());
+        $('#qty').change(() => chooseUnit());
 
         function getIndexedUnit(indexedUnit) {
             if (indexedUnit !== undefined) {
@@ -71,13 +78,17 @@ $(this).ready(() => {
         function renderUnitData(unit) {
             const name = $('#unit-name');
             const price = $('#unit-price');
-            const unit_id = $('#unit-id');
+            const unitId = $('#unit-id');
 
-            name.html(unit.name);
-            price.html(`R$ ${unit.price.replace('.', ',')}`);
-            unit_id.val(unit.id);
+            const addInfo = $('#add-info');
+            addInfo.text(`${$('#qty').val()} ${unit.name}`);
+
+            name.text(unit.name);
+            price.text(`R$ ${unit.price.replace('.', ',')}`);
+            unitId.val(unit.id);
     
             renderPromotional(unit);
+            renderAvaliable(unit);
             setActiveImage(unit);
         }
 
@@ -88,12 +99,39 @@ $(this).ready(() => {
                 $('.text-muted').remove();
             } else {
                 promotional.html(`
-                    <small class="pl-2 text-muted">
+                    <small class="pl-2 opacity-75 text-danger">
                         <del>
                             R$ ${unit.promotional.replace('.', ',')}
                         </del>
                     </small>
                 `);
+            }
+        }
+
+        function renderAvaliable(unit) {
+            const avaliable = $('#avaliable');
+            const booked = $('#booked');
+            
+            if (unit.stock > 0) {
+                avaliable.removeClass("text-danger");
+                avaliable.addClass("text-success");
+
+                avaliable.text(`${unit.stock - unit.booked} disponíveis`);
+                if (unit.stock == unit.booked) {
+                    avaliable.removeClass("text-danger");
+                    avaliable.removeClass("text-success");
+
+                    avaliable.text("Indisponível");
+                    booked.text(` (${unit.booked} reservado(s))`);
+                }
+                if (unit.booked > 0) {
+                    booked.text(` (${unit.booked} reservado(s))`);
+                }
+            } else {
+                avaliable.removeClass("text-success");
+                avaliable.addClass("text-danger");
+
+                avaliable.text("Esgotado");
             }
         }
 

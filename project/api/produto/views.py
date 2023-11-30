@@ -33,15 +33,19 @@ def view_product(request, slug):
         },
     } """
     units = unit_repository.get_units_variations(slug)
-    variations_values = unit_repository.get_variations_values(units)
-
-    units_serializer = UnitsSerializer(units, many=True)
-    product_variations_serializer = ProductVariationsSerializer(variations_values)
-
+    
+    units_serializer = UnitsSerializer(units, many=True) 
     response_data = {
-        "units": units_serializer.data,
-        "summary": product_variations_serializer.data,
+        "units": units_serializer.data
     }
+
+    if len(units) > 1:
+        variations_values = unit_repository.get_variations_values(units)
+
+        product_variations_serializer = ProductVariationsSerializer(variations_values)
+        response_data.update({
+            "options": product_variations_serializer.data
+        })
 
     return Response(response_data, status=status.HTTP_200_OK)
 
