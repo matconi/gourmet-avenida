@@ -6,8 +6,11 @@ from pedido.domain.repositories import order_unit_repository
 from produto.domain.repositories import unit_repository
 from gourmetavenida.utils import paginate
 from .domain.services import payment_service
-from .domain.repositories import payment_repository
+from .domain.repositories import payment_repository, user_repository
 from produto.domain.repositories import unit_repository
+from django.http import JsonResponse
+from produto.domain.repositories import unit_repository
+from django.urls import reverse
 
 @login_required
 def profile(request):
@@ -73,3 +76,17 @@ def favorites(request):
     if request.method == 'GET':
         units = unit_repository.get_customer_favorites(request.user.user_customer)
         return render(request, 'usuario/favorites.html', {"units": units})
+
+@login_required
+@permission_required('usuario.add_favorite', raise_exception=True)
+def add_favorive(request):
+    if request.method == 'POST':
+        unit_id = request.POST.get('id')
+
+        unit = unit_repository.get_or_404(unit_id)
+        user_repository.add_favorite(request.user, unit)
+
+        return JsonResponse({
+            "name": unit.name,
+            "url": reverse('usuario:favorites')
+        })

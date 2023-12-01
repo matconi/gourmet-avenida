@@ -50,7 +50,8 @@ def view(request, category_slug, unit_slug):
         product = product_repository.get_by_slug(unit_slug)
         units_category = unit_repository.get_related_category(category_slug, product.id)[0:10]
         json_data = {
-            "view_product_url": reverse('api_produto:view_product', args=[product.slug])
+            "view_product_url": reverse('api_produto:view_product', args=[product.slug]),
+            "add_favorite_url": reverse('usuario:add_favorite')
         }
 
         context = {

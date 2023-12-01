@@ -1,4 +1,5 @@
 from usuario.models.User import User
+from produto.models import Unit
 
 def get_by_email(email: str) -> User:
     return User.objects.get(email=email)
@@ -11,3 +12,6 @@ def get_by_email_and_status(email: str, is_active: bool=True) -> bool:
 
 def get_by_id(id: int) -> User:
     return User.objects.get(id=id)
+
+def add_favorite(user: User, unit: Unit) -> None:
+    user.user_customer.favorites.add(unit)

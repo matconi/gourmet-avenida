@@ -49,7 +49,7 @@ def get_releases() -> List[Unit]:
 def get_customer_favorites(customer: Customer) -> List[Unit]:
     return (
         Unit.objects.filter(unit_favorite=customer)
-        .annotate(uid=F('id'), product_slug=F('product__slug'))
+        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .all()
     )
 
