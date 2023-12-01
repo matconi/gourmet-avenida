@@ -78,7 +78,7 @@ $(this).ready(() => {
         function renderUnitData(unit) {
             const name = $('#unit-name');
             const price = $('#unit-price');
-            const unitId = $('#unit-id');
+            const unitId = $('.unit-id');
 
             const addInfo = $('#add-info');
             addInfo.text(`${$('#qty').val()} ${unit.name}`);

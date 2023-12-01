@@ -27,7 +27,7 @@
     {% if perms.produto.add_to_cart %}
         <div class="card-footer bg-transparent border-top-light-custom text-center">
             {% if unit.stock == unit.booked and unit.stock > 0 %}
-                <p class="opacity-75 m-0">Todos reservados</p>
+                <p class="opacity-75 m-0">Indisponível</p>
             {% elif unit.stock > 0 %}
                 <p class="opacity-75 m-0">{{ unit.avaliable }} disponíveis</p>
             {% else %}
