@@ -46,9 +46,9 @@ def get_releases() -> List[Unit]:
         .order_by('-released')[:10]
     )
 
-def get_customer_favorites(customer: Customer) -> List[Unit]:
+def get_customer_favorites(customer: Customer, kwargs: dict={}) -> List[Unit]:
     return (
-        Unit.objects.filter(unit_favorite=customer)
+        Unit.objects.filter(unit_favorite=customer, **kwargs)
         .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .all()
     )

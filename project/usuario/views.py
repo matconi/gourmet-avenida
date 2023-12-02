@@ -75,7 +75,19 @@ def payments(request):
 def favorites(request):
     if request.method == 'GET':
         units = unit_repository.get_customer_favorites(request.user.user_customer)
-        return render(request, 'usuario/favorites.html', {"units": units})
+        units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
+
+        json_data = {
+            "load_more_url": reverse('api_usuario:load_more_favorites'),
+            "add_to_cart_url": reverse('produto:add_to_cart'),
+            "add_to_cart_permission": request.user.has_perm('produto.add_to_cart'),
+        }
+
+        context = {
+            "units_loaded": units_loaded, 
+            "json_data": json_data
+        }
+        return render(request, 'usuario/favorites.html', context)
 
 @login_required
 @permission_required('usuario.add_favorite', raise_exception=True)
