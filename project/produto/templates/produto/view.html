@@ -61,33 +61,31 @@
                             <option value="10">10</option>
                         </select>
                     </div>
-                    <div class="row mt-2">             
-                        {% if perms.produto.add_to_cart %}
-                            <input type="hidden" class="unit-id" name="id" value="">
-                            <p class="lead fs-5 text-end m-0">
-                                <span id="avaliable" class="text-success"></span><span id="booked"></span>
-                            </p>
-                            <div class="col-10">
-                                <button type="submit" class="btn btn-primary w-100" form="form-add-to-cart">
+                    <div class="row mt-2">                      
+                        <input type="hidden" class="unit-id" name="id" value="">
+                        <p class="lead fs-5 text-end mb-2">
+                            <span id="avaliable" class="text-success"></span><span id="booked"></span>
+                        </p>
+                        <div class="col-10">
+                            {% if perms.produto.add_to_cart %}
+                                <button type="submit" class="btn btn-primary w-100">
                                     <p class="m-0">
                                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                        Adicionar <span id="add-info" class="fw-bold"></span>
+                                        Adicionar <span id="add-info-qty" class="fw-bold"></span> <span id="add-info" class="fw-bold"></span>
                                     </p>
                                 </button>
-                            </div>     
-                        {% endif %}
-                        </form>
-                        {% if perms.usuario.add_favorite %}
-                            <div class="col-2 p-0">
-                                <form action="{% url 'usuario:add_favorite' %}" method="POST" id="favorite-form" title="Adicionar aos favoritos">
-                                    {% csrf_token %}
-                                    <input type="hidden" class="unit-id" name="id" id="unit-id-favorite" value="">
-                                    <button type="submit" form="favorite-form" class="btn btn-outline-warning w-100">
-                                        <i class="fa-solid fa-star"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>     
+                </form>
+                        <div class="col-2 p-0">
+                            <form action="{% url 'usuario:add_favorite' %}" method="POST" id="favorite-form" title="Adicionar aos favoritos">
+                                {% csrf_token %}
+                                <input type="hidden" class="unit-id" name="id" id="unit-id-favorite" value="">
+                                <button type="submit" class="btn btn-outline-warning w-100">
+                                    <i class="fa-solid fa-star"></i>
+                                </button>
+                            </form>
+                        </div>             
                     </div>   
             </div>
         </div>
@@ -121,12 +119,12 @@
     </div>
 
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="favorite-toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2200">
+        <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2200">
             <div class="toast-header">
-                <strong class="me-auto">Mensagem</strong>
+                <strong class="me-auto text-success">Sucesso!</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <p class="container fs-6 favorite-toast-body"></p>
+            <p class="container fs-6 toast-body"></p>
         </div>
     </div>
 {% endblock main %}

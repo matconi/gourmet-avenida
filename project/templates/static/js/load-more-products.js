@@ -31,6 +31,11 @@ $(this).ready(() => {
                 });
                 const totalUnits = getTotalUnits(is_reload, currentItensCount, response);
                 renderNoMoreAlert(currentItensCount, totalUnits, loadMoreBtn);
+            },
+            error: err => {
+                spinner.addClass('d-none');
+                contentContainer.html('<p class="text-danger">Erro ao carregar os produtos!</p>');
+                console.error(err);
             }
         });
     }

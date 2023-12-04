@@ -61,7 +61,7 @@ $(this).ready(() => {
         removeImageArrows(units);
         getIndexedUnit(location.href.split('=')[1]); // WARN: spliting single URL param
         $('.select-variacoes').change(() => chooseUnit());
-        $('#qty').change(() => chooseUnit());
+        $('#qty').change(() => changeQuantity());
 
         function getIndexedUnit(indexedUnit) {
             if (indexedUnit !== undefined) {
@@ -75,21 +75,32 @@ $(this).ready(() => {
             }
         }
 
+        function changeUnitName(unit) {
+            $('#add-info').text(unit.name);
+        }
+
         function renderUnitData(unit) {
+            changeQuantity();
+            changeUnitName(unit);
+
             const name = $('#unit-name');
             const price = $('#unit-price');
             const unitId = $('.unit-id');
-
-            const addInfo = $('#add-info');
-            addInfo.text(`${$('#qty').val()} ${unit.name}`);
-
+            
             name.text(unit.name);
             price.text(`R$ ${unit.price.replace('.', ',')}`);
             unitId.val(unit.id);
     
+            setActiveImage(unit);
             renderPromotional(unit);
             renderAvaliable(unit);
-            setActiveImage(unit);
+            renderFavoriteForm(unit);
+            
+        }
+
+        function setActiveImage(unit) {
+            $('.image-item').removeClass('active');
+            $(`#image-${unit.id}`).parent().addClass('active');
         }
 
         function renderPromotional(unit) {
@@ -113,31 +124,44 @@ $(this).ready(() => {
             const booked = $('#booked');
             
             if (unit.stock > 0) {
-                avaliable.removeClass("text-danger");
-                avaliable.addClass("text-success");
-
+                avaliable.removeClass("text-danger").addClass("text-success");
                 avaliable.text(`${unit.stock - unit.booked} disponíveis`);
-                if (unit.stock == unit.booked) {
-                    avaliable.removeClass("text-danger");
-                    avaliable.removeClass("text-success");
 
-                    avaliable.text("Indisponível");
-                    booked.text(` (${unit.booked} reservado(s))`);
-                }
                 if (unit.booked > 0) {
                     booked.text(` (${unit.booked} reservado(s))`);
                 }
-            } else {
-                avaliable.removeClass("text-success");
-                avaliable.addClass("text-danger");
 
+                if (unit.stock == unit.booked) {
+                    avaliable.removeClass("text-danger text-success");
+                    avaliable.text("Indisponível");
+                }
+               
+            } else {
+                avaliable.removeClass("text-success").addClass("text-danger");
                 avaliable.text("Esgotado");
             }
         }
 
-        function setActiveImage(unit) {
-            $('.image-item').removeClass('active');
-            $(`#image-${unit.id}`).parent().addClass('active');
+        function renderFavoriteForm(unit) {
+            unit.is_favorite ? removeFavoriteForm() : addFavoriteForm();
+        }
+
+        function addFavoriteForm() {
+            if (jsonData.add_favorite_permission) {
+                $('#favorite-form').attr('action', jsonData.add_favorite_url).attr('title', 'Adicionar favorito');
+                $('#favorite-form button').removeClass('btn-warning text-primary').addClass('btn-outline-warning');
+            } else {
+                $('#favorite-form').remove();
+            }
+        }
+
+        function removeFavoriteForm() {
+            if (jsonData.remove_favorite_permission) {
+                $('#favorite-form').attr('action', jsonData.remove_favorite_url).attr('title', 'Remover favorito');
+                $('#favorite-form button').removeClass('btn-outline-warning').addClass('btn-warning text-primary');
+            } else {
+                $('#favorite-form').remove();
+            }
         }
 
         function renderImages(carousel, unit) {
@@ -177,7 +201,16 @@ $(this).ready(() => {
                 }
             }
         }
-    });
+
+        function changeQuantity() {
+            $('#add-info-qty').text($('#qty').val());
+        }
+        
+    }).catch(err => {
+            productSelect.innerHTML = '<p class="text-danger">Erro ao carregar os dados do produto!</p>';
+            console.error(err);
+        }
+    );
 
     const carousel = $("#images-carousel").carousel();
     $(".carousel-control-prev").click(() => carousel.carousel("prev"));
