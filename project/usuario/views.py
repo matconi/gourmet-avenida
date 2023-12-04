@@ -6,10 +6,8 @@ from pedido.domain.repositories import order_unit_repository
 from produto.domain.repositories import unit_repository
 from gourmetavenida.utils import paginate
 from .domain.services import payment_service
-from .domain.repositories import payment_repository, user_repository
-from produto.domain.repositories import unit_repository
+from .domain.repositories import payment_repository, user_repository, customer_repository
 from django.http import JsonResponse
-from produto.domain.repositories import unit_repository
 from django.urls import reverse
 
 @login_required
@@ -51,7 +49,7 @@ def home(request):
             "releases": releases
         }
 
-        if request.user.has_perm('add_order'):
+        if request.user.has_perm('pedido.add_order'):
             again = order_unit_repository.get_again(request.user.user_customer)
             context["again"] = again
 
@@ -96,7 +94,21 @@ def add_favorive(request):
         unit_id = request.POST.get('id')
 
         unit = unit_repository.get_or_404(unit_id)
-        user_repository.add_favorite(request.user, unit)
+        customer_repository.add_favorite(request.user.user_customer, unit)
+
+        return JsonResponse({
+            "name": unit.name,
+            "url": reverse('usuario:favorites')
+        })
+
+@login_required
+@permission_required('usuario.remove_favorite', raise_exception=True)
+def remove_favorive(request):
+    if request.method == 'POST':
+        unit_id = request.POST.get('id')
+
+        unit = unit_repository.get_or_404(unit_id)
+        customer_repository.remove_favorite(request.user.user_customer, unit)
 
         return JsonResponse({
             "name": unit.name,

@@ -26,10 +26,14 @@ class ProductVariationsSerializer(serializers.Serializer):
 
 class UnitsSerializer(serializers.ModelSerializer):
     variations = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    is_favorite = serializers.SerializerMethodField()
+
+    def get_is_favorite(self, unit):
+        return True if unit.unit_favorite.all() else False
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'image_lg', 'price', 'promotional', 'stock', 'booked', 'variations',)
+        fields = ('id', 'name', 'image_lg', 'price', 'promotional', 'stock', 'booked', 'variations', 'is_favorite',)
 
 class ShowcaseSerializer(serializers.ModelSerializer):
     uid = serializers.SerializerMethodField()

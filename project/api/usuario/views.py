@@ -7,7 +7,6 @@ from produto.domain.repositories import unit_repository
 from produto.models import Unit
 from produto.domain.services import unit_service
 
-
 @api_view(['GET'])
 @login_required
 @permission_required('usuario.favorites')

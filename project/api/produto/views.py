@@ -19,7 +19,7 @@ def view_product(request, slug):
                 ]
             },
         ],
-        "summary": {
+        "options": {
             "variants": [
                 {
                     ... variant data ...
@@ -33,7 +33,6 @@ def view_product(request, slug):
         },
     } """
     units = unit_repository.get_units_variations(slug)
-    
     units_serializer = UnitsSerializer(units, many=True) 
     response_data = {
         "units": units_serializer.data
@@ -43,9 +42,7 @@ def view_product(request, slug):
         variations_values = unit_repository.get_variations_values(units)
 
         product_variations_serializer = ProductVariationsSerializer(variations_values)
-        response_data.update({
-            "options": product_variations_serializer.data
-        })
+        response_data["options"] = product_variations_serializer.data
 
     return Response(response_data, status=status.HTTP_200_OK)
 
