@@ -33,5 +33,6 @@ class Customer(AbstractName):
             ("payments", "Can view self payments"),
             ("favorites", "Can view self payments"),
             ("add_favorite", "Can add favorite"),
+            ("remove_favorite", "Can remove favorite"),
             ("buy_in_term", "Can buy in term")
         ]

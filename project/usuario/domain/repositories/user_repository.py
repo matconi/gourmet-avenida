@@ -12,6 +12,3 @@ def get_by_email_and_status(email: str, is_active: bool=True) -> bool:
 
 def get_by_id(id: int) -> User:
     return User.objects.get(id=id)
-
-def add_favorite(user: User, unit: Unit) -> None:
-    user.user_customer.favorites.add(unit)
