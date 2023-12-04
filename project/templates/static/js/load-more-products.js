@@ -14,7 +14,8 @@ $(this).ready(() => {
             type: 'GET',
             data: {
                 'offset': currentItensCount,
-                'q': $('[name="q"]').val()
+                'q': $('[name="q"]').val(),
+                'cat': $('[name="cat"]').val()
             },
             beforeSend: () => {
                 loadMoreBtn.addClass('d-none');
@@ -30,6 +31,11 @@ $(this).ready(() => {
                 });
                 const totalUnits = getTotalUnits(is_reload, currentItensCount, response);
                 renderNoMoreAlert(currentItensCount, totalUnits, loadMoreBtn);
+            },
+            error: err => {
+                spinner.addClass('d-none');
+                contentContainer.html('<p class="text-danger">Erro ao carregar os produtos!</p>');
+                console.error(err);
             }
         });
     }
@@ -45,7 +51,7 @@ $(this).ready(() => {
         const card = `
             <div class="single-content col-6 col-sm-4 col-lg-3 mb-4">
                 <div class="card shadow-sm">
-                    <a href="${unit.category_slug}/${unit.product_slug}?uid=${unit.uid}">        
+                    <a href="/produtos/${unit.category_slug}/${unit.product_slug}?uid=${unit.uid}">        
                         <img class="card-img-top d-block w-100" src="${unit.image_sm}" alt="${unit.name}">  
                     </a>           
                     <div class="card-body d-flex flex-column">
@@ -119,6 +125,7 @@ $(this).ready(() => {
 
     loadMoreBtn.click(() => loadMore(false));
     $('#filter-form').click(() => loadMore(true));
+    $('#select-category').change(() => loadMore(true));
 
     
     const backToTopBtn = $('#back-to-top');

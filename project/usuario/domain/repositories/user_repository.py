@@ -1,4 +1,5 @@
 from usuario.models.User import User
+from produto.models import Unit
 
 def get_by_email(email: str) -> User:
     return User.objects.get(email=email)

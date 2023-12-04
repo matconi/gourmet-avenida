@@ -6,8 +6,9 @@ from pedido.domain.repositories import order_unit_repository
 from produto.domain.repositories import unit_repository
 from gourmetavenida.utils import paginate
 from .domain.services import payment_service
-from .domain.repositories import payment_repository
-from produto.domain.repositories import unit_repository
+from .domain.repositories import payment_repository, user_repository, customer_repository
+from django.http import JsonResponse
+from django.urls import reverse
 
 @login_required
 def profile(request):
@@ -48,7 +49,7 @@ def home(request):
             "releases": releases
         }
 
-        if request.user.has_perm('add_order'):
+        if request.user.has_perm('pedido.add_order'):
             again = order_unit_repository.get_again(request.user.user_customer)
             context["again"] = again
 
@@ -72,4 +73,44 @@ def payments(request):
 def favorites(request):
     if request.method == 'GET':
         units = unit_repository.get_customer_favorites(request.user.user_customer)
-        return render(request, 'usuario/favorites.html', {"units": units})
+        units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
+
+        json_data = {
+            "load_more_url": reverse('api_usuario:load_more_favorites'),
+            "add_to_cart_url": reverse('produto:add_to_cart'),
+            "add_to_cart_permission": request.user.has_perm('produto.add_to_cart'),
+        }
+
+        context = {
+            "units_loaded": units_loaded, 
+            "json_data": json_data
+        }
+        return render(request, 'usuario/favorites.html', context)
+
+@login_required
+@permission_required('usuario.add_favorite', raise_exception=True)
+def add_favorive(request):
+    if request.method == 'POST':
+        unit_id = request.POST.get('id')
+
+        unit = unit_repository.get_or_404(unit_id)
+        customer_repository.add_favorite(request.user.user_customer, unit)
+
+        return JsonResponse({
+            "name": unit.name,
+            "url": reverse('usuario:favorites')
+        })
+
+@login_required
+@permission_required('usuario.remove_favorite', raise_exception=True)
+def remove_favorive(request):
+    if request.method == 'POST':
+        unit_id = request.POST.get('id')
+
+        unit = unit_repository.get_or_404(unit_id)
+        customer_repository.remove_favorite(request.user.user_customer, unit)
+
+        return JsonResponse({
+            "name": unit.name,
+            "url": reverse('usuario:favorites')
+        })

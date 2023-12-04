@@ -19,9 +19,6 @@ class Customer(AbstractName):
     def delete(self):
         if self.user:
             raise Exception(self.user.groups.filter(id=User.CUSTOMER_ROLE))
-            customer_role = role_repository.get_by_id(id=User.CUSTOMER_ROLE)
-            if customer_role in self.user.groups.all():
-                self.user.groups.remove(customer_role)
 
         super(Customer, self).delete()
 
@@ -34,6 +31,8 @@ class Customer(AbstractName):
         db_table = 'usuario_customers'
         permissions = [
             ("payments", "Can view self payments"),
-            ("favorites", "Can view favorites"),
+            ("favorites", "Can view self payments"),
+            ("add_favorite", "Can add favorite"),
+            ("remove_favorite", "Can remove favorite"),
             ("buy_in_term", "Can buy in term")
         ]

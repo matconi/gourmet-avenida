@@ -24,15 +24,16 @@
             </p>
         </div>
     </div>
-    {% if perms.produto.add_to_cart %}
-        <div class="card-footer bg-transparent border-top-light-custom text-center">
-            {% if unit.stock == unit.booked and unit.stock > 0 %}
-                <p class="opacity-75 m-0">Todos reservados</p>
-            {% elif unit.stock > 0 %}
-                <p class="opacity-75 m-0">{{ unit.avaliable }} disponíveis</p>
-            {% else %}
-                <p class="opacity-75 m-0 text-danger">Esgotado</p>
-            {% endif %}
+    
+    <div class="card-footer bg-transparent border-top-light-custom text-center">
+        {% if unit.stock == unit.booked and unit.stock > 0 %}
+            <p class="opacity-75 m-0">Indisponível</p>
+        {% elif unit.stock > 0 %}
+            <p class="opacity-75 m-0">{{ unit.avaliable }} disponíveis</p>
+        {% else %}
+            <p class="opacity-75 m-0 text-danger">Esgotado</p>
+        {% endif %}
+        {% if perms.produto.add_to_cart %}
             <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
                 <input type="hidden" name="id" value="{{ unit.uid }}">
                 <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
@@ -40,6 +41,6 @@
                     <span class="d-none d-sm-inline">Adicionar</span>
                 </button>
             </form>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>  
 </div>

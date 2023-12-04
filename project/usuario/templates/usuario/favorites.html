@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block head %}
     <title>Favoritos - Gourmet Avenida</title>
 {% endblock head %}
@@ -6,9 +7,35 @@
 {% block main %}
     <section>
         <h2>Favoritos</h2>
-        <div class="row">
-            {% for unit in units %}
-                <div class="col-6 col-sm-4 col-lg-3 mb-4">
+        {% if units_loaded %}
+            <form>
+                <div class="row mb-2">
+                    <div class=" col-11 col-md-8 col-lg-6"> 
+                        <div class="form-group d-flex flex-column justify-content-center">
+                            <label for="q">Produto<br></label>
+                            <div class="input-group">
+                                <input class="form-control mr-sm-2" id="q" name="q" type="text" placeholder="Pesquisar..." aria-label="Pesquisar">
+                                <button class="btn btn-outline-primary" id="filter-form" type="button" title="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                    </div>
+               
+                    <div class="col-7 col-md-4 col-lg-4 d-flex flex-column justify-content-center">
+                        <label for="select-category">Categoria</label>
+                        <select class="form-control mb-2" id="select-category" name="cat">
+                            <option value="">Todas</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        <select>      
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+        
+        <div class="row" id="content">
+            {% for unit in units_loaded %}
+                <div class="single-content col-6 col-sm-4 col-lg-3 mb-4">
                     {% include 'components/product_card.html' %}
                 </div>
             {% empty %}
@@ -16,4 +43,31 @@
             {% endfor %}
         </div>
     </section>
+
+    {% if units_loaded %}
+        <div class="row">
+            <div class="col-6 col-lg-4 m-auto">    
+                <button class="btn btn-outline-primary opacity-75 w-100" type="button" id="load-more-btn">
+                    <span class="sr-only">Carregando...</span>
+                    Carregar mais
+                </button>
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary opacity-75 d-none" role="status" id="spinner">
+                    <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    {% endif %}
+    <div class="d-none" role="alert" id="no-more-alert">
+       <p class="lead">Todos os favoritos foram carregados.</p>
+    </div>
+    <button id="back-to-top" class="btn btn-lg border border-2 border-primary btn-light mt-4 mr-4 float-end d-none opacity-75" style="border-radius: 50% !important;" title="Voltar ao Topo">
+        <i class="fa-solid fa-chevron-up text-primary"></i>
+    </button>
 {% endblock main %}
+
+{% block footerscript %}
+    {{ json_data|json_script:"json-data" }}
+    <script src="{% static 'js/load-more-products.js' %}"></script>
+{% endblock footerscript %}
