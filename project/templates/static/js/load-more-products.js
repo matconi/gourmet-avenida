@@ -10,7 +10,7 @@ $(this).ready(() => {
         const contentContainer = $("#content");
 
         $.ajax({
-            url: jsonData.load_more_url,
+            url: jsonData.urls.load_more,
             type: 'GET',
             data: {
                 'offset': currentItensCount,
@@ -91,12 +91,12 @@ $(this).ready(() => {
     function renderCardFooter(unit, jsonData) {
         const footer = $(`#card-footer-${unit.uid}`);
 
-        if (!jsonData.add_to_cart_permission) {
+        if (!jsonData.permissions.add_to_cart) {
             footer.remove();
         } else {
             footer.html(`
                 <div class="card-footer bg-transparent border-top-light-custom text-center">
-                    <form action="${jsonData.add_to_cart_url}" method="GET"> 
+                    <form action="${jsonData.urls.add_to_cart}" method="GET"> 
                         <input type="hidden" name="id" value="${unit.uid}">
                         <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>

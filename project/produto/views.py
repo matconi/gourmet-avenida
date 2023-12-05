@@ -3,6 +3,7 @@ from .domain.repositories import product_repository, unit_repository, category_r
 from .domain.services.CartService import CartService
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
+from django.http import JsonResponse
 
 @login_required
 def index(request):
@@ -11,9 +12,13 @@ def index(request):
         units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
 
         json_data = {
-            "load_more_url": reverse('api_produto:load_more'),
-            "add_to_cart_url": reverse('produto:add_to_cart'),
-            "add_to_cart_permission": request.user.has_perm('produto.add_to_cart')
+            "urls": {
+                "load_more": reverse('api_produto:load_more'),
+                "add_to_cart": reverse('produto:add_to_cart'),
+            },
+            "permissions": {
+                "add_to_cart": request.user.has_perm('produto.add_to_cart')
+            }
         }
 
         context = {
@@ -31,9 +36,13 @@ def index_category(request, category_slug):
         units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
 
         json_data = {
-            "load_more_url": reverse('api_produto:load_more_category', args=[category_selected.slug]),
-            "add_to_cart_url": reverse('produto:add_to_cart'),
-            "add_to_cart_permission": request.user.has_perm('produto.add_to_cart')
+            "urls": {
+                "load_more": reverse('api_produto:load_more_category', args=[category_selected.slug]),
+                "add_to_cart": reverse('produto:add_to_cart'),
+            },
+            "permissions": {
+                "add_to_cart": request.user.has_perm('produto.add_to_cart')
+            }
         }
 
         context = {
@@ -50,11 +59,17 @@ def view(request, category_slug, unit_slug):
         product = product_repository.get_by_slug(unit_slug)
         units_category = unit_repository.get_related_category(category_slug, product.id)[0:10]
         json_data = {
-            "view_product_url": reverse('api_produto:view_product', args=[product.slug]),
-            "add_favorite_url": reverse('usuario:add_favorite'),
-            "remove_favorite_url": reverse('usuario:remove_favorite'),
-            "add_favorite_permission": request.user.has_perm('usuario.add_favorite'),
-            "remove_favorite_permission": request.user.has_perm('usuario.remove_favorite'),
+            "urls": {
+                "view_product": reverse('api_produto:view_product', args=[product.slug]),
+                "add_favorite": reverse('usuario:add_favorite'),
+                "remove_favorite": reverse('usuario:remove_favorite'),
+                "add_to_cart": reverse('produto:add_to_cart'),
+            },
+            "permissions": {
+                "add_favorite": request.user.has_perm('usuario.add_favorite'),
+                "remove_favorite": request.user.has_perm('usuario.remove_favorite'),
+                "add_to_cart": request.user.has_perm('produto.add_to_cart'),
+            }   
         }
 
         context = {
@@ -75,9 +90,11 @@ def add_to_cart(request):
         unit = unit_repository.get_or_404(unit_id_param)
 
         cart = CartService(request)
-        cart.add(unit, quantity_param)
+        messages = cart.add(unit, quantity_param)
 
-        return redirect('produto:view', category_slug=unit.product.category.slug, unit_slug=unit.product.slug)
+        return JsonResponse({
+            "messages": messages
+        })
 
 @login_required
 @permission_required('produto.add_one_to_cart', raise_exception=True)
@@ -112,5 +129,5 @@ def remove_from_cart(request):
         pk = request.POST.get('id')
         unit = unit_repository.get_or_404(pk)
         cart = CartService(request)
-        cart.remove(pk, unit)
+        cart.remove(unit)
         return redirect('produto:cart')

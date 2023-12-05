@@ -42,7 +42,7 @@
                     <span id="unit-promotional" class="lead"></span>         
                 </p>
                 
-                <form action="{% url 'produto:add_to_cart' %}" method="GET" id="form-add-to-cart">
+                <form action="{% url 'produto:add_to_cart' %}" method="GET" id="add-to-cart-form">
                     <div class="form-group product-select">   
 
                         <label style="margin-left: 75%" for="qty">
@@ -62,19 +62,17 @@
                         </select>
                     </div>
                     <div class="row mt-2">                      
-                        <input type="hidden" class="unit-id" name="id" value="">
+                        <input type="hidden" class="unit-id" name="id" id="unit-id-cart" value="">
                         <p class="lead fs-5 text-end mb-2">
                             <span id="avaliable" class="text-success"></span><span id="booked"></span>
                         </p>
                         <div class="col-10">
-                            {% if perms.produto.add_to_cart %}
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <p class="m-0">
-                                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                        Adicionar <span id="add-info-qty" class="fw-bold"></span> <span id="add-info" class="fw-bold"></span>
-                                    </p>
-                                </button>
-                            {% endif %}
+                            <button type="submit" class="btn btn-primary w-100" id="add-to-cart-submit">
+                                <p class="m-0">
+                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                    Adicionar <span id="add-info-qty" class="fw-bold"></span> <span id="add-info" class="fw-bold"></span>
+                                </p>
+                            </button>
                         </div>     
                 </form>
                         <div class="col-2 p-0">
@@ -118,14 +116,14 @@
         </div>
     </div>
 
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2200">
+    <div class="position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 11">
+        {% comment %} <div class="toast hider" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="222200">
             <div class="toast-header">
-                <strong class="me-auto text-success">Sucesso!</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                <strong class="my-auto alert bg-success p-1 text-light" id="type-message">Sucesso!</strong>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <p class="container fs-6 toast-body"></p>
-        </div>
+        </div> {% endcomment %}
     </div>
 {% endblock main %}
 

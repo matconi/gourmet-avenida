@@ -46,7 +46,7 @@ $(this).ready(() => {
         return selectedOptions.sort();
     }
 
-    fetch(jsonData.view_product_url)
+    fetch(jsonData.urls.view_product)
     .then(response => response.json())
     .then(data => {
         loadOptions(data);
@@ -66,12 +66,20 @@ $(this).ready(() => {
         function getIndexedUnit(indexedUnit) {
             if (indexedUnit !== undefined) {
                 const unit = units.find(unit => unit.id === parseInt(indexedUnit))
-
+                
+                removeAddToCartForm();
                 renderUnitData(unit);
                 changeUnitVariant(unit.variations);
             } else {
+                removeAddToCartForm();
                 renderUnitData(units[0]);
                 changeUnitVariant(units[0].variations);
+            }
+        }
+
+        function removeAddToCartForm() {
+            if (!jsonData.permissions.add_to_cart) {
+                $('#add-to-cart-submit').remove();
             }
         }
 
@@ -147,8 +155,8 @@ $(this).ready(() => {
         }
 
         function addFavoriteForm() {
-            if (jsonData.add_favorite_permission) {
-                $('#favorite-form').attr('action', jsonData.add_favorite_url).attr('title', 'Adicionar favorito');
+            if (jsonData.permissions.add_favorite) {
+                $('#favorite-form').attr('action', jsonData.urls.add_favorite).attr('title', 'Adicionar favorito');
                 $('#favorite-form button').removeClass('btn-warning text-primary').addClass('btn-outline-warning');
             } else {
                 $('#favorite-form').remove();
@@ -156,8 +164,8 @@ $(this).ready(() => {
         }
 
         function removeFavoriteForm() {
-            if (jsonData.remove_favorite_permission) {
-                $('#favorite-form').attr('action', jsonData.remove_favorite_url).attr('title', 'Remover favorito');
+            if (jsonData.permissions.remove_favorite) {
+                $('#favorite-form').attr('action', jsonData.urls.remove_favorite).attr('title', 'Remover favorito');
                 $('#favorite-form button').removeClass('btn-outline-warning').addClass('btn-warning text-primary');
             } else {
                 $('#favorite-form').remove();
