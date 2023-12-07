@@ -84,13 +84,14 @@ def view(request, category_slug, unit_slug):
 @permission_required('produto.add_to_cart', raise_exception=True)
 def add_to_cart(request):
     if request.method == 'GET':
-        unit_id_param =  request.GET.get('id')
-        quantity_param = request.GET.get('qty') or '1'
+        unit_id_param = request.GET.get('id')
+        quantity_param = request.GET.get('qty', '1')
 
         unit = unit_repository.get_or_404(unit_id_param)
 
         cart = CartService(request)
-        messages = cart.add(unit, quantity_param)
+        cart.add(unit, quantity_param)
+        messages = cart.get_messages()
 
         return JsonResponse({
             "messages": messages

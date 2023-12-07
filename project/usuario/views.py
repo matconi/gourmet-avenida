@@ -96,10 +96,12 @@ def add_favorive(request):
         unit = unit_repository.get_or_404(unit_id)
         customer_repository.add_favorite(request.user.user_customer, unit)
 
-        return JsonResponse({
-            "name": unit.name,
-            "url": reverse('usuario:favorites')
-        })
+        messages = {
+            "success": [messages_service.favorite_added(unit)],
+        }
+        return JsonResponse(
+            {"messages": messages}
+        )
 
 @login_required
 @permission_required('usuario.remove_favorite', raise_exception=True)
@@ -110,7 +112,9 @@ def remove_favorive(request):
         unit = unit_repository.get_or_404(unit_id)
         customer_repository.remove_favorite(request.user.user_customer, unit)
 
-        return JsonResponse({
-            "name": unit.name,
-            "url": reverse('usuario:favorites')
-        })
+        messages = {
+            "success": [messages_service.favorite_removed(unit)],
+        }
+        return JsonResponse(
+            {"messages": messages}
+        )
