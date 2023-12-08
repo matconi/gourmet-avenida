@@ -76,8 +76,13 @@
     </div>
 </div>
 
+<div class="position-fixed bottom-0 end-0 m-1" id="toast-container" style="z-index: 11">
+</div>
 {% endblock main %}
 
 {% block footerscript %}
-<script src="{% static 'js/unit-modal.js' %}"></script>
+    {{ json_data|json_script:"json-data" }}
+    <script src="{% static 'js/unit-modal.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/add-favorite.js' %}"></script>
 {% endblock footerscript %}

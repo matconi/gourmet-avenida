@@ -22,30 +22,28 @@
                         </td>
                     
                         <td class="fs-6">
-                            <div class="d-flex justify-content-center">
-                                {% if perms.produto.add_one_to_cart and unit.quantity > 1 %}
-                                    <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=0">
-                                        <button class="btn btn-outline-light" style="scale: .8;">
-                                            <i class="fa-solid fa-minus" style="color: #9b9b9b;"></i>
-                                        </button>
-                                    </a>
+                            <div class="d-flex">
+                                {% if perms.produto.add_to_cart %}
+                                    <button class="btn btn-outline-secondary opacity-50 border-0 decrement-cart {% if unit.quantity == 1 %}d-none{% endif %}">
+                                        <input type="hidden" name="id" value="{{ unit.id }}">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>          
                                 {% endif %}
-                                <span class="p-2">{{ unit.quantity }}</span>
-                                {% if perms.produto.add_one_to_cart %}
-                                    <a href="{% url 'produto:add_one_to_cart' unit.id %}?o=1">
-                                        <button class="btn btn-outline-light" style="scale: .8;">
-                                            <i class="fa-solid fa-plus" style="color: #9b9b9b;"></i>
-                                        </button>
-                                    </a>
+                                <span class="p-2 quantity">{{ unit.quantity }}</span>
+                                {% if perms.produto.add_to_cart %}
+                                    <button class="btn btn-outline-secondary opacity-50 border-0 increment-cart" type="button">
+                                        <input type="hidden" name="id" value="{{ unit.id }}">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
                                 {% endif %}
                             </div>
                         </td>
 
-                        <td class="fs-6">
+                        <td class="fs-6 unit-price">
                             R$ {{ unit.price|floatformat:2 }}
                         </td>
 
-                        <td class="fs-6">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
+                        <td class="fs-6 unit-quantity-price">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
                         <td>
                             <button type="button" class="btn text-danger" title="Remover"
                                 data-bs-toggle="modal" data-bs-target="#removeModal" 

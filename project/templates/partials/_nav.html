@@ -68,7 +68,7 @@
                         <a class="nav-link" href="{% url 'account_signup' %}">Criar Conta</a>
                     </li>
                 {% endif %}
-                {% if perms.usuario.add_to_cart %}
+                {% if perms.usuario.cart %}
                     <li class="nav-item">
                         <a class="nav-link nav-cart-link active" href="{% url 'produto:cart' %}">
                             <span class="nav-cart-count mr-1">

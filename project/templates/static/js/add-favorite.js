@@ -1,6 +1,8 @@
 $(this).ready(() => {
     const favoriteForm = $('#favorite-form');
     const addToCartForm = $('#add-to-cart-form');
+    const incrementCartBtn = $('.increment-cart');
+    const decrementCartBtn = $('.decrement-cart');
     const jsonData = JSON.parse($('#json-data').text());
     const csrftoken = Cookies.get('csrftoken');
 
@@ -65,18 +67,7 @@ $(this).ready(() => {
     }
 
     // add to cart form
-    function loadMessages(messages) {
-        $('#toast-container').empty();
-
-        for (let type in messages) {
-            const toastConf = getTypeConf(type);
-            
-            let messageList = messages[type];
-            showToast(toastConf, messageList);
-        }  
-    }
-
-    function addToCart() {    
+    function addToCart() {
         $.ajax({
             url: jsonData.urls.add_to_cart,
             type: 'GET',
@@ -94,9 +85,60 @@ $(this).ready(() => {
             }
         });
     }
+    
+    // add one to cart form
+    function inOrDeCrementCart(qty, target) {
+        $.ajax({
+            url: jsonData.urls.add_to_cart,
+            type: 'GET',
+            data: {
+                "id": target.find('input[name="id"]').val(),
+                "qty": qty
+            },
+            success: response => {
+                loadMessages(response.messages);
+                refreshQuantityUnit(response.unit_in_cart, target);
+            }, 
+            error: err => {
+                target.html(
+                    '<p class="text-danger">Erro ao adicionar ao carrinho!</p>');
+                console.error(err);
+            }
+        });
+    }
+
+    function refreshQuantityUnit(unitInCart, target) {
+        const quantityContainer = target.parent().find($('.quantity'));
+        let original = quantityContainer.text();
+    
+        if (original == 1 && unitInCart.quantity > 1) {
+            target.parent().find('.decrement-cart').removeClass('d-none');
+        } else if (unitInCart.quantity == 1) {
+            target.parent().find('.decrement-cart').addClass('d-none');
+        }
+        quantityContainer.text(unitInCart.quantity);
+
+        refreshQuantityPrice(unitInCart, target);
+    }
+
+    function refreshQuantityPrice(unitInCart, target) {
+        const quantityPriceContainer = target.parent().parent().parent().find($('.unit-quantity-price'));
+        quantityPriceContainer.text(`R$ ${unitInCart.quantity_price.toFixed(2).toString().replace('.', ',')}`);
+    }
 
     // utils
-    function getTypeConf(type) {
+    function loadMessages(messages) {
+        $('#toast-container').empty();
+
+        for (let type in messages) {
+            const toastConf = getConfType(type);
+            
+            let messageList = messages[type];
+            showToast(toastConf, messageList);
+        }  
+    }
+
+    function getConfType(type) {
         switch (type) {
             case 'success':
                 return {
@@ -133,7 +175,7 @@ $(this).ready(() => {
                         <strong class="my-auto alert bg-${typeConf.name} p-1 text-light" id="type-message">${typeConf.headerText}</strong>
                         <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                    <p class="container fs-6 toast-body">${message}</p>
+                    <p class="container fs-6 toast-body lead fs-5">${message}</p>
                 </div>
             `);
             $('.toast').toast('show');
@@ -148,5 +190,11 @@ $(this).ready(() => {
     addToCartForm.submit(event => {
         event.preventDefault();
         addToCart();
+    });
+    incrementCartBtn.click(event => {        
+        inOrDeCrementCart('1', $(event.currentTarget));
+    });
+    decrementCartBtn.click(event => {  
+        inOrDeCrementCart('-1', $(event.currentTarget));
     });
 });

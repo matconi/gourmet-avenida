@@ -69,7 +69,7 @@ class CartService:
         
         avaliable = unit.avaliable()
         try:
-            self.__existing_cart_validation(quantity_in_cart, avaliable, unit, unit_id)
+            self.__existing_cart_validation(quantity_in_cart, quantity, avaliable, unit, unit_id)
         except ValidationError:
             return 0
 
@@ -89,7 +89,7 @@ class CartService:
         self.cart[unit_id]["quantity_price"] = quantity_price
         return quantity_in_cart
 
-    def __existing_cart_validation(self, quantity_in_cart: int, avaliable: int, unit: Unit, unit_id: str):
+    def __existing_cart_validation(self, quantity_in_cart: int, quantity: int, avaliable: int, unit: Unit, unit_id: str):
         if avaliable == 0:
             self.messages["danger"].append(messages_service.not_enough_removed(unit))
             
@@ -97,7 +97,7 @@ class CartService:
             self.save()
             raise ValidationError("No avaliable product now")
 
-        elif quantity_in_cart == avaliable:
+        elif quantity_in_cart == avaliable and quantity > 0:
             self.messages["warning"].append(messages_service.all_avaliable_warn(unit))
 
             raise ValidationError("All avaliable product now")
@@ -120,9 +120,9 @@ class CartService:
     def remove(self, unit: Unit) -> None:
         del self.cart[str(unit.id)]
         self.save()
-        messages_service.removed_unit(self.request, unit)
+        self.messages["success"].append(messages_service.removed_unit(unit))
 
-    def clear(self) -> None:
+    def clean(self) -> None:
         del self.request.session["cart"]
         self.save()
-        messages_service.cleaned_cart(self.request)
+        self.messages["success"].append(messages_service.cleaned_cart())

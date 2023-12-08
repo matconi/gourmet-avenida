@@ -86,14 +86,15 @@ def add_to_cart(request):
     if request.method == 'GET':
         unit_id_param = request.GET.get('id')
         quantity_param = request.GET.get('qty', '1')
-
         unit = unit_repository.get_or_404(unit_id_param)
 
         cart = CartService(request)
         cart.add(unit, quantity_param)
         messages = cart.get_messages()
+        refresh_unit_cart = request.session.get('cart').get(unit_id_param)
 
         return JsonResponse({
+            "unit_in_cart": refresh_unit_cart,
             "messages": messages
         })
 
@@ -113,14 +114,23 @@ def add_one_to_cart(request, pk: int):
 @permission_required('produto.cart', raise_exception=True)
 def cart(request):
     if request.method == 'GET':
-        return render(request, "produto/cart.html")
+        json_data = {
+            "urls": {
+                "add_to_cart": reverse('produto:add_to_cart')
+            }
+        }
+
+        context = {
+            "json_data": json_data
+        }
+        return render(request, "produto/cart.html", context)
 
 @login_required
 @permission_required('produto.clear_cart', raise_exception=True)
-def clear_cart(request):
+def clean_cart(request):
     if request.method == 'POST':
         cart = CartService(request)
-        cart.clear()
+        cart.clean()
         return redirect('produto:cart')
 
 @login_required
