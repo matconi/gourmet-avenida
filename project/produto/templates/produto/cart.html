@@ -6,83 +6,79 @@
 
 
 {% block main %}
-<section>
-    <div class="row mt-3">
-        <div class="col">
-            <h2>Carrinho de compras</h2>
-            <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
-            {% include 'components/cart.html' %}
+    <section>
+        <div class="row mt-3">
+            <div class="col">
+                <h2>Carrinho de compras</h2>
+                <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
+                {% include 'components/cart.html' %}
+            </div>
         </div>
-    </div>
-</section>
-{% if request.session.cart %}
-    <div class="row m-auto">    
-        <div class="col-10">
-            <button type="button" class="btn btn-lg btn-block btn-success" data-bs-toggle="modal" data-bs-target="#bookModal">
-                Reservar
-            </button>
-        </div>
-        <div class="col-1">
-            <button type="button" class="btn btn-lg btn-block btn-danger" title="Esvaziar carrinho" data-bs-toggle="modal" data-bs-target="#clearModal">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    </div>
-{% else %}
-    <button class="btn btn-lg btn-block btn-primary">
-        <a class="nav-link" href="{% url 'produto:index' %}">Produtos</a>
-    </button>
-{% endif %}
+        {% if request.session.cart %}
+            <div class="row m-auto" id="cart-actions">
+                <div class="col-10">
+                    <button type="button" class="btn btn-lg btn-block btn-success" data-bs-toggle="modal" data-bs-target="#bookModal">
+                        Reservar
+                    </button>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-lg btn-block btn-danger" title="Limpar carrinho" data-bs-toggle="modal" data-bs-target="#cleanModal">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+    </section>
 
-<div class="modal fade" id="clearModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Esvaziar Carrinho?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-            <p>Tem certeza que deseja remover todos os produtos do carrinho?</p>
-        </div>
-        <div class="modal-footer">
-            <form action="{% url 'produto:clear_cart' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Sim</button>
-            </form>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-        </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="bookModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Reservar produtos?</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-            <p>Tem certeza que deseja reservar os produtos do carrinho?</p>
-        </div>
-        <div class="modal-footer">
-            <form action="{% url 'pedido:save' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">Sim</button>
-            </form>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-        </div>
+    <div class="modal fade" id="cleanModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Limpar Carrinho?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja remover todos os produtos do carrinho?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="" method="POST" id="clean-cart-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" id="clean-cart">Sim</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+            </div>
+            </div>
         </div>
     </div>
-</div>
+    
+    <div class="modal fade" id="bookModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reservar produtos?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja reservar os produtos do carrinho?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{% url 'pedido:save' %}" method="POST" id="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Sim</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
-<div class="position-fixed bottom-0 end-0 m-1" id="toast-container" style="z-index: 11">
-</div>
+    <div class="position-fixed bottom-0 end-0 m-1" id="toast-container" style="z-index: 11">
+    </div>
 {% endblock main %}
 
 {% block footerscript %}
     {{ json_data|json_script:"json-data" }}
-    <script src="{% static 'js/unit-modal.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-    <script type="text/javascript" src="{% static 'js/add-favorite.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/produto/cart-forms.js' %}"></script>
 {% endblock footerscript %}

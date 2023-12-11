@@ -34,9 +34,9 @@
             <p class="opacity-75 m-0 text-danger">Esgotado</p>
         {% endif %}
         {% if perms.produto.add_to_cart %}
-            <form action="{% url 'produto:add_to_cart' %}" method="GET"> 
-                <input type="hidden" name="id" value="{{ unit.uid }}">
-                <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
+            <form action="" method="GET" class="add-to-cart-form"> 
+                <button type="submit" class="btn btn-primary btn-sm m-2 w-75 increment-cart">
+                    <input type="hidden" name="id" value="{{ unit.uid }}">
                     <i class="fa fa-cart-plus" aria-hidden="true"></i>
                     <span class="d-none d-sm-inline">Adicionar</span>
                 </button>

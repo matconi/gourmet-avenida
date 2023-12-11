@@ -117,10 +117,11 @@ class CartService:
     def save(self) -> None:
         self.request.session.modified = True
 
-    def remove(self, unit: Unit) -> None:
-        del self.cart[str(unit.id)]
-        self.save()
+    def remove(self, id: str) -> None:
+        unit = self.cart.get(id)
         self.messages["success"].append(messages_service.removed_unit(unit))
+        del self.cart[id]
+        self.save()
 
     def clean(self) -> None:
         del self.request.session["cart"]

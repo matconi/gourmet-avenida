@@ -35,12 +35,8 @@ def over_avaliable(unit: Unit, over_avaliable: int) -> str:
     return (f'Atualmente seu carrinho possui mais unidades de "{unit.name}" que o disponível. '
             f'Reduzimos {over_avaliable}x do carrinho.')   
 
-def cleaned_cart(request) -> None:
-    messages.success(
-        request, 'Carrinho esvaziado com sucesso.'
-    )
+def cleaned_cart() -> str:
+    return 'Carrinho limpo com sucesso.'
 
-def removed_unit(request, unit: Unit) -> None:
-    messages.success(
-        request, f'O produto "{unit.name}" for removido com sucesso.'
-    )
+def removed_unit(unit: Unit) -> str:
+    return f'O produto "{unit["name"]}" foi removido com sucesso.'

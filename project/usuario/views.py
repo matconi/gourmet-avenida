@@ -44,9 +44,16 @@ def home(request):
         week_trends = order_unit_repository.get_week_trends()
         releases = unit_repository.get_releases()
 
+        json_data = {
+            "urls": {
+                "add_to_cart": reverse('produto:add_to_cart')
+            }
+        }
+
         context = {
             "week_trends": week_trends,
-            "releases": releases
+            "releases": releases,
+            "json_data": json_data
         }
 
         if request.user.has_perm('pedido.add_order'):

@@ -90,6 +90,7 @@ def add_to_cart(request):
 
         cart = CartService(request)
         cart.add(unit, quantity_param)
+
         messages = cart.get_messages()
         refresh_unit_cart = request.session.get('cart').get(unit_id_param)
 
@@ -116,7 +117,9 @@ def cart(request):
     if request.method == 'GET':
         json_data = {
             "urls": {
-                "add_to_cart": reverse('produto:add_to_cart')
+                "add_to_cart": reverse('produto:add_to_cart'),
+                "remove_from_cart": reverse('produto:remove_from_cart'),
+                "clean_cart": reverse('produto:clean_cart'),
             }
         }
 
@@ -126,19 +129,27 @@ def cart(request):
         return render(request, "produto/cart.html", context)
 
 @login_required
-@permission_required('produto.clear_cart', raise_exception=True)
+@permission_required('produto.clean_cart', raise_exception=True)
 def clean_cart(request):
     if request.method == 'POST':
         cart = CartService(request)
         cart.clean()
-        return redirect('produto:cart')
+
+        messages = cart.get_messages()
+
+        return JsonResponse({
+            "messages": messages
+        })
 
 @login_required
 @permission_required('produto.remove_from_cart', raise_exception=True)
 def remove_from_cart(request):
     if request.method == 'POST':
-        pk = request.POST.get('id')
-        unit = unit_repository.get_or_404(pk)
         cart = CartService(request)
-        cart.remove(unit)
-        return redirect('produto:cart')
+        cart.remove(request.POST.get('id'))
+
+        messages = cart.get_messages()
+
+        return JsonResponse({
+            "messages": messages
+        })
