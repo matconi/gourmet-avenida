@@ -1,6 +1,6 @@
 $(this).ready(() => {
     const favoriteForm = $('#favorite-form');
-    const addToCartForm = $('.add-to-cart-form');
+    const addToCartForm = $('#add-to-cart-form');
     const jsonData = JSON.parse($('#json-data').text());
     const csrftoken = Cookies.get('csrftoken');
 
@@ -19,7 +19,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 favoriteForm.html(
-                    '<p class="text-danger">Erro ao adicionar favorito!</p>');
+                    '<p class="text-danger">Erro inesperado ao adicionar favorito!</p>');
                 console.error(err);
             }
         });
@@ -49,7 +49,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 favoriteForm.html(
-                    '<p class="text-danger">Erro ao remover favorito!</p>');
+                    '<p class="text-danger">Erro inesperado ao remover favorito!</p>');
                 console.error(err);
             }
         });
@@ -66,6 +66,7 @@ $(this).ready(() => {
 
     // add to cart form
     function addToCart() {
+
         $.ajax({
             url: jsonData.urls.add_to_cart,
             type: 'GET',
@@ -78,7 +79,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 addToCartForm.html(
-                    '<p class="text-danger">Erro ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
                 console.error(err);
             }
         });
@@ -90,6 +91,8 @@ $(this).ready(() => {
         favoriteForm.attr('action') === jsonData.urls.remove_favorite ? removeFavorite() : addFavorite();
     });
     addToCartForm.submit(event => {
+        console.log('deu');
+
         event.preventDefault();
         addToCart();
     });

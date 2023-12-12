@@ -7,13 +7,12 @@ $(this).ready(() => {
     const csrftoken = Cookies.get('csrftoken');
 
     // imcrement/decrement cart button
-    function inOrDeCrementCart(qty, target) {
+    function incrementCart(target) {
         $.ajax({
-            url: jsonData.urls.add_to_cart,
+            url: jsonData.urls.increment_cart,
             type: 'GET',
             data: {
                 "id": target.find('input[name="id"]').val(),
-                "qty": qty
             },
             success: response => {
                 loadMessages(response.messages);
@@ -21,7 +20,26 @@ $(this).ready(() => {
             }, 
             error: err => {
                 target.html(
-                    '<p class="text-danger">Erro ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
+                console.error(err);
+            }
+        });
+    }
+
+    function decrementCart(target) {
+        $.ajax({
+            url: jsonData.urls.decrement_cart,
+            type: 'GET',
+            data: {
+                "id": target.find('input[name="id"]').val(),
+            },
+            success: response => {
+                loadMessages(response.messages);
+                refreshQuantityUnit(response.unit_in_cart, target);
+            }, 
+            error: err => {
+                target.html(
+                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
                 console.error(err);
             }
         });
@@ -48,6 +66,7 @@ $(this).ready(() => {
 
     // remove from cart form
     function removeFromCart(unitId, relatedTarget) {
+        console.log(unitId)
         $.ajax({
             url: jsonData.urls.remove_from_cart,
             type: 'POST',
@@ -61,8 +80,9 @@ $(this).ready(() => {
                 relatedTarget.parent().parent().remove();
             }, 
             error: err => {
+                $('#removeModal').modal('hide');
                 relatedTarget.html(
-                    '<p class="text-danger">Erro ao remover do carrinho!</p>');
+                    '<p class="text-danger">Erro inesperado ao remover do carrinho!</p>');
                 console.error(err);
             }
         });
@@ -81,8 +101,9 @@ $(this).ready(() => {
                 emptyCart();
             }, 
             error: err => {
+                $('#cleanModal').modal('hide');
                 cleanCartForm.html(
-                    '<p class="text-danger">Erro ao limpar carrinho!</p>');
+                    '<p class="text-danger">Erro inesperado ao limpar carrinho!</p>');
                 console.error(err);
             }
         });
@@ -98,10 +119,10 @@ $(this).ready(() => {
 
     // events
     incrementCartBtn.click(event => { 
-        inOrDeCrementCart('1', $(event.currentTarget));
+        incrementCart($(event.currentTarget));
     });
     decrementCartBtn.click(event => {  
-        inOrDeCrementCart('-1', $(event.currentTarget));
+        decrementCart($(event.currentTarget));
     });
     $('#removeModal').on('show.bs.modal', event => {
         const button = $(event.relatedTarget); 

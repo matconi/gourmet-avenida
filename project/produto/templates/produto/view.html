@@ -42,7 +42,7 @@
                     <span id="unit-promotional" class="lead"></span>         
                 </p>
                 
-                <form action="{% url 'produto:add_to_cart' %}" method="GET" id="add-to-cart-form">
+                <form action="" method="GET" id="add-to-cart-form">
                     <div class="form-group product-select">   
 
                         <label style="margin-left: 75%" for="qty">
@@ -67,22 +67,26 @@
                             <span id="avaliable" class="text-success"></span><span id="booked"></span>
                         </p>
                         <div class="col-10">
-                            <button type="submit" class="btn btn-primary w-100" id="add-to-cart-submit">
-                                <p class="m-0">
-                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                    Adicionar <span id="add-info-qty" class="fw-bold"></span> <span id="add-info" class="fw-bold"></span>
-                                </p>
-                            </button>
+                            {% if perms.produto.add_to_cart %}
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <p class="m-0">
+                                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                        Adicionar <span id="add-info-qty" class="fw-bold"></span> <span id="add-info" class="fw-bold"></span>
+                                    </p>
+                                </button>
+                            {% endif %}
                         </div>     
                 </form>
                         <div class="col-2 p-0">
-                            <form action="{% url 'usuario:add_favorite' %}" method="POST" id="favorite-form" title="Adicionar aos favoritos">
-                                {% csrf_token %}
-                                <input type="hidden" class="unit-id" name="id" id="unit-id-favorite" value="">
-                                <button type="submit" class="btn btn-outline-warning w-100">
-                                    <i class="fa-solid fa-star"></i>
-                                </button>
-                            </form>
+                            {% if perms.produto.add_favorite %}
+                                <form action="" method="POST" id="favorite-form" title="Adicionar aos favoritos">
+                                    {% csrf_token %}
+                                    <input type="hidden" class="unit-id" name="id" id="unit-id-favorite" value="">
+                                    <button type="submit" class="btn btn-outline-warning w-100">
+                                        <i class="fa-solid fa-star"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>             
                     </div>   
             </div>

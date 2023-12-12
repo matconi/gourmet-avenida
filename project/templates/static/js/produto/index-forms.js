@@ -16,7 +16,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 addToCartForm.html(
-                    '<p class="text-danger">Erro ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
                 console.error(err);
             }
         });
