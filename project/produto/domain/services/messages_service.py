@@ -29,14 +29,13 @@ def not_enough_removed(unit: Unit) -> str:
     return format_html(                       
         'Nenhuma unidade de "{}" disponível no momento. O produto foi removido do carrinho<a href="{}"> Visualizar.</a>',
         unit.name, reverse('produto:cart')
-    )   
-
-def over_avaliable(unit: Unit, over_avaliable: int) -> str:
-    return (f'Atualmente seu carrinho possui mais unidades de "{unit.name}" que o disponível. '
-            f'Reduzimos {over_avaliable}x do carrinho.')   
+    )
 
 def cleaned_cart() -> str:
     return 'Carrinho limpo com sucesso.'
 
 def removed_unit(unit: Unit) -> str:
     return f'O produto "{unit["name"]}" foi removido com sucesso.'
+
+def not_in_cart() -> str:
+    return f'O produto não foi encontrado no carrinhho.'  

@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator, Page
 from datetime import datetime
+from typing import Callable
+from django.core.validators import ValidationError
 
 def paginate(request, queryset, intens_per_page=10) -> Page:
     paginator = Paginator(queryset, intens_per_page)
@@ -14,3 +16,9 @@ def str_date_to_datetime(date: str, date_format: str="%d/%m/%Y", datetime_format
         return datetime.strptime(date, date_format).strftime(datetime_format)
     except Exception as e:
         print(e)
+
+def try_method(instance, method: Callable, args: list) -> None:
+    try:
+        method(*args)
+    except ValidationError as e:
+        instance.messages["danger"].append(e.message)

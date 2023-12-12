@@ -6,6 +6,6 @@ urlpatterns = [
     path('perfil/', views.profile, name="profile"),
     path('pagamentos/', views.payments, name="payments"),
     path('favoritos/', views.favorites, name="favorites"),
-    path('adicionar-favorito/', views.add_favorive, name="add_favorite"),
-    path('remover-favorito/', views.remove_favorive, name="remove_favorite")
+    path('favoritos/adicionar/', views.add_favorive, name="add_favorite"),
+    path('favoritos/remover/', views.remove_favorive, name="remove_favorite")
  ]

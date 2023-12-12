@@ -53,4 +53,4 @@ def get_customer_favorites(customer: Customer, kwargs: dict={}) -> List[Unit]:
         .all()
     )
 
-CARDS_PER_VIEW = 16
+CARDS_PER_VIEW = 12
