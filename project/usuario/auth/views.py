@@ -2,7 +2,8 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from usuario.domain.services import messages_service
 from allauth.account.views import PasswordResetDoneView, PasswordResetFromKeyDoneView, LogoutView, _ajax_response
-from copy import deepcopy
+from produto.domain.services import CartService
+import copy
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     def get(self, *args, **kwargs):
@@ -19,12 +20,11 @@ password_reset_from_key_done = CustomPasswordResetFromKeyDoneView.as_view()
 
 class CustomLogoutView(LogoutView):
     def post(self, *args, **kwargs):
-        url = self.get_redirect_url()
-        if self.request.user.is_authenticated:
-            cart = copy.deepcopy(Cart(request).cart)
-            self.logout()
-            session = self.request.session
-            session["cart"] = cart
-            session.modified = True
-            response = redirect(url)
-        return _ajax_response(self.request, response)
+        cart = self.request.session.get('cart')
+        cart_copy = copy.deepcopy(cart)
+        logout = super(CustomLogoutView, self).post(*args, **kwargs)
+        self.request.session["cart"] = cart_copy
+        self.request.session.modified = True
+        return logout
+
+logout = CustomLogoutView.as_view()

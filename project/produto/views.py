@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .domain.repositories import product_repository, unit_repository, category_repository
-from .domain.services.CartService import CartService
+from .domain.services import CartService
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.http import JsonResponse
@@ -17,10 +17,10 @@ def index(request):
     json_data = {
         "urls": {
             "load_more": reverse('api_produto:load_more'),
-            "add_to_cart": reverse('produto:add_to_cart'),
+            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart')
         },
         "permissions": {
-            "add_to_cart": request.user.has_perm('produto.add_to_cart')
+            "add_from_list_to_cart": request.user.has_perm('produto.add_from_list_to_cart')
         }
     }
 
@@ -42,10 +42,10 @@ def index_category(request, category_slug):
     json_data = {
         "urls": {
             "load_more": reverse('api_produto:load_more_category', args=[category_selected.slug]),
-            "add_to_cart": reverse('produto:add_to_cart'),
+            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart'),
         },
         "permissions": {
-            "add_to_cart": request.user.has_perm('produto.add_to_cart')
+            "add_from_list_to_cart": request.user.has_perm('produto.add_from_list_to_cart')
         }
     }
 
@@ -122,10 +122,11 @@ def add_to_cart(request):
 @login_required
 @permission_required('produto.add_from_list_to_cart', raise_exception=True)
 def add_from_list_to_cart(request):
+    unit_id_param = request.GET.get('id')
     unit = unit_repository.get_or_404(unit_id_param)
 
     cart = CartService(request)
-    try_method(cart, cart.increment, [unit])
+    try_method(cart, cart.add, [unit, 1])
     messages = cart.get_messages()
 
     return JsonResponse({

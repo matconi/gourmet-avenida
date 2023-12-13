@@ -9,7 +9,7 @@ from allauth.socialaccount.providers.google.provider import GoogleProvider
 urlpatterns = [
     path("signup/", views.signup, name="account_signup"),
     path("login/", views.login, name="account_login"),
-    path("logout/", views.logout, name="account_logout"),
+    path("logout/", custom_views.logout, name="account_logout"),
     path("inactive/", views.account_inactive, name="account_inactive"),
     path(
         "password/change/",

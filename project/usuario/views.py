@@ -48,7 +48,7 @@ def home(request):
     
     json_data = {
         "urls": {
-            "add_to_cart": reverse('produto:add_to_cart')
+            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart')
         }
     }
 
@@ -85,9 +85,13 @@ def favorites(request):
     units_loaded = units[0:unit_repository.CARDS_PER_VIEW]
 
     json_data = {
-        "load_more_url": reverse('api_usuario:load_more_favorites'),
-        "add_to_cart_url": reverse('produto:add_to_cart'),
-        "add_to_cart_permission": request.user.has_perm('produto.add_to_cart'),
+        "urls": {
+            "load_more": reverse('api_usuario:load_more_favorites'),
+            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart')
+        },
+        "permissions": {
+            "add_from_list_to_cart": request.user.has_perm('produto.add_from_list_to_cart')
+        }
     }
 
     context = {

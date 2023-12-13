@@ -5,17 +5,16 @@ from django.core.validators import ValidationError
 class CartService:
     def __init__(self, request):
         self.request = request
-        cart = self.request.session.get('cart')
+        cart = self.request.session.get('cart') 
+        if not cart:
+            cart = self.request.session["cart"] = {}
+        self.cart = cart
         self.messages = {
             "success": [],
             "info": [],
             "warning": [],
             "danger": []
-        }
-        
-        if not cart:
-            cart = self.request.session["cart"] = {}
-        self.cart = cart
+        } 
 
     def get_messages(self) -> dict:
         return self.messages
@@ -118,7 +117,7 @@ class CartService:
 
     def __validate_unit_in_cart(self, unit_id: str) -> None:
         if not self.cart.get(unit_id):
-            raise ValidationError(messages_service.not_in_cart())
+            raise ValidationError(messages_service.not_found())
 
     def decrement(self, unit: Unit) -> None:
         unit_id = str(unit.id)
