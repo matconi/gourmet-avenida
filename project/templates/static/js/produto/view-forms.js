@@ -91,8 +91,6 @@ $(this).ready(() => {
         favoriteForm.attr('action') === jsonData.urls.remove_favorite ? removeFavorite() : addFavorite();
     });
     addToCartForm.submit(event => {
-        console.log('deu');
-
         event.preventDefault();
         addToCart();
     });

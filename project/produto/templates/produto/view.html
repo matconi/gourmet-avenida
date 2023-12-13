@@ -128,7 +128,9 @@
     {{ json_data|json_script:"json-data" }}
     <script src="{% static 'js/produto/view-product.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/produto/product-carousel.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-    <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/produto/view-forms.js' %}"></script>
+    {% if perms.produto.add_to_cart or perms.produto.add_favorite or perms.produto.remove_favorite %}
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/produto/view-forms.js' %}"></script>
+    {% endif %}
 {% endblock footerscript %}

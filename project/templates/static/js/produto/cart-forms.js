@@ -66,7 +66,6 @@ $(this).ready(() => {
 
     // remove from cart form
     function removeFromCart(unitId, relatedTarget) {
-        console.log(unitId)
         $.ajax({
             url: jsonData.urls.remove_from_cart,
             type: 'POST',

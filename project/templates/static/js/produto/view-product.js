@@ -103,7 +103,6 @@ $(this).ready(() => {
             renderPromotional(unit);
             renderAvaliable(unit);
             renderFavoriteForm(unit);
-            
         }
 
         function setActiveImage(unit) {
