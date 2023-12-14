@@ -39,7 +39,6 @@ class Unit(AbstractName):
         permissions = [
             ("cart", "Can view cart"),
             ("add_to_cart", "Can add to cart"),
-            ("add_from_list_to_cart", "Can add from list to cart"),
             ("increment_cart", "Can increment cart"),
             ("decrement_cart", "Can decrement cart"),
             ("clean_cart", "Can clear cart"),

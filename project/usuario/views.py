@@ -48,7 +48,7 @@ def home(request):
     
     json_data = {
         "urls": {
-            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart')
+            "add_to_cart": reverse('produto:add_to_cart')
         }
     }
 
@@ -87,10 +87,10 @@ def favorites(request):
     json_data = {
         "urls": {
             "load_more": reverse('api_usuario:load_more_favorites'),
-            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart')
+            "add_to_cart": reverse('produto:add_to_cart')
         },
         "permissions": {
-            "add_from_list_to_cart": request.user.has_perm('produto.add_from_list_to_cart')
+            "add_to_cart": request.user.has_perm('produto.add_to_cart')
         }
     }
 

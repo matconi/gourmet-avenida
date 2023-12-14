@@ -18,6 +18,9 @@ def str_date_to_datetime(date: str, date_format: str="%d/%m/%Y", datetime_format
         print(e)
 
 def try_method(instance, method: Callable, args: list) -> None:
+    """ Instance must have 'messages' dict attribute with 'danger' key, 
+    wich contains an error list to be displayed for user
+    """
     try:
         method(*args)
     except ValidationError as e:
