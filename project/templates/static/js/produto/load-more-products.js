@@ -10,7 +10,7 @@ $(this).ready(() => {
         const contentContainer = $("#content");
 
         $.ajax({
-            url: jsonData.load_more_url,
+            url: jsonData.urls.load_more,
             type: 'GET',
             data: {
                 'offset': currentItensCount,
@@ -23,7 +23,6 @@ $(this).ready(() => {
             },
             success: response => {
                 spinner.addClass('d-none');
-
                 response.units.map(unit => {
                     renderCard(contentContainer, unit);
                     renderPromotional(unit);
@@ -61,7 +60,7 @@ $(this).ready(() => {
                         
                         <div class="product-price-block text-center">
                             <span class="product-price text-success">
-                                R$ ${unit.price.replace('.', ',')}
+                                ${priceFormat(unit.price)}
                             </span>
                             <span id="unit-promotional-${unit.uid}"></span>         
                         </div>
@@ -81,7 +80,7 @@ $(this).ready(() => {
             promotional.html(`
                 <small class="pl-2 text-muted">
                     <del>
-                        R$ ${unit.promotional.replace('.', ',')}
+                        ${priceFormat(unit.promotional)}
                     </del>
                 </small>
             `);
@@ -90,22 +89,31 @@ $(this).ready(() => {
     
     function renderCardFooter(unit, jsonData) {
         const footer = $(`#card-footer-${unit.uid}`);
-
-        if (!jsonData.add_to_cart_permission) {
-            footer.remove();
-        } else {
-            footer.html(`
-                <div class="card-footer bg-transparent border-top-light-custom text-center">
-                    <form action="${jsonData.add_to_cart_url}" method="GET"> 
-                        <input type="hidden" name="id" value="${unit.uid}">
-                        <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
-                            <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                            <span class="d-none d-sm-inline">Adicionar</span>
-                        </button>
-                    </form>
-                </div>
+        footer.html(`
+            <div class="card-footer bg-transparent border-top-light-custom text-center">
+                ${getAvaliable(unit)}    
+            </div>
+        `);
+        if (jsonData.permissions.add_to_cart) {
+            footer.find('.card-footer').append(`
+                <form action="${jsonData.urls.add_to_cart}" method="GET"> 
+                    <input type="hidden" name="id" value="${unit.uid}">
+                    <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                        <span class="d-none d-sm-inline">Adicionar</span>
+                    </button>
+                </form>
             `);
         }
+    }
+
+    function getAvaliable(unit) {  
+        if (unit.avaliable == 0 && unit.stock > 0) {
+            return '<p class="opacity-75 m-0">Indisponível</p>';
+        } else if (unit.stock > 0) {
+            return `<p class="opacity-75 m-0">${unit.avaliable} disponíveis</p>`;
+        }
+        return '<p class="opacity-75 m-0 text-danger">Esgotado</p>';
     }
 
     function getTotalUnits(is_reload, currentItensCount, response) {

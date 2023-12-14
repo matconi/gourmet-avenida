@@ -37,9 +37,10 @@ class Unit(AbstractName):
         verbose_name_plural = 'Unidades'
         db_table = 'produto_units'
         permissions = [
-            ("add_to_cart", "Can add to cart"),
-            ("add_one_to_cart", "Can add one to cart"),
             ("cart", "Can view cart"),
-            ("clear_cart", "Can clear cart"),
-            ("remove_from_cart", "Can remove from cart"),
+            ("add_to_cart", "Can add to cart"),
+            ("increment_cart", "Can increment cart"),
+            ("decrement_cart", "Can decrement cart"),
+            ("clean_cart", "Can clear cart"),
+            ("remove_from_cart", "Can remove from cart")
         ]

@@ -46,7 +46,7 @@ $(this).ready(() => {
         return selectedOptions.sort();
     }
 
-    fetch(jsonData.view_product_url)
+    fetch(jsonData.urls.view_product)
     .then(response => response.json())
     .then(data => {
         loadOptions(data);
@@ -66,12 +66,20 @@ $(this).ready(() => {
         function getIndexedUnit(indexedUnit) {
             if (indexedUnit !== undefined) {
                 const unit = units.find(unit => unit.id === parseInt(indexedUnit))
-
+                
+                removeAddToCartForm();
                 renderUnitData(unit);
                 changeUnitVariant(unit.variations);
             } else {
+                removeAddToCartForm();
                 renderUnitData(units[0]);
                 changeUnitVariant(units[0].variations);
+            }
+        }
+
+        function removeAddToCartForm() {
+            if (!jsonData.permissions.add_to_cart) {
+                $('#add-to-cart-submit').remove();
             }
         }
 
@@ -88,14 +96,13 @@ $(this).ready(() => {
             const unitId = $('.unit-id');
             
             name.text(unit.name);
-            price.text(`R$ ${unit.price.replace('.', ',')}`);
+            price.text(priceFormat(unit.price));
             unitId.val(unit.id);
     
             setActiveImage(unit);
             renderPromotional(unit);
             renderAvaliable(unit);
             renderFavoriteForm(unit);
-            
         }
 
         function setActiveImage(unit) {
@@ -112,7 +119,7 @@ $(this).ready(() => {
                 promotional.html(`
                     <small class="pl-2 opacity-75 text-danger">
                         <del>
-                            R$ ${unit.promotional.replace('.', ',')}
+                            ${priceFormat(unit.promotional)}
                         </del>
                     </small>
                 `);
@@ -143,25 +150,8 @@ $(this).ready(() => {
         }
 
         function renderFavoriteForm(unit) {
+            console.log(unit);
             unit.is_favorite ? removeFavoriteForm() : addFavoriteForm();
-        }
-
-        function addFavoriteForm() {
-            if (jsonData.add_favorite_permission) {
-                $('#favorite-form').attr('action', jsonData.add_favorite_url).attr('title', 'Adicionar favorito');
-                $('#favorite-form button').removeClass('btn-warning text-primary').addClass('btn-outline-warning');
-            } else {
-                $('#favorite-form').remove();
-            }
-        }
-
-        function removeFavoriteForm() {
-            if (jsonData.remove_favorite_permission) {
-                $('#favorite-form').attr('action', jsonData.remove_favorite_url).attr('title', 'Remover favorito');
-                $('#favorite-form button').removeClass('btn-outline-warning').addClass('btn-warning text-primary');
-            } else {
-                $('#favorite-form').remove();
-            }
         }
 
         function renderImages(carousel, unit) {
@@ -186,7 +176,6 @@ $(this).ready(() => {
             selectBoxes.forEach((selectBox, i) => {
                 optionInSelect = Array.from(ids)
                                         .find(option => option.value == valuesToSelect[i]);
-
                 optionInSelect.setAttribute("selected", "");
             }); 
         }
@@ -204,8 +193,7 @@ $(this).ready(() => {
 
         function changeQuantity() {
             $('#add-info-qty').text($('#qty').val());
-        }
-        
+        }       
     }).catch(err => {
             productSelect.innerHTML = '<p class="text-danger">Erro ao carregar os dados do produto!</p>';
             console.error(err);

@@ -84,9 +84,16 @@
     <button id="back-to-top" class="btn btn-lg border border-2 border-primary btn-light mt-4 mr-4 float-end d-none opacity-75" style="border-radius: 50% !important;" title="Voltar ao Topo">
         <i class="fa-solid fa-chevron-up text-primary"></i>
     </button>
+
+    <div class="position-fixed bottom-0 end-0 m-1" id="toast-container" style="z-index: 11">
+    </div>
 {% endblock main %}
 
 {% block footerscript %}
     {{ json_data|json_script:"json-data" }}
-    <script src="{% static 'js/load-more-products.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
+    <script src="{% static 'js/produto/load-more-products.js' %}"></script> 
+    {% if perms.produto.add_to_cart %}
+        <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
+    {% endif %}
 {% endblock footerscript %}

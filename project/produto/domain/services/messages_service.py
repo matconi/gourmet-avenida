@@ -3,59 +3,39 @@ from django.utils.html import format_html
 from django.urls import reverse
 from produto.models.Unit import Unit
 
-def empty_avaliable(request, unit: Unit) -> None:
-    messages.warning(
-        request, format_html(                       
-        'Nenhuma unidade de "{}" disponível no momento. <a href="{}"> Meu Carrinho.</a>',
+def empty_avaliable(unit: Unit) -> str:
+    return format_html(                       
+        'Nenhuma unidade de "{}" disponível no momento. <a href="{}"> Visualizar.</a>',
         unit.name, reverse('produto:cart')
-        )
+    )
+      
+def not_enough_to_add(quantity: int, unit: Unit, added: int) -> str:
+    return (f'Disponibilidade insuficiente para {quantity}x de "{unit.name}". ' 
+            f'Adicionamos {added}x no seu carrinho.')           
+
+def all_avaliable_warn(unit: Unit) -> str:
+    return format_html(                       
+        'Atualmente seu carrinho possui todas as unidades de "{}" disponíveis. <a href="{}"> Visualizar.</a>',
+        unit.name, reverse('produto:cart')
+    )
+
+def added_to_cart(unit: Unit, quantity: int) -> str:
+    return format_html(
+        'Produto "{}" adicionado {}x no carrinho.<a href="{}"> Visualizar.</a>',
+        unit.name, quantity, reverse('produto:cart')
     )   
 
-def not_enough_to_add(request, quantity: int, unit: Unit, added: int) -> None:
-    messages.warning(
-        request,
-        f'Disponibilidade insuficiente para {quantity}x do produto "{unit.name}". ' 
-        f'Adicionamos {added}x no seu carrinho.'           
+def not_enough_removed(unit: Unit) -> str:
+    return format_html(                       
+        'Nenhuma unidade de "{}" disponível no momento. O produto foi removido do carrinho<a href="{}"> Visualizar.</a>',
+        unit.name, reverse('produto:cart')
     )
 
-def all_avaliable_warn(request, unit: Unit) -> None:
-    messages.warning(
-        request, format_html(                       
-            'Atualmente seu carrinho possui todas as unidades de "{}" disponíveis. '
-            'Recomendamos que finalize o pedido para garantir o produto.<a href="{}"> Meu Carrinho.</a>',
-            unit.name, reverse('produto:cart')
-        )
-    )
+def cleaned_cart() -> str:
+    return 'Carrinho limpo com sucesso.'
 
-def added_to_cart(request, unit: Unit, quantity: int) -> None:
-    messages.success(
-        request, format_html(
-            'produto "{}" adicionado {}x no Carrinho.<a href="{}"> Confira.</a>',
-            unit.name, quantity, reverse('produto:cart')
-        )   
-    )
+def removed_unit(unit: Unit) -> str:
+    return f'O produto "{unit["name"]}" foi removido com sucesso.'
 
-def not_enough_removed(request, unit: Unit) -> None:
-    messages.warning(
-        request, format_html(                       
-            'Nenhuma unidade de "{}" disponível no momento. O produto foi removido do carrinho<a href="{}"> Confira.</a>',
-            unit.name, reverse('produto:cart')
-        )
-    )
-
-def over_avaliable(request, unit: Unit, over_avaliable: int) -> None:
-    messages.warning(
-        request,
-        f'Atualmente seu carrinho possui mais unidades de "{unit.name}" que o disponível. '
-        f'Reduzimos {over_avaliable}x do seu carrinho.'   
-    ) 
-
-def cleaned_cart(request) -> None:
-    messages.success(
-        request, 'Carrinho esvaziado com sucesso.'
-    )
-
-def removed_unit(request, unit: Unit) -> None:
-    messages.success(
-        request, f'O produto "{unit.name}" for removido com sucesso.'
-    )
+def not_in_cart() -> str:
+    return f'O produto não foi encontrado no carrinhho.'  

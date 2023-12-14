@@ -42,7 +42,7 @@
                     <span id="unit-promotional" class="lead"></span>         
                 </p>
                 
-                <form action="{% url 'produto:add_to_cart' %}" method="GET" id="form-add-to-cart">
+                <form action="" method="GET" id="add-to-cart-form">
                     <div class="form-group product-select">   
 
                         <label style="margin-left: 75%" for="qty">
@@ -62,7 +62,7 @@
                         </select>
                     </div>
                     <div class="row mt-2">                      
-                        <input type="hidden" class="unit-id" name="id" value="">
+                        <input type="hidden" class="unit-id" name="id" id="unit-id-cart" value="">
                         <p class="lead fs-5 text-end mb-2">
                             <span id="avaliable" class="text-success"></span><span id="booked"></span>
                         </p>
@@ -78,13 +78,15 @@
                         </div>     
                 </form>
                         <div class="col-2 p-0">
-                            <form action="{% url 'usuario:add_favorite' %}" method="POST" id="favorite-form" title="Adicionar aos favoritos">
-                                {% csrf_token %}
-                                <input type="hidden" class="unit-id" name="id" id="unit-id-favorite" value="">
-                                <button type="submit" class="btn btn-outline-warning w-100">
-                                    <i class="fa-solid fa-star"></i>
-                                </button>
-                            </form>
+                            {% if perms.produto.add_favorite %}
+                                <form action="" method="POST" id="favorite-form" title="Adicionar aos favoritos">
+                                    {% csrf_token %}
+                                    <input type="hidden" class="unit-id" name="id" id="unit-id-favorite" value="">
+                                    <button type="submit" class="btn btn-outline-warning w-100">
+                                        <i class="fa-solid fa-star"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>             
                     </div>   
             </div>
@@ -118,21 +120,18 @@
         </div>
     </div>
 
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2200">
-            <div class="toast-header">
-                <strong class="me-auto text-success">Sucesso!</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <p class="container fs-6 toast-body"></p>
-        </div>
+    <div class="position-fixed bottom-0 end-0 m-1" id="toast-container" style="z-index: 11">
     </div>
 {% endblock main %}
 
 {% block footerscript %}
     {{ json_data|json_script:"json-data" }}
-    <script src="{% static 'js/view-product.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/product-carousel.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-    <script type="text/javascript" src="{% static 'js/add-favorite.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
+    <script src="{% static 'js/produto/view-product.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/produto/product-carousel.js' %}"></script>
+    {% if perms.produto.add_to_cart or perms.produto.add_favorite or perms.produto.remove_favorite %}
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/produto/view-forms.js' %}"></script>
+    {% endif %}
 {% endblock footerscript %}
