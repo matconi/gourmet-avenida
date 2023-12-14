@@ -192,6 +192,5 @@ def remove_from_cart(request):
         "refresh_cart": {
             "total_in_cart": produto_pipe.total_in_cart(cart.cart),
             "total_price_in_cart": produto_pipe.total_price_in_cart(cart.cart),
-            "unit_in_cart": cart.cart.get(unit_id_param)
         }
     })

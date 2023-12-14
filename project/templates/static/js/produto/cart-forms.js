@@ -78,12 +78,13 @@ $(this).ready(() => {
                 "id": unitId
             },
             success: response => {
+                console.log(response.refresh_cart);
+
                 loadMessages(response.messages);
                 changeTotalQuantity(response);
                 changeTotalPrice(response);
-
-                $('#removeModal').modal('hide');
-                relatedTarget.parent().parent().remove();
+                removeOrEmpty(response, relatedTarget);
+               
             }, 
             error: err => {
                 $('#removeModal').modal('hide');
@@ -93,6 +94,11 @@ $(this).ready(() => {
             }
         });
     } 
+
+    function removeOrEmpty(response, relatedTarget) {
+        $('#removeModal').modal('hide');
+        response.refresh_cart.total_in_cart > 0 ? relatedTarget.parent().parent().remove() : emptyCart();  
+    }
 
     // clean cart form
     function cleanCart() {
