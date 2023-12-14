@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 from django.core.validators import ValidationError
 from gourmetavenida.utils import try_method
+from .templatetags import produto_pipe
 
 @require_GET
 @login_required
@@ -17,10 +18,10 @@ def index(request):
     json_data = {
         "urls": {
             "load_more": reverse('api_produto:load_more'),
-            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart')
+            "add_to_cart": reverse('produto:add_to_cart')
         },
         "permissions": {
-            "add_from_list_to_cart": request.user.has_perm('produto.add_from_list_to_cart')
+            "add_to_cart": request.user.has_perm('produto.add_to_cart')
         }
     }
 
@@ -42,10 +43,10 @@ def index_category(request, category_slug):
     json_data = {
         "urls": {
             "load_more": reverse('api_produto:load_more_category', args=[category_selected.slug]),
-            "add_from_list_to_cart": reverse('produto:add_from_list_to_cart'),
+            "add_to_cart": reverse('produto:add_to_cart'),
         },
         "permissions": {
-            "add_from_list_to_cart": request.user.has_perm('produto.add_from_list_to_cart')
+            "add_to_cart": request.user.has_perm('produto.add_to_cart')
         }
     }
 
@@ -115,22 +116,10 @@ def add_to_cart(request):
     messages = cart.get_messages()
 
     return JsonResponse({
-        "messages": messages
-    })
-
-@require_GET
-@login_required
-@permission_required('produto.add_from_list_to_cart', raise_exception=True)
-def add_from_list_to_cart(request):
-    unit_id_param = request.GET.get('id')
-    unit = unit_repository.get_or_404(unit_id_param)
-
-    cart = CartService(request)
-    try_method(cart, cart.add, [unit, 1])
-    messages = cart.get_messages()
-
-    return JsonResponse({
-        "messages": messages
+        "messages": messages,
+        "refresh_cart": {
+            "total_in_cart": produto_pipe.total_in_cart(cart.cart),
+        }
     })
 
 @require_GET
@@ -144,11 +133,14 @@ def increment_cart(request):
     cart = CartService(request)
     try_method(cart, cart.increment, [unit])
     messages = cart.get_messages()
-    refresh_unit_cart = request.session.get('cart').get(unit_id_param)
 
     return JsonResponse({
         "messages": messages,
-        "unit_in_cart": refresh_unit_cart,
+        "refresh_cart": {
+            "total_in_cart": produto_pipe.total_in_cart(cart.cart),
+            "total_price_in_cart": produto_pipe.total_price_in_cart(cart.cart),
+            "unit_in_cart": cart.cart.get(unit_id_param)
+        }
     })
 
 @require_GET
@@ -161,11 +153,14 @@ def decrement_cart(request):
     cart = CartService(request)
     try_method(cart, cart.decrement, [unit])
     messages = cart.get_messages()
-    refresh_unit_cart = request.session.get('cart').get(unit_id_param)
 
     return JsonResponse({
         "messages": messages,
-        "unit_in_cart": refresh_unit_cart,
+        "refresh_cart": {
+            "total_in_cart": produto_pipe.total_in_cart(cart.cart),
+            "total_price_in_cart": produto_pipe.total_price_in_cart(cart.cart),
+            "unit_in_cart": cart.cart.get(unit_id_param)
+        }
     })
 
 @require_POST
@@ -174,11 +169,13 @@ def decrement_cart(request):
 def clean_cart(request):
     cart = CartService(request)
     cart.clean()
-
     messages = cart.get_messages()
 
     return JsonResponse({
-        "messages": messages
+        "messages": messages,
+        "refresh_cart": {
+            "total_in_cart": 0,
+        }
     })
 
 @require_POST
@@ -191,5 +188,10 @@ def remove_from_cart(request):
     messages = cart.get_messages()
 
     return JsonResponse({
-        "messages": messages
+        "messages": messages,
+        "refresh_cart": {
+            "total_in_cart": produto_pipe.total_in_cart(cart.cart),
+            "total_price_in_cart": produto_pipe.total_price_in_cart(cart.cart),
+            "unit_in_cart": cart.cart.get(unit_id_param)
+        }
     })

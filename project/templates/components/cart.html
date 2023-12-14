@@ -58,7 +58,7 @@
             <div class="col-lg">   
                 <tfoot>
                     <tr>
-                        <td colspan="5">Total: <strong>R$ {{ request.session.cart|total_price_in_cart|floatformat:2 }}</strong></td>
+                        <td colspan="5">Total: <strong class="cart-total">R$ {{ request.session.cart|total_price_in_cart|floatformat:2 }}</strong></td>
                     </tr>
                 </tfoot>
             </div>

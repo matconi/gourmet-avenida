@@ -25,15 +25,6 @@ $(this).ready(() => {
         });
     }
 
-    function addFavoriteForm() {
-        if (jsonData.permissions.add_favorite) {
-            $('#favorite-form').attr('action', jsonData.urls.add_favorite).attr('title', 'Adicionar favorito');
-            $('#favorite-form button').removeClass('btn-warning text-primary').addClass('btn-outline-warning');
-        } else {
-            $('#favorite-form').remove();
-        }
-    }
-
     // remove favorite form
     function removeFavorite() {     
         $.ajax({
@@ -55,18 +46,8 @@ $(this).ready(() => {
         });
     }
 
-    function removeFavoriteForm() {
-        if (jsonData.permissions.remove_favorite) {
-            $('#favorite-form').attr('action', jsonData.urls.remove_favorite).attr('title', 'Remover favorito');
-            $('#favorite-form button').removeClass('btn-outline-warning').addClass('btn-warning text-primary');
-        } else {
-            $('#favorite-form').remove();
-        }
-    }
-
     // add to cart form
     function addToCart() {
-
         $.ajax({
             url: jsonData.urls.add_to_cart,
             type: 'GET',
@@ -76,6 +57,7 @@ $(this).ready(() => {
             },
             success: response => {
                 loadMessages(response.messages);
+                changeTotalQuantity(response);
             }, 
             error: err => {
                 addToCartForm.html(

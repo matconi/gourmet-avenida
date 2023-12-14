@@ -1,3 +1,5 @@
+const jsonData = JSON.parse($('#json-data').text());
+
 function loadMessages(messages) {
     $('#toast-container').empty();
 
@@ -51,4 +53,34 @@ function showToast(confType, messageList) {
         `);
         $('.toast').toast('show');
     }
+}
+
+function addFavoriteForm() {
+    if (jsonData.permissions.add_favorite) {
+        $('#favorite-form').attr('action', jsonData.urls.add_favorite).attr('title', 'Adicionar favorito');
+        $('#favorite-form button').removeClass('btn-warning text-primary').addClass('btn-outline-warning');
+    } else {
+        $('#favorite-form').remove();
+    }
+}
+
+function removeFavoriteForm() {
+    if (jsonData.permissions.remove_favorite) {
+        $('#favorite-form').attr('action', jsonData.urls.remove_favorite).attr('title', 'Remover favorito');
+        $('#favorite-form button').removeClass('btn-outline-warning').addClass('btn-warning text-primary');
+    } else {
+        $('#favorite-form').remove();
+    }
+}
+
+function changeTotalQuantity(response) {
+    $('.cart-count').text(`${response.refresh_cart.total_in_cart}x`);
+}
+
+function changeTotalPrice(response) {
+    $('.cart-total').text(priceFormat(response.refresh_cart.total_price_in_cart));
+}
+
+function priceFormat(srcValue) {
+    return `R$ ${parseFloat(srcValue).toFixed(2).toString().replace('.', ',')}`;
 }

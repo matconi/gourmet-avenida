@@ -41,7 +41,7 @@ def get_releases() -> List[Unit]:
     last_month = (timezone.now() - timedelta(days=31)).date()
      
     return (
-        Unit.objects.filter(released__gte=last_month)
+        Unit.objects.filter(showcase=True, released__gte=last_month)
         .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .order_by('-released')[:10]
     )

@@ -5,17 +5,18 @@ $(this).ready(() => {
     // add to cart form
     function addFromListToCart(target) {
         $.ajax({
-            url: jsonData.urls.add_from_list_to_cart,
+            url: jsonData.urls.add_to_cart,
             type: 'GET',
             data: {
                 "id": target.find('input[name="id"]').val(),
             },
             success: response => {
                 loadMessages(response.messages);
+                changeTotalQuantity(response);
             }, 
             error: err => {
                 addFromListToCartForm.html(
-                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro ao solicitar adição ao carrinho!</p>');
                 console.error(err);
             }
         });

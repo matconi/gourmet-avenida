@@ -16,11 +16,13 @@ $(this).ready(() => {
             },
             success: response => {
                 loadMessages(response.messages);
-                refreshQuantityUnit(response.unit_in_cart, target);
+                refreshQuantityUnit(response.refresh_cart.unit_in_cart, target);
+                changeTotalQuantity(response);
+                changeTotalPrice(response);
             }, 
             error: err => {
                 target.html(
-                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro ao solicitar adição ao carrinho!</p>');
                 console.error(err);
             }
         });
@@ -35,11 +37,13 @@ $(this).ready(() => {
             },
             success: response => {
                 loadMessages(response.messages);
-                refreshQuantityUnit(response.unit_in_cart, target);
+                refreshQuantityUnit(response.refresh_cart.unit_in_cart, target);
+                changeTotalQuantity(response);
+                changeTotalPrice(response);
             }, 
             error: err => {
                 target.html(
-                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro ao solicitar diminuição do carrinho!</p>');
                 console.error(err);
             }
         });
@@ -61,7 +65,7 @@ $(this).ready(() => {
 
     function refreshQuantityPrice(unitInCart, target) {
         const quantityPriceContainer = target.parent().parent().parent().find($('.unit-quantity-price'));
-        quantityPriceContainer.text(`R$ ${unitInCart.quantity_price.toFixed(2).toString().replace('.', ',')}`);
+        quantityPriceContainer.text(priceFormat(unitInCart.quantity_price));
     }
 
     // remove from cart form
@@ -75,13 +79,16 @@ $(this).ready(() => {
             },
             success: response => {
                 loadMessages(response.messages);
+                changeTotalQuantity(response);
+                changeTotalPrice(response);
+
                 $('#removeModal').modal('hide');
                 relatedTarget.parent().parent().remove();
             }, 
             error: err => {
                 $('#removeModal').modal('hide');
                 relatedTarget.html(
-                    '<p class="text-danger">Erro inesperado ao remover do carrinho!</p>');
+                    '<p class="text-danger">Erro ao solicitar remoção do carrinho!</p>');
                 console.error(err);
             }
         });
@@ -95,6 +102,7 @@ $(this).ready(() => {
             headers: { 'X-CSRFToken': csrftoken },
             success: response => {
                 loadMessages(response.messages);
+                changeTotalQuantity(response);
 
                 $('#cleanModal').modal('hide');
                 emptyCart();
@@ -102,7 +110,7 @@ $(this).ready(() => {
             error: err => {
                 $('#cleanModal').modal('hide');
                 cleanCartForm.html(
-                    '<p class="text-danger">Erro inesperado ao limpar carrinho!</p>');
+                    '<p class="text-danger">Erro ao solicitar limpeza do carrinho!</p>');
                 console.error(err);
             }
         });

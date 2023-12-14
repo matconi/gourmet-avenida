@@ -60,7 +60,7 @@ $(this).ready(() => {
                         
                         <div class="product-price-block text-center">
                             <span class="product-price text-success">
-                                R$ ${unit.price.replace('.', ',')}
+                                ${priceFormat(unit.price)}
                             </span>
                             <span id="unit-promotional-${unit.uid}"></span>         
                         </div>
@@ -80,7 +80,7 @@ $(this).ready(() => {
             promotional.html(`
                 <small class="pl-2 text-muted">
                     <del>
-                        R$ ${unit.promotional.replace('.', ',')}
+                        ${priceFormat(unit.promotional)}
                     </del>
                 </small>
             `);
@@ -94,9 +94,9 @@ $(this).ready(() => {
                 ${getAvaliable(unit)}    
             </div>
         `);
-        if (jsonData.permissions.add_from_list_to_cart) {
+        if (jsonData.permissions.add_to_cart) {
             footer.find('.card-footer').append(`
-                <form action="${jsonData.urls.add_from_list_to_cart}" method="GET"> 
+                <form action="${jsonData.urls.add_to_cart}" method="GET"> 
                     <input type="hidden" name="id" value="${unit.uid}">
                     <button type="submit" class="btn btn-primary btn-sm m-1 mt-3 w-75">
                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
