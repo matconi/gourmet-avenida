@@ -5,10 +5,10 @@ class ProductVariationsSerializer(serializers.Serializer):
     def to_representation(self, instance):
         representation = super(ProductVariationsSerializer, self).to_representation(instance)
         return {
-            "variants": [
+            "varieties": [
                 {
-                    "id": variant['variations__variant__id'],
-                    "name": variant['variations__variant__name'],
+                    "id": variety['variations__variety__id'],
+                    "name": variety['variations__variety__name'],
                     "variations": [
                         {
                             "id": variation['variations__id'],
@@ -16,11 +16,11 @@ class ProductVariationsSerializer(serializers.Serializer):
                         } 
                         
                         for variation in instance 
-                            if variation['variations__variant__id'] == variant['variations__variant__id']
+                            if variation['variations__variety__id'] == variety['variations__variety__id']
                     ]
                 } 
                 
-                for variant in instance
+                for variety in instance
             ]
         }
 

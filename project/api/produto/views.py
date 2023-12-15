@@ -20,9 +20,9 @@ def view_product(request, slug):
             },
         ],
         "options": {
-            "variants": [
+            "varieties": [
                 {
-                    ... variant data ...
+                    ... variety data ...
                     "variations": [
                         {
                             ... variation data ...

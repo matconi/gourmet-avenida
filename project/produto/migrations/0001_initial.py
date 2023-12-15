@@ -42,15 +42,15 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Variant',
+            name='variety',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Nome')),
             ],
             options={
-                'verbose_name': 'Variante',
-                'verbose_name_plural': 'Variantes',
-                'db_table': 'produto_variants',
+                'verbose_name': 'varietye',
+                'verbose_name_plural': 'varietyes',
+                'db_table': 'produto_varieties',
             },
         ),
         migrations.CreateModel(
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Nome')),
-                ('variant', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='produto.variant', verbose_name='Variante')),
+                ('variety', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, to='produto.variety', verbose_name='varietye')),
             ],
             options={
                 'verbose_name': 'Variação',
