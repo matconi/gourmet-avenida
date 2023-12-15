@@ -25,6 +25,9 @@ class UserAdminForm(forms.ModelForm):
     def __customer_without_added_role(self, user, customer_role: Group) -> bool:
         return self.__is_customer(user) and customer_role not in self.cleaned_data["groups"]
 
+    class Meta:
+        exclude = ('user_permissions',)
+
 class CustomerAdminForm(forms.ModelForm):
     def save(self, **kwargs):
         customer: Customer = super(CustomerAdminForm, self).save(**kwargs)

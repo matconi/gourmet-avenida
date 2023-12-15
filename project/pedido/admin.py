@@ -1,15 +1,21 @@
 from django.contrib import admin
-from .models.Order import Order
-from .models.OrderUnit import OrderUnit
+from .models import Order
+from .models import OrderUnit
+from usuario.models import Payment 
 
 class OrderUnitInline(admin.TabularInline):
     model = OrderUnit
-    extra = 1
+    extra = 0
+
+class PaymentInline(admin.TabularInline):
+    model = Payment
+    extra = 0
 
 class OrderAdmin(admin.ModelAdmin):
     inlines = [
-        OrderUnitInline
+        OrderUnitInline,
+        PaymentInline
     ]
 
-admin.site.register(Order, OrderAdmin)
+admin.site.register(Order)
 admin.site.register(OrderUnit)

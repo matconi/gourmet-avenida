@@ -5,6 +5,7 @@ class Payment(models.Model):
     class Method(models.TextChoices):
         MONEY = ('M', 'Dinheiro')
         PIX = ('P', 'Pix')
+        CARD = ('C', 'Cartão')
 
     amount = models.DecimalField("Quantia", max_digits=5, decimal_places=2)
     method = models.CharField("Método", max_length=1, choices=Method.choices, default=Method.PIX)

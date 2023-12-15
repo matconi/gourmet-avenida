@@ -6,7 +6,9 @@ class Order(models.Model):
         FINISHED = ('F', 'Finalizado')
         BOOKED = ('B', 'Reservado')
         EXPIRED = ('E', 'Expirado')
+        REPROVED = ('R', 'Reprovado')
         CONSUMED = ('C', 'Consumido')
+        ABANDONED = ('A', 'Carrinho abandonado')
 
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.FINISHED)
     date_time = models.DateTimeField("Data/Hora", default=timezone.now)
@@ -16,6 +18,9 @@ class Order(models.Model):
 
     customer = models.ForeignKey("usuario.Customer", on_delete=models.RESTRICT,
         verbose_name='Cliente'
+    )
+    payment = models.ForeignKey("usuario.Payment", on_delete=models.RESTRICT,
+        blank=True, null=True, default=None, verbose_name='Pagamento'
     )
 
     def __str__(self) -> str:
