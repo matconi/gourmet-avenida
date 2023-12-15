@@ -78,13 +78,10 @@ $(this).ready(() => {
                 "id": unitId
             },
             success: response => {
-                console.log(response.refresh_cart);
-
                 loadMessages(response.messages);
                 changeTotalQuantity(response);
                 changeTotalPrice(response);
-                removeOrEmpty(response, relatedTarget);
-               
+                removeOrEmpty(response, relatedTarget);      
             }, 
             error: err => {
                 $('#removeModal').modal('hide');

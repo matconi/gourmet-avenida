@@ -9,7 +9,6 @@
     <div class="row mt-3">
         <div class="col">
             <h2>Pedidos</h2>
-            <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
             <div class="accordion mb-2" id="accordion-filter">
                 <div class="accordion-item">
                     <h4 class="accordion-header " id="headingFilter">
@@ -72,14 +71,14 @@
                                                 <i class="fa-solid fa-triangle-exclamation"></i>
                                                 {{ order.get_status_display }}
                                             </span>
-                                        {% elif order.status == 'C' %}
-                                            <span class="badge bg-error" title="Pedido consumido">
-                                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                        {% else %}
+                                            <span class="badge bg-danger" title="Pedido reprovado">
+                                                <i class="fa-solid fa-circle-xmark"></i>
                                                 {{ order.get_status_display }}
                                             </span>
                                         {% endif %}
                                     </div>
-                                    <caption>{{ order.date_time.date }} - <span> Total: <strong>R$ {{ order.total_price|floatformat:2 }}</strong></span></caption>
+                                    <caption>{{ order.date_time.date }} <strong class="m-1">R$ {{ order.total_price|floatformat:2 }}</strong></caption>
                                 </button>
                             </h2>
                             <div id="collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
