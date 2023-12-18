@@ -33,7 +33,7 @@ $(this).ready(() => {
             },
             error: err => {
                 spinner.addClass('d-none');
-                contentContainer.html('<p class="text-danger">Erro ao carregar os produtos!</p>');
+                contentContainer.html('<p class="text-danger">Erro ao carregar a lista de produtos!</p>');
                 console.error(err);
             }
         });

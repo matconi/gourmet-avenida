@@ -38,6 +38,7 @@
                                             <option value="F" {% if request.GET.status == 'F' %}selected{% endif %}>Finalizado</option>
                                             <option value="B" {% if request.GET.status == 'B' %}selected{% endif %}>Reservado</option>
                                             <option value="E" {% if request.GET.status == 'E' %}selected{% endif %}>Expirado</option>
+                                            <option value="R" {% if request.GET.status == 'R' %}selected{% endif %}>Reprovado</option>
                                         </select>
                                         <label for="end-date" class="form-label">Até:</label>
                                         <input type="text" class="form-control" name="end_date" id="end-date" placeholder="DD/MM/AAAA" value="{{ request.GET.end_date }}">

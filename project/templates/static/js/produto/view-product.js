@@ -193,7 +193,7 @@ $(this).ready(() => {
             $('#add-info-qty').text($('#qty').val());
         }       
     }).catch(err => {
-            productSelect.innerHTML = '<p class="text-danger">Erro ao carregar os dados do produto!</p>';
+            productSelect.innerHTML = '<p class="text-danger">Erro ao carregar o produto!</p>';
             console.error(err);
         }
     );

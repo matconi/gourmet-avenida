@@ -12,7 +12,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="cart-body">
                 {% for unit in request.session.cart.values %}
                     <tr>
                         <td class="fs-6">
@@ -21,27 +21,28 @@
                             </a>  
                         </td>
                     
-                        <td class="fs-6">
-                            <div class="d-flex">
-                                {% if perms.produto.add_to_cart %}
-                                    <button class="btn btn-outline-secondary opacity-50 border-0 decrement-cart {% if unit.quantity == 1 %}d-none{% endif %}">
-                                        <input type="hidden" name="id" value="{{ unit.id }}">
-                                        <i class="fa-solid fa-minus"></i>
-                                    </button>          
-                                {% endif %}
-                                <span class="p-2 quantity">{{ unit.quantity }}</span>
-                                {% if perms.produto.add_to_cart %}
-                                    <button class="btn btn-outline-secondary opacity-50 border-0 increment-cart" type="button">
-                                        <input type="hidden" name="id" value="{{ unit.id }}">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </td>
-
-                        <td class="fs-6 unit-price">
-                            R$ {{ unit.price|floatformat:2 }}
-                        </td>
+                        <div id="item-quantities">
+                            <td class="fs-6">
+                                <div class="d-flex">
+                                    {% if perms.produto.add_to_cart %}
+                                        <button class="btn btn-outline-secondary opacity-50 border-0 decrement-cart {% if unit.quantity == 1 %}d-none{% endif %}">
+                                            <input type="hidden" name="id" value="{{ unit.id }}">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+                                    {% endif %}
+                                    <span class="p-2 quantity">{{ unit.quantity }}</span>
+                                    {% if perms.produto.add_to_cart %}
+                                        <button class="btn btn-outline-secondary opacity-50 border-0 increment-cart" type="button">
+                                            <input type="hidden" name="id" value="{{ unit.id }}">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="fs-6 unit-price">
+                                R$ {{ unit.price|floatformat:2 }}
+                            </td>
+                        </div>
 
                         <td class="fs-6 unit-quantity-price">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
                         <td>
