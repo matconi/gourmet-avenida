@@ -1,5 +1,5 @@
 from django.db import models
-from .abstract.AbstractName import AbstractName
+from .abstract import AbstractName
 
 class Variety(AbstractName):
 

@@ -23,7 +23,7 @@ def get_week_trends() -> List[OrderUnit]:
     last_week = (timezone.now() - timedelta(days=7)).date()
      
     return (
-        OrderUnit.objects.filter(order__date_time__gte=last_week)
+        OrderUnit.objects.filter(order__date_time__gte=last_week, order__status=Order.Status.FINISHED)
         .values(
             uid=F('unit__id'), 
             name=F('unit__name'), 
