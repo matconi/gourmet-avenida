@@ -28,6 +28,7 @@ class OrderService():
 
         order = order_repository.create_booking(self.request)     
         order_unit_repository.create_booking_units(order, self.cart)
+        self.__change_booked(units)
         del self.request.session["cart"]
 
         self.messages["success"].append(messages_service.booked_success())
@@ -53,6 +54,12 @@ class OrderService():
 
                 over_avaliable = quantity_in_cart - avaliable
                 raise ValidationError(messages_service.over_avaliable(unit, over_avaliable))
+
+    def __change_booked(self, units: List[Unit]) -> None:
+        for unit in units:
+            to_book = self.cart[str(unit.id)]["quantity"]
+            unit.booked += to_book
+            unit.save()
     
 def filter_orders(request) -> dict:
     unit = request.GET.get('unit', '')

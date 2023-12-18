@@ -2,11 +2,18 @@ from django.contrib import messages
 from django.utils.html import format_html
 from django.urls import reverse
 from produto.models.Unit import Unit
+from pedido.models import Order
 
 def empty_avaliable(unit: Unit) -> str:
     return format_html(                       
         'Nenhuma unidade de "{}" disponível no momento. <a href="{}"> Visualizar.</a>',
         unit.name, reverse('produto:cart')
+    )
+
+def unique_active_book() -> str:
+    return format_html(
+        'Você já possui uma reserva ativa, não sendo possível adicionar produtos!<a href="{}?status={}"> Visualizar.</a>', 
+        reverse('pedido:index'), Order.Status.BOOKED
     )
       
 def not_enough_to_add(quantity: int, unit: Unit, added: int) -> str:
