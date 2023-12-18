@@ -1,6 +1,7 @@
 from . import messages_service
 from produto.models.Unit import Unit
 from django.core.validators import ValidationError
+from typing import Dict
 
 class CartService:
     def __init__(self, request):
@@ -16,7 +17,7 @@ class CartService:
             "danger": []
         } 
 
-    def get_messages(self) -> dict:
+    def get_messages(self) -> Dict[str, list]:
         return self.messages
 
     def get_quantity_in_cart(self, unit_id: str) -> int:

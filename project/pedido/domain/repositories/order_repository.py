@@ -4,7 +4,8 @@ from usuario.models.Customer import Customer
 from usuario.domain.repositories import customer_repository
 from produto.templatetags import produto_pipe
 
-def create_order(request, cart: dict) -> Order:
+def create_booking(request) -> Order:
+    cart = request.session["cart"]
     return Order.objects.create(
         status=Order.Status.BOOKED,
         total_price= produto_pipe.total_price_in_cart(cart),

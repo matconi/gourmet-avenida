@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db.models import Sum, F
 from usuario.models.Customer import Customer
 
-def create_order_units(order: Order, cart: dict) -> None:
+def create_booking_units(order: Order, cart: dict) -> None:
     OrderUnit.objects.bulk_create(
         [
             OrderUnit(

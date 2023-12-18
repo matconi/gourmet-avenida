@@ -17,7 +17,7 @@ def str_date_to_datetime(date: str, date_format: str="%d/%m/%Y", datetime_format
     except Exception as e:
         print(e)
 
-def try_method(instance, method: Callable, args: list) -> None:
+def try_method(instance, method: Callable, args: list=[]) -> None:
     """ Instance must have 'messages' dict attribute with 'danger' key, 
     wich contains an error list to be displayed for user
     """

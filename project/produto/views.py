@@ -95,6 +95,7 @@ def cart(request):
             "decrement_cart": reverse('produto:decrement_cart'),
             "clean_cart": reverse('produto:clean_cart'),
             "remove_from_cart": reverse('produto:remove_from_cart'),
+            "book": reverse('pedido:book'),
         }
     }
 
@@ -174,7 +175,7 @@ def clean_cart(request):
     return JsonResponse({
         "messages": messages,
         "refresh_cart": {
-            "total_in_cart": 0,
+            "total_in_cart": 0
         }
     })
 
