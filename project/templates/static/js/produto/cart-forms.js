@@ -128,7 +128,6 @@ $(this).ready(() => {
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken },
             success: response => {
-                console.log(response);
                 loadMessages(response.messages);
                 changeTotalQuantity(response);
 
@@ -210,10 +209,7 @@ $(this).ready(() => {
         const button = $(event.relatedTarget); 
         const unitName = button.attr('data-unit-name');   
         const unitId = button.attr('data-unit-id');   
-       
         $('.unit-name').text(unitName);
-        $('#unit-id').val(unitId);
-
         removeFromCartBtn.click(() => {  
             removeFromCart(unitId, button);
         });
