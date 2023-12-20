@@ -5,6 +5,7 @@ from gourmetavenida.utils import str_date_to_datetime
 from django.core.validators import ValidationError
 from produto.domain.repositories import unit_repository
 from pedido.domain.repositories import order_repository, order_unit_repository
+from pedido.models import Order, OrderUnit
 
 class OrderService():
     def __init__(self, request):
@@ -28,7 +29,7 @@ class OrderService():
 
         order = order_repository.create_booking(self.request)     
         order_unit_repository.create_booking_units(order, self.cart)
-        self.__change_booked(units)
+        self.__up_boked(units)
         del self.request.session["cart"]
 
         self.messages["success"].append(messages_service.booked_success())
@@ -55,12 +56,29 @@ class OrderService():
                 over_avaliable = quantity_in_cart - avaliable
                 raise ValidationError(messages_service.over_avaliable(unit, over_avaliable))
 
-    def __change_booked(self, units: List[Unit]) -> None:
+    def __up_boked(self, units: List[Unit]) -> None:
         for unit in units:
             to_book = self.cart[str(unit.id)]["quantity"]
-            unit.booked += to_book
-            unit.save()
-    
+            unit_repository.up_booked(unit, to_book)
+
+    def cancel_book(self, id: str) -> None:
+        order = order_repository.get_or_404(id)
+        self.__validate_is_booked(order)
+
+        order_repository.change_status(order, Order.Status.ABANDONED)
+        order_units = order_unit_repository.get_by_order(order)
+        self.__down_booked(order_units)
+
+        messages_service.canceled_success(self.request)
+
+    def __validate_is_booked(self, order: Order) -> None:
+        if order.status != Order.Status.BOOKED:
+            raise ValidationError(messages_service.is_not_booked())
+
+    def __down_booked(self, order_units: List[OrderUnit]) -> None:
+        for order_unit in order_units:
+            unit_repository.down_booked(order_unit)
+
 def filter_orders(request) -> dict:
     unit = request.GET.get('unit', '')
     status = request.GET.get('status')

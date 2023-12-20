@@ -20,3 +20,12 @@ def booked_success() -> str:
         'Produtos reservados com sucesso.<a href="{}?status={}"> Visualizar.</a>', 
         reverse('pedido:index'), Order.Status.BOOKED
     )
+
+def is_not_booked() -> str:
+    return "Apenas é possível cancelar um pedido que está reservado!"
+
+def canceled_success(request) -> str:
+    return messages.success(
+        request,
+        "O pedido foi cancelado com sucesso."
+    )

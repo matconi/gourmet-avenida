@@ -8,29 +8,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from gourmetavenida.utils import paginate, is_ajax
 from django.views.decorators.http import require_GET, require_POST
 from django.http import JsonResponse
-from gourmetavenida.utils import try_method
+from gourmetavenida.utils import refresh_if_invalid, reload_if_invalid
 from produto.templatetags import produto_pipe
-
-@require_POST
-@login_required
-@permission_required('pedido.add_order', raise_exception=True)
-def book(request):
-    cart = request.session.get('cart')  
-    units_ids = [unit_id for unit_id in cart]  
-
-    order_service = OrderService(request)
-    try_method(order_service, order_service.book, [units_ids])
-    messages = order_service.get_messages()
-    refresh_cart = request.session.get('cart')
-
-    return JsonResponse({
-        "messages": messages,
-        "refresh_cart": {
-            "cart": refresh_cart,
-            "total_in_cart": produto_pipe.total_in_cart(refresh_cart),
-            "total_price_in_cart": produto_pipe.total_price_in_cart(refresh_cart)
-        }
-    })
 
 @require_GET
 @login_required
@@ -45,3 +24,35 @@ def index(request):
     }
 
     return render(request, 'pedido/index.html', context)
+
+@require_POST
+@login_required
+@permission_required('pedido.add_order', raise_exception=True)
+def book(request):
+    cart = request.session.get('cart')  
+    units_ids = [unit_id for unit_id in cart]  
+
+    order_service = OrderService(request)
+    refresh_if_invalid(order_service, order_service.book, [units_ids])
+    messages = order_service.get_messages()
+    refresh_cart = request.session.get('cart')
+
+    return JsonResponse({
+        "messages": messages,
+        "refresh_cart": {
+            "cart": refresh_cart,
+            "total_in_cart": produto_pipe.total_in_cart(refresh_cart),
+            "total_price_in_cart": produto_pipe.total_price_in_cart(refresh_cart)
+        }
+    })
+
+@require_POST
+@login_required
+@permission_required('pedido.cancel_book', raise_exception=True)
+def cancel_book(request):
+    id_param = request.POST.get('id')
+
+    order_service = OrderService(request)
+    reload_if_invalid(request, order_service, order_service.cancel_book, [id_param])
+
+    return redirect('pedido:index')

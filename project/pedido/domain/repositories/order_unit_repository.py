@@ -56,3 +56,6 @@ def get_again(customer: Customer) -> List[Unit]:
         .annotate(total_sold=Sum('quantity'))
         .order_by('-total_sold')[:10]
     )
+
+def get_by_order(order: Order) -> List[OrderUnit]:
+    return order.order_units.all()

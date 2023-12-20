@@ -8,7 +8,7 @@ class Order(models.Model):
         EXPIRED = ('E', 'Expirado')
         REPROVED = ('R', 'Reprovado')
         CONSUMED = ('C', 'Consumido')
-        ABANDONED = ('A', 'Carrinho abandonado')
+        ABANDONED = ('A', 'Cancelado')
 
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.FINISHED)
     date_time = models.DateTimeField("Data/Hora", default=timezone.now)
@@ -39,5 +39,6 @@ class Order(models.Model):
         db_table = 'pedido_orders'
         ordering = ["-date_time"]
         permissions = [
-            ("self_orders", "Can view self orders")
+            ("self_orders", "Can view self orders"),
+            ("cancel_book", "Can cancel booking")
         ]

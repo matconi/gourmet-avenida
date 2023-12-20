@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 from django.core.validators import ValidationError
-from gourmetavenida.utils import try_method
+from gourmetavenida.utils import refresh_if_invalid
 from .templatetags import produto_pipe
 
 @require_GET
@@ -113,7 +113,7 @@ def add_to_cart(request):
     unit = unit_repository.get_or_404(unit_id_param)
 
     cart = CartService(request)
-    try_method(cart, cart.add, [unit, quantity_param])
+    refresh_if_invalid(cart, cart.add, [unit, quantity_param])
     messages = cart.get_messages()
 
     return JsonResponse({
@@ -132,7 +132,7 @@ def increment_cart(request):
     unit = unit_repository.get_or_404(unit_id_param)
 
     cart = CartService(request)
-    try_method(cart, cart.increment, [unit])
+    refresh_if_invalid(cart, cart.increment, [unit])
     messages = cart.get_messages()
 
     return JsonResponse({
@@ -152,7 +152,7 @@ def decrement_cart(request):
     unit = unit_repository.get_or_404(unit_id_param)
 
     cart = CartService(request)
-    try_method(cart, cart.decrement, [unit])
+    refresh_if_invalid(cart, cart.decrement, [unit])
     messages = cart.get_messages()
 
     return JsonResponse({
@@ -185,7 +185,7 @@ def clean_cart(request):
 def remove_from_cart(request):
     unit_id_param = request.POST.get('id')
     cart = CartService(request)
-    try_method(cart, cart.remove, [unit_id_param])
+    refresh_if_invalid(cart, cart.remove, [unit_id_param])
     messages = cart.get_messages()
 
     return JsonResponse({

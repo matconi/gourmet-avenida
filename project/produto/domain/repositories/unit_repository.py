@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.db.models import F
 from usuario.models.Customer import Customer
+from pedido.models import OrderUnit
 
 def get_showcase(kwargs: dict) -> List[Unit]:
     return (
@@ -52,5 +53,14 @@ def get_customer_favorites(customer: Customer, kwargs: dict={}) -> List[Unit]:
         .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .all()
     )
+
+def up_booked(unit: Unit, to_book: int) -> None:
+    unit.booked += to_book
+    unit.save()
+
+def down_booked(order_unit: OrderUnit) -> None:
+    unit = order_unit.unit
+    unit.booked -= order_unit.quantity if unit.booked < 0 else 0
+    unit.save()
 
 CARDS_PER_VIEW = 12

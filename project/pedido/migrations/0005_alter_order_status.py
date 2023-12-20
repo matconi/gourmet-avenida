@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='order',
             name='status',
-            field=models.CharField(choices=[('F', 'Finalizado'), ('B', 'Reservado'), ('E', 'Expirado'), ('R', 'Reprovado'), ('C', 'Consumido'), ('A', 'Carrinho abandonado')], default='F', max_length=1, verbose_name='Status'),
+            field=models.CharField(choices=[('F', 'Finalizado'), ('B', 'Reservado'), ('E', 'Expirado'), ('R', 'Reprovado'), ('C', 'Consumido'), ('A', 'Cancelado')], default='F', max_length=1, verbose_name='Status'),
         ),
     ]
