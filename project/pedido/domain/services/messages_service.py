@@ -5,6 +5,7 @@ from produto.models import Unit
 from pedido.models import Order
 from usuario.models import Payment
 from django.conf import settings
+from produto.templatetags.produto_pipe import currencyformat
 
 def empty_cart() -> str:
     return "Atualmente o seu carrinho se encontra vazio!"
@@ -34,8 +35,8 @@ def canceled_success(request) -> None:
 
 def binded_order_payment(request, payment: Payment) -> None:
     messages.success(request,
-        format_html('Pagamento PIX vinculado ao pedido com sucesso. <a href="{}">Alterar</a>', 
-        f'/{settings.ADMIN_PATH}/usuario/payment/{payment.pk}/change/')
+        format_html('Pagamento PIX de {} vinculado ao pedido com sucesso. <a href="{}">Alterar</a>', 
+        currencyformat(payment.amount), f'/{settings.ADMIN_PATH}usuario/payment/{payment.pk}/change/')
     )
 
 def increased_booking(request) -> None:

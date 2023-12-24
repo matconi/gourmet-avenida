@@ -6,8 +6,8 @@ from pedido.models import Order
 def get_customer_payments(customer: Customer, kwargs: dict) -> List[Payment]:
     return Payment.objects.filter(customer=customer, **kwargs).order_by('-date_time').all()
 
-def bind_order_payment(data: dict, instance: Order) -> Payment:
+def bind_order_payment(instance: Order) -> Payment:
     return Payment.objects.create(
-        amount=data["total_price"] - data["discount"],
+        amount=instance.get_sold_price(),
         customer=instance.customer
     )

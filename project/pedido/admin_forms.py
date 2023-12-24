@@ -1,16 +1,12 @@
 from django import forms
-from .models import Order
-from django.core.validators import ValidationError
+from .models import Order, OrderUnit
 from usuario.models import Payment
-from django.contrib import messages
-from django.utils.html import format_html
-from django.conf import settings
 from usuario.domain.repositories import payment_repository
 from .domain.services import messages_service
 from .domain.services import OrderService
 from pedido.domain.repositories import order_unit_repository
-from gourmetavenida.utils import str_date_to_datetime
 from datetime import date
+from typing import List
 
 class OrderAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -19,7 +15,7 @@ class OrderAdminForm(forms.ModelForm):
         self.fields["total_price"].help_text ='Cálculo Automático'
         self.fields["total_quantity"].help_text ='Cálculo Automático'
 
-    is_paid = forms.BooleanField(label='Pago ', required=False,
+    is_paid = forms.BooleanField(label='Pago', required=False,
         help_text='Cria um pagamento por PIX junto à compra.'
     )
 
@@ -27,13 +23,14 @@ class OrderAdminForm(forms.ModelForm):
         self.__validate_booking_date()
         if not self.instance.id:
             self.__validate_initial_status()
-            self.instance = super(OrderAdminForm, self).save(*args, **kwargs)     
+            self.instance = super(OrderAdminForm, self).save(*args, **kwargs) 
+
             self.__change_unit_booking()
         else:
             self.__validate_book_only_create()
-            self.instance = super(OrderAdminForm, self).save(*args, **kwargs)    
+            self.instance = super(OrderAdminForm, self).save(*args, **kwargs)  
+
             self.__booking_changed()
-        self.__bind_payment()
         return self.instance
 
     def __validate_booking_date(self) -> None:
@@ -51,6 +48,10 @@ class OrderAdminForm(forms.ModelForm):
         if self.cleaned_data["status"] in status_denied:
             raise forms.ValidationError("Não é possível criar um pedido expirado, reprovado ou cancelado.")
 
+    def set_totals(self, order_units: List[OrderUnit]) -> None:
+        self.instance.set_total_price(order_units)
+        self.instance.set_total_quantity(order_units)
+
     def __change_unit_booking(self) -> None:
         if self.cleaned_data["status"] == Order.Status.BOOKED:
             order_units = order_unit_repository.get_by_order(self.instance)
@@ -67,14 +68,15 @@ class OrderAdminForm(forms.ModelForm):
             OrderService.down_booked(order_units)
             messages_service.removed_booking(self.request)
 
-    def __bind_payment(self) -> None:
+    def bind_payment(self) -> None:
         if (
             self.cleaned_data["status"] == Order.Status.FINISHED 
             and (self.__not_premium_or_paid())
             and not self.instance.payment
         ):
-            payment = payment_repository.bind_order_payment(self.cleaned_data, self.instance)
+            payment = payment_repository.bind_order_payment(self.instance)
             self.instance.payment = payment
+            self.instance.save()
             messages_service.binded_order_payment(self.request, payment)
 
     def __not_premium_or_paid(self) -> bool:

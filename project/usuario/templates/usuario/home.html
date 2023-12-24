@@ -14,7 +14,7 @@
             <div class="container">
                 <p class="lead fs-4 text-center">
                     Olá, <strong>{{ request.user.first_name }}</strong>, atualmente a sua conta é:<br>
-                    <strong class="fs-1">R$ {{ request.user.user_customer.bill|get_bill }}</strong><br>
+                    <strong class="fs-1">{{ request.user.user_customer.bill|get_bill }}</strong><br>
                     <a class="fs-6 text-secondary nav-link pt-2 d-inline" href="{% url 'usuario:payments' %}">
                         Ver pagamentos
                     </a>

@@ -4,6 +4,14 @@ from pedido.models import Order
 register = Library()
 
 @register.filter
+def currencyformat(currency: float) -> str:
+    return f'R$ {currency:.2f}'.replace('.', ',')
+
+@register.filter
+def total_in_cart(cart: dict) -> int:
+    return sum([unit["quantity"] for unit in cart.values()]) if cart else 0
+
+@register.filter
 def total_in_cart(cart: dict) -> int:
     return sum([unit["quantity"] for unit in cart.values()]) if cart else 0
 
@@ -13,4 +21,4 @@ def total_price_in_cart(cart: dict) -> float:
     
 @register.filter
 def actual_order_price(order: Order) -> float:
-    return order.get_actual()
+    return order.get_sold_price()

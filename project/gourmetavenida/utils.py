@@ -6,14 +6,19 @@ from django.contrib import messages
 from usuario.models import User
 
 def paginate(request, queryset, intens_per_page=10) -> Page:
+    """ paginates a queryset default using querystring as page controller """
     paginator = Paginator(queryset, intens_per_page)
     page_number = request.GET.get("page")
     return paginator.get_page(page_number)
 
 def is_ajax(request) -> bool:
+    """ checks if request is ajax """
     return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
 def str_date_to_datetime(date: str, date_format: str="%d/%m/%Y", datetime_format: str="%Y-%m-%d %H:%M"):
+    """ converts an string DATE, by default in brazilian format, to DATETIME, by default US format,
+    same of database setting
+    """
     try:
         return datetime.strptime(date, date_format).strftime(datetime_format)
     except Exception as e:
@@ -27,12 +32,17 @@ def refresh_if_invalid(instance, method: Callable, args: list=[]) -> None:
         method(*args)
     except ValidationError as e:
         instance.messages["danger"].append(e.message)
+    except KeyError as e:
+        raise KeyError("Instance must have 'messages' dict attribute with 'danger' key," 
+        "wich contains an error list to be displayed for user")
 
 def reload_if_invalid(request, instance, method: Callable, args: list=[]) -> None:
+    """ dispay a flash message reloading page for user """
     try:
         method(*args)
     except ValidationError as e:
         messages.error(request, e.message)
 
 def is_authenticated_user(user_test: User, auth_user: User) -> bool:
+    """ checks if is same than 'user' """
     return user_test is auth_user

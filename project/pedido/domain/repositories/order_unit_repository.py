@@ -58,4 +58,4 @@ def get_again(customer: Customer) -> List[Unit]:
     )
 
 def get_by_order(order: Order) -> List[OrderUnit]:
-    return order.order_units.all()
+    return OrderUnit.objects.filter(order=order).select_related('unit')

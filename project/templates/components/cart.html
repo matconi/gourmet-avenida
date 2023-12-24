@@ -40,11 +40,11 @@
                                 </div>
                             </td>
                             <td class="fs-6 unit-price">
-                                R$ {{ unit.price|floatformat:2 }}
+                                R$ {{ unit.price|currencyformat }}
                             </td>
                         </div>
 
-                        <td class="fs-6 unit-quantity-price">R$ {{ unit.quantity_price|floatformat:2 }}</td>           
+                        <td class="fs-6 unit-quantity-price">{{ unit.quantity_price|currencyformat }}</td>           
                         <td>
                             <button type="button" class="btn text-danger" title="Remover"
                                 data-bs-toggle="modal" data-bs-target="#removeModal" 
@@ -59,7 +59,7 @@
             <div class="col-lg">   
                 <tfoot>
                     <tr>
-                        <td colspan="5">Total: <strong class="cart-total">R$ {{ request.session.cart|total_price_in_cart|floatformat:2 }}</strong></td>
+                        <td colspan="5">Total: <strong class="cart-total">R$ {{ request.session.cart|total_price_in_cart|currencyformat }}</strong></td>
                     </tr>
                 </tfoot>
             </div>
