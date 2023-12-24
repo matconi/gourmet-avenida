@@ -16,8 +16,8 @@ class Order(models.Model):
         help_text='Preencha apenas se estiver reservado'
     )
 
-    total_price = models.DecimalField("Preço Total", max_digits=5, decimal_places=2)
-    total_quantity = models.PositiveIntegerField("Quantidade Total")
+    total_price = models.DecimalField("Preço Total", max_digits=5, decimal_places=2, blank=True)
+    total_quantity = models.PositiveIntegerField("Quantidade Total", blank=True)
     discount = models.DecimalField("Desconto", max_digits=5, decimal_places=2, default=0)
 
     customer = models.ForeignKey("usuario.Customer", on_delete=models.RESTRICT,
@@ -27,7 +27,7 @@ class Order(models.Model):
         blank=True, null=True, default=None, verbose_name='Pagamento'
     )
 
-    def get_bill(self) -> float:
+    def get_actual(self) -> float:
         return self.total_price - self.discount
 
     def __str__(self) -> str:

@@ -60,7 +60,8 @@ def up_booked(unit: Unit, to_book: int) -> None:
 
 def down_booked(order_unit: OrderUnit) -> None:
     unit = order_unit.unit
-    unit.booked -= order_unit.quantity if unit.booked < 0 else 0
+    prev = unit.booked - order_unit.quantity
+    unit.booked = prev if prev >= 0 else 0
     unit.save()
 
 CARDS_PER_VIEW = 12

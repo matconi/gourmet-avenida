@@ -135,7 +135,7 @@ $(this).ready(() => {
                 avaliable.text(`${unit.stock - unit.booked} disponíveis`);
 
                 if (unit.booked > 0) {
-                    booked.text(` (${unit.booked} reservado(s))`);
+                    booked.text(` (${unit.booked} reservados)`);
                 }
 
                 if (unit.stock == unit.booked) {

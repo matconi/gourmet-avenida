@@ -6,6 +6,7 @@ from django.core.validators import ValidationError
 from produto.domain.repositories import unit_repository
 from pedido.domain.repositories import order_repository, order_unit_repository
 from pedido.models import Order, OrderUnit
+from gourmetavenida.utils import is_authenticated_user
 
 class OrderService():
     def __init__(self, request):
@@ -55,27 +56,29 @@ class OrderService():
 
                 over_avaliable = quantity_in_cart - avaliable
                 raise ValidationError(messages_service.over_avaliable(unit, over_avaliable))
-
-    def __up_boked(self, units: List[Unit]) -> None:
+    
+    @staticmethod
+    def up_boked(units: List[Unit]) -> None:
         for unit in units:
             to_book = self.cart[str(unit.id)]["quantity"]
             unit_repository.up_booked(unit, to_book)
 
     def cancel_book(self, id: str) -> None:
         order = order_repository.get_or_404(id)
-        self.__validate_is_booked(order)
+        self.__validate_booked(order)
 
         order_repository.change_status(order, Order.Status.ABANDONED)
         order_units = order_unit_repository.get_by_order(order)
-        self.__down_booked(order_units)
+        OrderService.down_booked(order_units)
 
         messages_service.canceled_success(self.request)
 
-    def __validate_is_booked(self, order: Order) -> None:
-        if order.status != Order.Status.BOOKED:
+    def __validate_booked(self, order: Order) -> None:
+        if order.status != Order.Status.BOOKED or not is_authenticated_user(order.customer.user, self.request.user):
             raise ValidationError(messages_service.is_not_booked())
 
-    def __down_booked(self, order_units: List[OrderUnit]) -> None:
+    @staticmethod
+    def down_booked(order_units: List[OrderUnit]) -> None:
         for order_unit in order_units:
             unit_repository.down_booked(order_unit)
 

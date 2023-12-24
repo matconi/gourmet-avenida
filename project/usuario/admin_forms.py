@@ -48,4 +48,4 @@ class CustomerAdminForm(forms.ModelForm):
         return customer
     
     def __user_was_removed(self) -> bool:
-        return (self.initial["user"] is not None) and (self.cleaned_data["user"] is None)
+        return (self.initial.get("user") is not None) and (self.cleaned_data["user"] is None)

@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Callable
 from django.core.validators import ValidationError
 from django.contrib import messages
+from usuario.models import User
 
 def paginate(request, queryset, intens_per_page=10) -> Page:
     paginator = Paginator(queryset, intens_per_page)
@@ -32,3 +33,6 @@ def reload_if_invalid(request, instance, method: Callable, args: list=[]) -> Non
         method(*args)
     except ValidationError as e:
         messages.error(request, e.message)
+
+def is_authenticated_user(user_test: User, auth_user: User) -> bool:
+    return user_test is auth_user

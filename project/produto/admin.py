@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models.Category import Category
-from .models.Product import Product
-from .models.Variety import Variety
-from .models.Variation import Variation
+from .models import Category
+from .models import Product
+from .models import Variety
+from .models import Variation
 from .models.Unit import Unit
 from .admin_forms import UnitAdminForm
 

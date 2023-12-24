@@ -79,7 +79,7 @@
                                             </span>
                                         {% endif %}
                                     </div>
-                                    <caption>{{ order.date_time.date }} <strong class="m-1">R$ {{ order.total_price|floatformat:2 }}</strong></caption>
+                                    <caption>{{ order.date_time.date }} <strong class="m-1">R$ {{ order|actual_order_price|floatformat:2 }}</strong></caption>
                                 </button>
                             </h2>
                             <div id="collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
@@ -129,6 +129,9 @@
                                                 {% endfor %}
                                             </tbody>
                                         </table>
+                                        {% if order.discount > 0 %}
+                                            Desconto: <strong>R$ {{ order.discount|floatformat:2 }}</strong>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

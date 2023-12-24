@@ -3,6 +3,8 @@ from django.utils.html import format_html
 from django.urls import reverse
 from produto.models import Unit
 from pedido.models import Order
+from usuario.models import Payment
+from django.conf import settings
 
 def empty_cart() -> str:
     return "Atualmente o seu carrinho se encontra vazio!"
@@ -24,8 +26,20 @@ def booked_success() -> str:
 def is_not_booked() -> str:
     return "Apenas é possível cancelar um pedido que está reservado!"
 
-def canceled_success(request) -> str:
-    return messages.success(
+def canceled_success(request) -> None:
+    messages.success(
         request,
         "O pedido foi cancelado com sucesso."
     )
+
+def binded_order_payment(request, payment: Payment) -> None:
+    messages.success(request,
+        format_html('Pagamento PIX vinculado ao pedido com sucesso. <a href="{}">Alterar</a>', 
+        f'/{settings.ADMIN_PATH}/usuario/payment/{payment.pk}/change/')
+    )
+
+def increased_booking(request) -> None:
+    messages.info(request, "As unidades do pedido foram reservadas.")
+
+def removed_booking(request) -> None:
+    messages.info(request, "As unidades reservadas voltaram a ficar disponíveis.")
