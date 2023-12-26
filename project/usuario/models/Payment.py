@@ -22,3 +22,4 @@ class Payment(models.Model):
         verbose_name = 'Pagamento'
         verbose_name_plural = 'Pagamentos'
         db_table = 'usuario_payments'
+        ordering = ["-date_time"]

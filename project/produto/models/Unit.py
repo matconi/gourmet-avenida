@@ -9,7 +9,7 @@ class Unit(AbstractName):
     image_sm = models.ImageField(editable=False, upload_to='produtos/sm/')
 
     price = models.DecimalField("Preço", max_digits=5, decimal_places=2)
-    promotional = models.DecimalField("Preço promocional", max_digits=5, decimal_places=2, 
+    promotional = models.DecimalField("Preço promocional", max_digits=6, decimal_places=2, 
        blank=True, null=True, help_text='Preço acima do original que mostrará riscado.'
     )
 

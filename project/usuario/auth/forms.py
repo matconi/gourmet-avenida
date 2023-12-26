@@ -13,6 +13,12 @@ def get_password_pattern() -> RegexValidator:
         'A senha deve conter pelo menos 1 número, 1 letra maiúscula e 1 minúscula, totalizando no mínimo 8 caracteres.'
     )
 
+def get_phone_pattern() -> RegexValidator:
+    return RegexValidator(
+        r'^\([0-9]{2}\)[0-9]{5}-[0-9]{4}$',
+        'Telefone inválido, padrão esperado: "(12) 12345-1234".'
+    )
+        
 class CustomLoginForm(LoginForm):
     def clean_login(self):     
         user_service.block_user_by_password_err(self.cleaned_data["login"])

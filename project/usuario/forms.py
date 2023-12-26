@@ -7,6 +7,8 @@ from .domain.services import user_service
 
 class ProfileForm(forms.ModelForm):   
     email = forms.CharField(max_length=320, label='Email', required=True,
+        help_text='Gmail obrigatório.<br>Pelo email, é possível entrar com um clique pelo Google,'
+        ' recuperar senhas e ter um canal de contato.',
         widget=forms.TextInput(
             attrs={
                 "placeholder": "exemplo@gmail.com"
@@ -29,7 +31,8 @@ class ProfileForm(forms.ModelForm):
         )
     )
     phone = forms.CharField(max_length=14, label='Celular', required=True,
-        help_text='Digite apenas números',
+        help_text='Digite apenas números.<br>Com o número de telefone podemos identificá-lo(a) mais facilmente'
+        ' e estabelecer uma comunicação mais direta.',
         widget=forms.TextInput(
             attrs={
                 "placeholder": "(12)12345-1234"
