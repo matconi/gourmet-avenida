@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.models import Group
 from django.core.validators import ValidationError
 from .domain.repositories import customer_repository, user_repository, role_repository
-from .models import User, Customer
+from .models import User, Customer, Payment
+from .domain.services import messages_service
 
 class UserAdminForm(forms.ModelForm):
     def save(self, **kwargs):
@@ -25,6 +26,9 @@ class UserAdminForm(forms.ModelForm):
     def __customer_without_added_role(self, user, customer_role: Group) -> bool:
         return self.__is_customer(user) and customer_role not in self.cleaned_data["groups"]
 
+    class Meta:
+        exclude = ('user_permissions',)
+
 class CustomerAdminForm(forms.ModelForm):
     def save(self, **kwargs):
         customer: Customer = super(CustomerAdminForm, self).save(**kwargs)
@@ -45,4 +49,22 @@ class CustomerAdminForm(forms.ModelForm):
         return customer
     
     def __user_was_removed(self) -> bool:
-        return (self.initial["user"] is not None) and (self.cleaned_data["user"] is None)
+        return (self.initial.get("user") is not None) and (self.cleaned_data["user"] is None)
+
+class PaymentAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(PaymentAdminForm, self).__init__(*args, **kwargs)
+
+    def save(self, **kwargs):
+        customer: Customer = self.instance.customer
+        if customer.user is not None and customer.user.has_perm('buy_in_term'):
+            if not self.instance.id:                   
+                customer: Customer = customer_repository.pay_bill(self.instance)
+                messages_service.pay_bill(self.request, customer)
+            else:
+                diff = self.initial["amount"] - self.cleaned_data["amount"]
+                customer: Customer = customer_repository.pay_bill(self.instance, diff)
+                messages_service.update_pay_bill(self.request, customer, diff)
+
+        return super(PaymentAdminForm, self).save(**kwargs)

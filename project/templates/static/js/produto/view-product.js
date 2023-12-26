@@ -4,13 +4,13 @@ $(this).ready(() => {
     
     function loadOptions(data) {
         if (data.options) { 
-            data.options.variants.map((variant, i) => {
-                let variantLabels = $('.label').text();
+            data.options.varieties.map((variety, i) => {
+                let varietyLabels = $('.label').text();
                 
-                if (!variantLabels.includes(variant.name)) {                    
-                    const selectBox = setSelectBox(variant, i);
+                if (!varietyLabels.includes(variety.name)) {                    
+                    const selectBox = setSelectBox(variety, i);
                     
-                    variant.variations.map((variation) => {
+                    variety.variations.map((variation) => {
                         setOptionsInSelect(variation, selectBox);
                     });
                     
@@ -19,10 +19,10 @@ $(this).ready(() => {
         }
     }
 
-    function setSelectBox(variant, i) {
+    function setSelectBox(variety, i) {
         productSelect.insertAdjacentHTML('beforebegin', `
             <label class="label" for="select-variacoes-${i}">
-                <h4>${variant.name}</h4>
+                <h4>${variety.name}</h4>
             </label>
             <select id="select-variacoes-${i}" class="form-control form-control-lg mb-5 select-variacoes"></select>
         `);  
@@ -69,11 +69,11 @@ $(this).ready(() => {
                 
                 removeAddToCartForm();
                 renderUnitData(unit);
-                changeUnitVariant(unit.variations);
+                changeUnitvariety(unit.variations);
             } else {
                 removeAddToCartForm();
                 renderUnitData(units[0]);
-                changeUnitVariant(units[0].variations);
+                changeUnitvariety(units[0].variations);
             }
         }
 
@@ -135,14 +135,13 @@ $(this).ready(() => {
                 avaliable.text(`${unit.stock - unit.booked} disponíveis`);
 
                 if (unit.booked > 0) {
-                    booked.text(` (${unit.booked} reservado(s))`);
+                    booked.text(` (${unit.booked} reservados)`);
                 }
 
                 if (unit.stock == unit.booked) {
                     avaliable.removeClass("text-danger text-success");
                     avaliable.text("Indisponível");
-                }
-               
+                }              
             } else {
                 avaliable.removeClass("text-success").addClass("text-danger");
                 avaliable.text("Esgotado");
@@ -150,7 +149,6 @@ $(this).ready(() => {
         }
 
         function renderFavoriteForm(unit) {
-            console.log(unit);
             unit.is_favorite ? removeFavoriteForm() : addFavoriteForm();
         }
 
@@ -169,7 +167,7 @@ $(this).ready(() => {
             }
         }
 
-        function changeUnitVariant(valuesToSelect) {
+        function changeUnitvariety(valuesToSelect) {
             const selectBoxes = document.querySelectorAll('.select-variacoes');
             const ids = document.querySelectorAll('.ids');
 
@@ -195,7 +193,7 @@ $(this).ready(() => {
             $('#add-info-qty').text($('#qty').val());
         }       
     }).catch(err => {
-            productSelect.innerHTML = '<p class="text-danger">Erro ao carregar os dados do produto!</p>';
+            productSelect.innerHTML = '<p class="text-danger">Erro ao carregar o produto!</p>';
             console.error(err);
         }
     );

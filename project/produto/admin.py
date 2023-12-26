@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models.Category import Category
-from .models.Product import Product
-from .models.Variant import Variant
-from .models.Variation import Variation
+from .models import Category
+from .models import Product
+from .models import Variety
+from .models import Variation
 from .models.Unit import Unit
 from .admin_forms import UnitAdminForm
 
@@ -34,5 +34,5 @@ class UnitAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Unit, UnitAdmin)
-admin.site.register(Variant)
+admin.site.register(Variety)
 admin.site.register(Variation)

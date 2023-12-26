@@ -1,5 +1,5 @@
 from django.db import models
-from .abstract.AbstractName import AbstractName
+from .abstract import AbstractName
 from django.utils.text import slugify
 
 class Product(AbstractName):

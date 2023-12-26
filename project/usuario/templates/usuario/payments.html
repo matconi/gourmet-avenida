@@ -63,7 +63,7 @@
                                 {% for payment in page_obj %}            
                                     <tr>
                                         <td class="fs-6">
-                                            R$ {{ payment.amount|floatformat:2 }}
+                                            {{ payment.amount|currencyformat }}
                                         </td>
                                         <td class="fs-6">
                                             {{ payment.date_time.date }}

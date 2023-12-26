@@ -1,6 +1,8 @@
 from . import messages_service
 from produto.models.Unit import Unit
 from django.core.validators import ValidationError
+from typing import Dict
+from pedido.domain.repositories import order_repository
 
 class CartService:
     def __init__(self, request):
@@ -16,7 +18,7 @@ class CartService:
             "danger": []
         } 
 
-    def get_messages(self) -> dict:
+    def get_messages(self) -> Dict[str, list]:
         return self.messages
 
     def get_quantity_in_cart(self, unit_id: str) -> int:
@@ -50,13 +52,18 @@ class CartService:
     def __add_unit(self, unit: Unit, quantity_add: int, unit_id: str) -> None:
         avaliable = unit.avaliable()
         self.__validate_empty_avaliable(avaliable, unit)
-
+        self.__validate_unique_book()
         quantity_add = self.__add_quantity_in_cart(avaliable, unit, quantity_add)           
         self.__fill_add_unit_cart(unit_id, unit, quantity_add)  
     
     def __validate_empty_avaliable(self, avaliable: int, unit: Unit) -> None:
         if not self.__is_avaliable(avaliable):
             raise ValidationError(messages_service.empty_avaliable(unit))
+
+    def __validate_unique_book(self) -> None:
+        booked = order_repository.get_booked_by_user(self.request.user)
+        if booked:
+            raise ValidationError(messages_service.unique_active_book())
 
     def __add_quantity_in_cart(self, avaliable: int, unit: Unit, quantity_add: int) -> int:
         if not self.__is_avaliable(avaliable, quantity_add):
@@ -80,7 +87,7 @@ class CartService:
     def __update_unit(self, unit: Unit, quantity_in_cart: int, quantity_update: int, unit_id: str) -> None:
         avaliable = unit.avaliable()  
         self.__validate_empty_avaliable_remove(avaliable, unit, unit_id)
-
+        self.__validate_unique_book()
         quantity_in_cart += quantity_update     
         quantity_update = self.__update_quantity_in_cart(quantity_in_cart, avaliable, unit, unit_id)
         self.__fill_update_unit_cart(unit, quantity_update, unit_id)

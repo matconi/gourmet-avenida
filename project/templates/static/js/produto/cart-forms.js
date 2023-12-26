@@ -3,10 +3,11 @@ $(this).ready(() => {
     const decrementCartBtn = $('.decrement-cart');
     const removeFromCartBtn = $('.remove-from-cart');
     const cleanCartForm = $('#clean-cart-form');
+    const bookForm = $('#book-form');
     const jsonData = JSON.parse($('#json-data').text());
     const csrftoken = Cookies.get('csrftoken');
 
-    // imcrement/decrement cart button
+    // imcrement cart button
     function incrementCart(target) {
         $.ajax({
             url: jsonData.urls.increment_cart,
@@ -28,6 +29,7 @@ $(this).ready(() => {
         });
     }
 
+    // decrement cart button
     function decrementCart(target) {
         $.ajax({
             url: jsonData.urls.decrement_cart,
@@ -78,13 +80,10 @@ $(this).ready(() => {
                 "id": unitId
             },
             success: response => {
-                console.log(response.refresh_cart);
-
                 loadMessages(response.messages);
                 changeTotalQuantity(response);
                 changeTotalPrice(response);
-                removeOrEmpty(response, relatedTarget);
-               
+                removeOrEmpty(response, relatedTarget);      
             }, 
             error: err => {
                 $('#removeModal').modal('hide');
@@ -122,6 +121,75 @@ $(this).ready(() => {
         });
     }
 
+    // clean cart form
+    function bookItems() {
+        $.ajax({
+            url: jsonData.urls.book,
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            success: response => {
+                loadMessages(response.messages);
+                changeTotalQuantity(response);
+
+                $('#bookModal').modal('hide');
+                cartPostBook(response);
+            }, 
+            error: err => {
+                $('#cleanModal').modal('hide');
+                cleanCartForm.html(
+                    '<p class="text-danger">Erro ao solicitar reserva!</p>');
+                console.error(err);
+            }
+        });
+    }
+
+    function cartPostBook(response) {
+        const refresh_cart = response.refresh_cart.cart;
+        if (refresh_cart === null) {
+            emptyCart();
+        } else {    
+            changeTotalPrice(response);
+
+            $('#cart-body').empty();
+            for (let unitId in refresh_cart) {
+                const unit = refresh_cart[unitId];
+                $('#cart-body').append(`
+                    <tr>
+                        <td class="fs-6">
+                            <a  href="/produtos/${unit.category}/${unit.slug}?uid=${unit.id}">
+                                ${unit.name}
+                            </a>  
+                        </td>                
+                        <td class="fs-6">
+                            <div class="d-flex">
+                                <button class="btn btn-outline-secondary opacity-50 border-0 decrement-cart ${unit.quantity === 1 ? 'd-none' : ''}">
+                                    <input type="hidden" name="id" value="${unit.id}">
+                                    <i class="fa-solid fa-minus"></i>
+                                </button>          
+                                <span class="p-2 quantity">${unit.quantity}</span>
+                                <button class="btn btn-outline-secondary opacity-50 border-0 increment-cart" type="button">
+                                    <input type="hidden" name="id" value="${unit.id}">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td class="fs-6 unit-price">
+                            R$ ${priceFormat(unit.price)}
+                        </td>
+                        <td class="fs-6 unit-quantity-price">R$ ${priceFormat(unit.quantity_price)}</td>           
+                        <td>
+                            <button type="button" class="btn text-danger" title="Remover"
+                                data-bs-toggle="modal" data-bs-target="#removeModal" 
+                                data-unit-id="${unit.id}" data-unit-name="${unit.name}">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            }       
+        }
+    }
+
     // utils
     function emptyCart() {
         $('#cart-table').html(`
@@ -141,10 +209,7 @@ $(this).ready(() => {
         const button = $(event.relatedTarget); 
         const unitName = button.attr('data-unit-name');   
         const unitId = button.attr('data-unit-id');   
-       
         $('.unit-name').text(unitName);
-        $('#unit-id').val(unitId);
-
         removeFromCartBtn.click(() => {  
             removeFromCart(unitId, button);
         });
@@ -152,5 +217,9 @@ $(this).ready(() => {
     cleanCartForm.submit(event => {  
         event.preventDefault();
         cleanCart();
+    });
+    bookForm.submit(event => {  
+        event.preventDefault();
+        bookItems();
     });
 });

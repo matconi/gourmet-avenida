@@ -1,9 +1,9 @@
 from django.db import models
-from .abstract.AbstractName import AbstractName
+from .abstract import AbstractName
 
 class Variation(AbstractName):
-    variant = models.ForeignKey("Variant", on_delete=models.RESTRICT,
-        verbose_name='Variante'
+    variety = models.ForeignKey("Variety", on_delete=models.RESTRICT,
+        verbose_name='Variedade'
     )
 
     def __str__(self) -> str:

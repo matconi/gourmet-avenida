@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db.models import Sum, F
 from usuario.models.Customer import Customer
 
-def create_order_units(order: Order, cart: dict) -> None:
+def create_booking_units(order: Order, cart: dict) -> None:
     OrderUnit.objects.bulk_create(
         [
             OrderUnit(
@@ -23,7 +23,7 @@ def get_week_trends() -> List[OrderUnit]:
     last_week = (timezone.now() - timedelta(days=7)).date()
      
     return (
-        OrderUnit.objects.filter(order__date_time__gte=last_week)
+        OrderUnit.objects.filter(order__date_time__gte=last_week, order__status=Order.Status.FINISHED)
         .values(
             uid=F('unit__id'), 
             name=F('unit__name'), 
@@ -56,3 +56,6 @@ def get_again(customer: Customer) -> List[Unit]:
         .annotate(total_sold=Sum('quantity'))
         .order_by('-total_sold')[:10]
     )
+
+def get_by_order(order: Order) -> List[OrderUnit]:
+    return OrderUnit.objects.filter(order=order).select_related('unit')

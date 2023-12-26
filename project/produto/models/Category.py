@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-from .abstract.AbstractName import AbstractName
+from .abstract import AbstractName
 
 class Category(AbstractName):
     slug = models.SlugField(    

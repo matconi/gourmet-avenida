@@ -19,7 +19,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 favoriteForm.html(
-                    '<p class="text-danger">Erro inesperado ao adicionar favorito!</p>');
+                    '<p class="text-danger">Erro ao solicitar adição do favorito!</p>');
                 console.error(err);
             }
         });
@@ -40,7 +40,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 favoriteForm.html(
-                    '<p class="text-danger">Erro inesperado ao remover favorito!</p>');
+                    '<p class="text-danger">Erro ao solicitar remoção do favorito!</p>');
                 console.error(err);
             }
         });
@@ -61,7 +61,7 @@ $(this).ready(() => {
             }, 
             error: err => {
                 addToCartForm.html(
-                    '<p class="text-danger">Erro inesperado ao adicionar ao carrinho!</p>');
+                    '<p class="text-danger">Erro ao solicitar adição ao carrinho!</p>');
                 console.error(err);
             }
         });

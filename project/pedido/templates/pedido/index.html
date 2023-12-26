@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load produto_pipe %}
 {% block head %}
     <title>Pedidos - Gourmet Avenida</title>
 {% endblock head %}
 
-
 {% block main %}
     <div class="row mt-3">
         <div class="col">
             <h2>Pedidos</h2>
-            <p class="lead">Os produtos, quantidades e preços que você escolheu.</p>
             <div class="accordion mb-2" id="accordion-filter">
                 <div class="accordion-item">
                     <h4 class="accordion-header " id="headingFilter">
@@ -39,6 +38,7 @@
                                             <option value="F" {% if request.GET.status == 'F' %}selected{% endif %}>Finalizado</option>
                                             <option value="B" {% if request.GET.status == 'B' %}selected{% endif %}>Reservado</option>
                                             <option value="E" {% if request.GET.status == 'E' %}selected{% endif %}>Expirado</option>
+                                            <option value="R" {% if request.GET.status == 'R' %}selected{% endif %}>Reprovado</option>
                                         </select>
                                         <label for="end-date" class="form-label">Até:</label>
                                         <input type="text" class="form-control" name="end_date" id="end-date" placeholder="DD/MM/AAAA" value="{{ request.GET.end_date }}">
@@ -72,14 +72,14 @@
                                                 <i class="fa-solid fa-triangle-exclamation"></i>
                                                 {{ order.get_status_display }}
                                             </span>
-                                        {% elif order.status == 'C' %}
-                                            <span class="badge bg-error" title="Pedido consumido">
-                                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                        {% else %}
+                                            <span class="badge bg-danger" title="Pedido reprovado">
+                                                <i class="fa-solid fa-circle-xmark"></i>
                                                 {{ order.get_status_display }}
                                             </span>
                                         {% endif %}
                                     </div>
-                                    <caption>{{ order.date_time.date }} - <span> Total: <strong>R$ {{ order.total_price|floatformat:2 }}</strong></span></caption>
+                                    <caption>{{ order.date_time.date }} <strong class="m-1">{{ order|actual_order_price|currencyformat }}</strong></caption>
                                 </button>
                             </h2>
                             <div id="collapse-{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
@@ -87,6 +87,13 @@
                                     <div class="table-responsive">
                                         <table class="table table-hover">
                                             # <strong>{{ order.id }}</strong>
+                                            {% if order.status == 'B' %}
+                                                {% if perms.pedido.cancel_book %}
+                                                    <button type="button" class="btn btn-danger float-end" data-bs-toggle="modal" data-bs-target="#cancelModal"
+                                                    data-order-id="{{ order.id }}">Cancelar</button>
+                                                {% endif %}
+                                                <p class="lead fs-6 d-inline m-0 float-end p-2">Até {{ order.booked_upto.date }}</p>
+                                            {% endif %}
                                             <thead>
                                                 <tr>
                                                     <th>Produto</th>
@@ -109,10 +116,10 @@
                                                             </div>
                                                         </td>
                                                         <td class="fs-6">
-                                                            R$ {{ order_unit.unit.price|floatformat:2 }}
+                                                            {{ order_unit.unit.price|currencyformat }}
                                                         </td>
                                                         <td class="fs-6">
-                                                            R$ {{ order_unit.quantity_price|floatformat:2 }}
+                                                            {{ order_unit.quantity_price|currencyformat }}
                                                         </td>
                                                     </tr>
                                                 {% empty %}
@@ -122,6 +129,9 @@
                                                 {% endfor %}
                                             </tbody>
                                         </table>
+                                        {% if order.discount > 0 %}
+                                            Desconto: <strong>{{ order.discount|currencyformat }}</strong>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -138,4 +148,34 @@
             {% endif %}
         </div>       
     </div>
+
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancelar pedido?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja cancelar o pedido de reserva?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{% url 'pedido:cancel_book' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="order-id" name="id" value="">
+                    <button type="submit" class="btn btn-danger">
+                        Sim
+                    </button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+            </div>
+            </div>
+        </div>
+    </div>
 {% endblock main %}
+
+{% if perms.pedido.cancel_book %}
+    {% block footerscript %}
+        <script type="text/javascript" src="{% static 'js/pedido/index-modal.js' %}"></script>
+    {% endblock footerscript %}
+{% endif %}

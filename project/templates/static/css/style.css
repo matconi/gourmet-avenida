@@ -9,9 +9,8 @@
 }
 
 .h1 {
-    font-size: 1em;  
     font-family: Passion One, sans-serif;
-    font-variant: small-caps;
+    font-variety: small-caps;
     letter-spacing: .1em;
     text-align: center;
 } 

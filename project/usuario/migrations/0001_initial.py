@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bill', models.DecimalField(blank=True, decimal_places=2, default=None, max_digits=5, null=True, verbose_name='Conta')),
-                ('limit', models.DecimalField(blank=True, decimal_places=2, default=None, help_text='Define o valor máximo da conta à prazo. Deixe vazio caso indefinido.', max_digits=5, null=True, verbose_name='Limite')),
+                ('limit', models.DecimalField(blank=True, decimal_places=2, default=None, help_text='Define o valor máximo da conta à prazo. Válido apenas para Usuários Premium.', max_digits=5, null=True, verbose_name='Limite')),
                 ('default', models.BooleanField(default=True, verbose_name='Perfil Padrão')),
                 ('favorites', models.ManyToManyField(blank=True, to='produto.unit', verbose_name='Favoritos')),
                 ('user', models.OneToOneField(blank=True, db_column='user_id', default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Usuário')),
