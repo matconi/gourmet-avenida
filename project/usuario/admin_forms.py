@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.models import Group
 from django.core.validators import ValidationError
 from .domain.repositories import customer_repository, user_repository, role_repository
-from .models import User, Customer
+from .models import User, Customer, Payment
+from .domain.services import messages_service
 
 class UserAdminForm(forms.ModelForm):
     def save(self, **kwargs):
@@ -49,3 +50,21 @@ class CustomerAdminForm(forms.ModelForm):
     
     def __user_was_removed(self) -> bool:
         return (self.initial.get("user") is not None) and (self.cleaned_data["user"] is None)
+
+class PaymentAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(PaymentAdminForm, self).__init__(*args, **kwargs)
+
+    def save(self, **kwargs):
+        customer: Customer = self.instance.customer
+        if customer.user is not None and customer.user.has_perm('buy_in_term'):
+            if not self.instance.id:                   
+                customer: Customer = customer_repository.pay_bill(self.instance)
+                messages_service.pay_bill(self.request, customer)
+            else:
+                diff = self.initial["amount"] - self.cleaned_data["amount"]
+                customer: Customer = customer_repository.pay_bill(self.instance, diff)
+                messages_service.update_pay_bill(self.request, customer, diff)
+
+        return super(PaymentAdminForm, self).save(**kwargs)

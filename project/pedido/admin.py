@@ -28,6 +28,7 @@ class OrderAdmin(admin.ModelAdmin):
             if order_unit_form.changed_data:
                 form.set_totals(instances)
                 form.instance.save()
+            form.change_bill()
             form.bind_payment()
         except IndexError as e:
             raise forms.ValidationError("Por favor, adicione as unidades referentes ao pedido.")

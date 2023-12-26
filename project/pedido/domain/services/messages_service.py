@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from produto.models import Unit
 from pedido.models import Order
-from usuario.models import Payment
+from usuario.models import Payment, Customer
 from django.conf import settings
 from produto.templatetags.produto_pipe import currencyformat
 
@@ -37,6 +37,12 @@ def binded_order_payment(request, payment: Payment) -> None:
     messages.success(request,
         format_html('Pagamento PIX de {} vinculado ao pedido com sucesso. <a href="{}">Alterar</a>', 
         currencyformat(payment.amount), f'/{settings.ADMIN_PATH}usuario/payment/{payment.pk}/change/')
+    )
+
+def changed_bill(request, customer: Customer) -> None:
+    messages.success(request,
+        format_html('A conta do cliente "{}" foi acrescida com sucesso.<a href="{}">Alterar</a>', 
+        customer.name, f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
     )
 
 def increased_booking(request) -> None:
