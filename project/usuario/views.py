@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from .forms import ProfileForm
-from .domain.services import messages_service
+from .domain.services import messages_service, user_service
 from pedido.domain.repositories import order_unit_repository
 from produto.domain.repositories import unit_repository
 from gourmetavenida.utils import paginate
@@ -15,7 +15,6 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 @login_required
 def profile(request):
     user = request.user
-
     if request.method == 'GET':
         form = ProfileForm(
             initial={
@@ -25,21 +24,20 @@ def profile(request):
                 "phone": user.phone,
             }
         )
-
+        user_service.fill_customer_initial(user, form)
+        
         context = {
             "form": form,
             "user": user
         }
         return render(request, "usuario/profile.html", context)
-        
+
     elif request.method == 'POST':
         form = ProfileForm(request.POST, instance=user)
-
         if form.is_valid():
             form.save()
             messages_service.updated_profile(request)
-        
-        return redirect('usuario:profile')
+        return render(request,"usuario/profile.html", {"form": form})
 
 @require_GET
 def home(request):

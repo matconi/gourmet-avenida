@@ -11,7 +11,7 @@ class User(AbstractUser):
     last_name = models.CharField("Último Nome", max_length=120, blank=True, null=True, default=None)
     email = models.EmailField("Email", max_length=320, blank=False, null=False, unique=True)
     password = models.CharField("Senha", max_length=240, editable=False)
-    phone = models.CharField("Celular", max_length=14, null=True, default=None)
+    phone = models.CharField("Celular", max_length=15, null=True, default=None)
     attempts = models.PositiveSmallIntegerField(
         "Tentativas", default=0,
         help_text="Tentativas de login com a senha incorreta. "
@@ -43,7 +43,7 @@ class User(AbstractUser):
     CUSTOMER_ROLE = 1
 
     def __str__(self) -> str:
-        return self.get_name()
+        return self.get_username()
 
     def get_name(self) -> str:
         return self.get_full_name().replace("None", "") 

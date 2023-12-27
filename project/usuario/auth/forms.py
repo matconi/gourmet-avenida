@@ -7,16 +7,16 @@ from usuario.models import User
 from usuario.domain.repositories import user_repository
 from usuario.domain.services import user_service
 
-def get_password_pattern() -> RegexValidator:
+def password_pattern() -> RegexValidator:
     return RegexValidator(
-        r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)((?=.*[\W_]))*.*$",
-        'A senha deve conter pelo menos 1 número, 1 letra maiúscula e 1 minúscula, totalizando no mínimo 8 caracteres.'
+        r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)((?=.*[\W_]))*.{6,}$",
+        'A senha deve conter pelo menos 1 número, 1 letra maiúscula e 1 minúscula, totalizando no mínimo 6 caracteres.'
     )
 
-def get_phone_pattern() -> RegexValidator:
+def phone_pattern() -> RegexValidator:
     return RegexValidator(
         r'^\([0-9]{2}\)[0-9]{5}-[0-9]{4}$',
-        'Telefone inválido, padrão esperado: "(12) 12345-1234".'
+        'Telefone inválido, padrão esperado: "(12)12345-1234".'
     )
         
 class CustomLoginForm(LoginForm):
@@ -30,13 +30,19 @@ class CustomSignupForm(SignupForm):
         self.fields['password1'] = PasswordField(
             label='Senha', autocomplete="new-password",
             help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
-            validators=[get_password_pattern()]
+            validators=[password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
            {"placeholder": "Repetir"}
         )
-        self.fields['email'].widget.attrs.update(
-           {"placeholder": "exemplo@gmail.com"}
+        self.fields['email'] = forms.CharField(max_length=320, label='Email', required=True,
+            help_text='Gmail obrigatório.<br>Pelo email, é possível entrar com um clique pelo Google,'
+            ' recuperar senhas e ter um canal de contato.',
+            widget=forms.TextInput(
+                attrs={
+                    "placeholder": "exemplo@gmail.com"
+                }
+            )
         )
 
     first_name = forms.CharField(max_length=50, label='Primeiro nome', required=True,
@@ -54,13 +60,19 @@ class CustomSignupForm(SignupForm):
         )
     )
     phone = forms.CharField(max_length=14, label='Celular', required=True,
-        help_text='Digite apenas números',
+        help_text='Digite apenas números.',
+        validators=[phone_pattern()],
         widget=forms.TextInput(
             attrs={
                 "placeholder": "(12)12345-1234"
             }
         )
     )
+
+    def clean_email(self):
+        email = super(CustomSignupForm, self).clean_email()
+        user_service.gmail_required(email)
+        return email
 
     def save(self, request):
         user = super(CustomSignupForm, self).save(request)
@@ -76,7 +88,7 @@ class CustomChangePasswordForm(ChangePasswordForm):
         self.fields['password1'] = PasswordField(
             label='Nova Senha', autocomplete="new-password",
             help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
-            validators=[get_password_pattern()]
+            validators=[password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
            {"placeholder": "Repetir"}
@@ -88,7 +100,7 @@ class CustomSetPasswordForm(SetPasswordForm):
         self.fields['password1'] = PasswordField(
             label='Senha', autocomplete="new-password",
             help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
-            validators=[get_password_pattern()]
+            validators=[password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
            {"placeholder": "Repetir"}
@@ -110,7 +122,7 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
         self.fields['password1'] = PasswordField(
             label='Nova Senha', autocomplete="new-password",
             help_text="Mínimo de 8 caracteres, incluindo números, letras maiúsculas e minúsculas.",
-            validators=[get_password_pattern()]
+            validators=[password_pattern()]
         )
         self.fields['password2'].widget.attrs.update(
            {"placeholder": "Repetir"}

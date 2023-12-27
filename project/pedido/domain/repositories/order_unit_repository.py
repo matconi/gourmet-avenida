@@ -27,10 +27,11 @@ def get_week_trends() -> List[OrderUnit]:
         .values(
             uid=F('unit__id'), 
             name=F('unit__name'), 
-            image_lg=F('unit__image_lg'),           
             image_sm=F('unit__image_sm'),  
             price=F('unit__price'), 
             promotional=F('unit__promotional'),
+            stock=F('unit__stock'),
+            avaliable=F('unit__stock') - F('unit__booked'),
             category_slug=F('unit__product__category__slug'),
             product_slug=F('unit__product__slug')
         )
@@ -46,10 +47,11 @@ def get_again(customer: Customer) -> List[Unit]:
         .values(
             uid=F('unit__id'), 
             name=F('unit__name'), 
-            image_lg=F('unit__image_lg'),           
             image_sm=F('unit__image_sm'),  
             price=F('unit__price'), 
             promotional=F('unit__promotional'),
+            stock=F('unit__stock'),
+            avaliable=F('unit__stock') - F('unit__booked'),
             category_slug=F('unit__product__category__slug'),
             product_slug=F('unit__product__slug')
         )

@@ -1,7 +1,5 @@
 from django.contrib import admin
-from .models.User import User
-from .models.Customer import Customer
-from .models.Payment import Payment
+from .models import User, Customer, Payment
 from .admin_forms import UserAdminForm, CustomerAdminForm, PaymentAdminForm
 
 class UserAdmin(admin.ModelAdmin):

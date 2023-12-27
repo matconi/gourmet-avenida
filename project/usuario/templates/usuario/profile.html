@@ -8,15 +8,26 @@
     <div class="row">
         <div class="col-lg mt-3">
             <h1>Meu Perfil</h1> 
-            {% if not perms.pedido.add_order %}
-                <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
-                <small class="text-danger">Complete o cadastro para poder reservar produtos.</small>
-            {% endif %}
-            <form method="POST" action="{% url 'usuario:profile' %}" class="mb-4">
-            {% csrf_token %}
-                {{ form|crispy }}
+            <form method="POST" action="" class="mb-4">
+                {% csrf_token %}
+                <fieldset>
+                    <legend>Usuário</legend>
+                    {{ form.email|as_crispy_field }}
+                    {{ form.first_name|as_crispy_field }}
+                    {{ form.last_name|as_crispy_field }}
+                    {{ form.phone|as_crispy_field }}
+                </fieldset>
+                {% if user.user_customer %}
+                    <fieldset>
+                        <legend>Cliente</legend>
+                        <div class="row">
+                            <div class="col-6">{{ form.gender|as_crispy_field }}</div>
+                            <div class="col-6">{{ form.born|as_crispy_field }}</div>
+                        </div>
+                    </fieldset>
+                {% endif %}
                 <button type="submit" class="btn btn-success">Salvar</button>
-            </form>
+            </form> 
             <div class="d-block d-md-inline">
                 <a href="{% url 'socialaccount_connections' %}" class="text-decoration-none">
                     <button class="btn btn-outline-secondary m-2">
