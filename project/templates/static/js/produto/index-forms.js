@@ -1,4 +1,4 @@
-$(this).ready(() => {
+$(document).ready(() => {
     const addFromListToCartForm = $('.add-to-cart-card');
     const jsonData = JSON.parse($('#json-data').text());
 

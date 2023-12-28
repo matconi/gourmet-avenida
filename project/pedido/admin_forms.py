@@ -95,6 +95,13 @@ class OrderAdminForm(forms.ModelForm):
     def __not_premium_or_paid(self) -> bool:
         return self.instance.customer.user is None or not self.instance.customer.user.has_perm('pedido.buy_in_term') or self.cleaned_data["is_paid"]
 
+    class Media:
+        js = (
+            '//ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js',
+            'js/admin-shared.js',
+        )
+
     class Meta:
         model = Order
         fields = '__all__'

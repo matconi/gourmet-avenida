@@ -1,4 +1,4 @@
-$(this).ready(() => {     
+$(document).ready(() => {     
     const productSelect = document.querySelector('.product-select'); 
     const jsonData = JSON.parse($('#json-data').text());
     
@@ -96,7 +96,7 @@ $(this).ready(() => {
             const unitId = $('.unit-id');
             
             name.text(unit.name);
-            price.text(priceFormat(unit.price));
+            price.text(currencyFormat(unit.price));
             unitId.val(unit.id);
     
             setActiveImage(unit);
@@ -119,7 +119,7 @@ $(this).ready(() => {
                 promotional.html(`
                     <small class="pl-2 opacity-75 text-danger">
                         <del>
-                            ${priceFormat(unit.promotional)}
+                            ${currencyFormat(unit.promotional)}
                         </del>
                     </small>
                 `);

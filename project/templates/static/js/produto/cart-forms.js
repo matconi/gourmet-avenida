@@ -67,7 +67,7 @@ $(this).ready(() => {
 
     function refreshQuantityPrice(unitInCart, target) {
         const quantityPriceContainer = target.parent().parent().parent().find($('.unit-quantity-price'));
-        quantityPriceContainer.text(priceFormat(unitInCart.quantity_price));
+        quantityPriceContainer.text(currencyFormat(unitInCart.quantity_price));
     }
 
     // remove from cart form
@@ -174,9 +174,9 @@ $(this).ready(() => {
                             </div>
                         </td>
                         <td class="fs-6 unit-price">
-                            R$ ${priceFormat(unit.price)}
+                            R$ ${currencyFormat(unit.price)}
                         </td>
-                        <td class="fs-6 unit-quantity-price">R$ ${priceFormat(unit.quantity_price)}</td>           
+                        <td class="fs-6 unit-quantity-price">R$ ${currencyFormat(unit.quantity_price)}</td>           
                         <td>
                             <button type="button" class="btn text-danger" title="Remover"
                                 data-bs-toggle="modal" data-bs-target="#removeModal" 

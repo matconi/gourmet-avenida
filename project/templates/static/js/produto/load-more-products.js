@@ -1,4 +1,4 @@
-$(this).ready(() => {
+$(document).ready(() => {
     const loadMoreBtn = $('#load-more-btn');
     const spinner = $('#spinner');
     const jsonData = JSON.parse($('#json-data').text());
@@ -60,7 +60,7 @@ $(this).ready(() => {
                         
                         <div class="product-price-block text-center">
                             <span class="product-price text-success">
-                                ${priceFormat(unit.price)}
+                                ${currencyFormat(unit.price)}
                             </span>
                             <span id="unit-promotional-${unit.uid}"></span>         
                         </div>
@@ -80,7 +80,7 @@ $(this).ready(() => {
             promotional.html(`
                 <small class="pl-2 text-muted">
                     <del>
-                        ${priceFormat(unit.promotional)}
+                        ${currencyFormat(unit.promotional)}
                     </del>
                 </small>
             `);

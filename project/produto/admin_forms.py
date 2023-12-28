@@ -6,10 +6,6 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 import os
 
 class UnitAdminForm(forms.ModelForm):
-    class Meta:
-        model = Unit
-        fields = '__all__'
-
     def thumb_images(self):
         if not self.instance.pk or self.initial.get('image_lg') != self.instance.image_lg:
             sizes = {'image_lg': 512, 'image_sm': 216}
@@ -45,3 +41,14 @@ class UnitAdminForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         self.thumb_images()
         return super(UnitAdminForm, self).save(*args, **kwargs)
+    
+    class Meta:
+        model = Unit
+        fields = '__all__'
+
+    class Media:
+        js = (
+            '//ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js',
+            'js/admin-shared.js',
+        )

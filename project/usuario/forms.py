@@ -36,7 +36,7 @@ class ProfileForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "(12)12345-1234",
-                "class": "w-50"
+                "class": "w-50 cel-input"
             }
         )
     )
@@ -45,6 +45,7 @@ class ProfileForm(forms.ModelForm):
         widget=forms.DateInput(
             attrs={
                 "placeholder": "DD/MM/AAAA",
+                "class": "date-input"
             }
         )
     )

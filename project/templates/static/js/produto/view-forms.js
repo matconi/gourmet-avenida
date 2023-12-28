@@ -1,4 +1,4 @@
-$(this).ready(() => {
+$(document).ready(() => {
     const favoriteForm = $('#favorite-form');
     const addToCartForm = $('#add-to-cart-form');
     const jsonData = JSON.parse($('#json-data').text());

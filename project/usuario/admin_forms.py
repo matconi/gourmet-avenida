@@ -6,6 +6,10 @@ from .models import User, Customer, Payment
 from .domain.services import messages_service
 
 class UserAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UserAdminForm, self).__init__(*args, **kwargs)
+        self.fields["phone"].widget.attrs.update({"class": "cel-input"})
+
     def save(self, **kwargs):
         user: User = super(UserAdminForm, self).save(**kwargs)
         customer_role = role_repository.get_by_id(User.CUSTOMER_ROLE)
@@ -26,10 +30,22 @@ class UserAdminForm(forms.ModelForm):
     def __customer_without_added_role(self, user, customer_role: Group) -> bool:
         return self.__is_customer(user) and customer_role not in self.cleaned_data["groups"]
 
+    class Media:
+        js = (
+            '//ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js',
+            'js/admin-shared.js',
+        )
+
     class Meta:
         exclude = ('user_permissions',)
 
 class CustomerAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomerAdminForm, self).__init__(*args, **kwargs)
+        self.fields["bill"].help_text = 'Negativo indica "em haver".'
+        self.fields["born"].widget.attrs.update({"class": "date-input"})
+
     def save(self, **kwargs):
         customer: Customer = super(CustomerAdminForm, self).save(**kwargs)
 
@@ -50,6 +66,13 @@ class CustomerAdminForm(forms.ModelForm):
     
     def __user_was_removed(self) -> bool:
         return (self.initial.get("user") is not None) and (self.cleaned_data["user"] is None)
+    
+    class Media:
+        js = (
+            '//ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js',
+            'js/admin-shared.js',
+        )
 
 class PaymentAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -68,3 +91,10 @@ class PaymentAdminForm(forms.ModelForm):
                 messages_service.update_pay_bill(self.request, customer, diff)
 
         return super(PaymentAdminForm, self).save(**kwargs)
+
+    class Media:
+        js = (
+            '//ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js',
+            'js/admin-shared.js',
+        )
