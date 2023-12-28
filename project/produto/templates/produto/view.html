@@ -124,7 +124,7 @@
     </div>
 {% endblock main %}
 
-{% block footerscript %}
+{% block scripts %}
     {{ json_data|json_script:"json-data" }}
     <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
     <script src="{% static 'js/produto/view-product.js' %}"></script>
@@ -134,4 +134,4 @@
         <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/produto/view-forms.js' %}"></script>
     {% endif %}
-{% endblock footerscript %}
+{% endblock scripts %}

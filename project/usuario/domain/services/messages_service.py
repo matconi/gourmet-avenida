@@ -13,9 +13,9 @@ def updated_profile(request) -> None:
     )
 
 def password_reset_done(request) -> None:
-    messages.success(
+    messages.info(
         request,
-        "Email de redefinição de senha enviado com sucesso."
+        "Email de redefinição de senha enviado. Confira no email se foi digitado corretamente."
     )
 
 def favorite_added(unit: Unit) -> str:

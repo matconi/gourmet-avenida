@@ -70,11 +70,11 @@
     </div>
 {% endblock main %}
 
-{% block footerscript %}
+{% block scripts %}
     {{ json_data|json_script:"json-data" }}
     <script src="{% static 'js/produto/load-more-products.js' %}"></script>
     {% if perms.produto.add_to_cart %}
         <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
     {% endif %}
-{% endblock footerscript %}
+{% endblock scripts %}

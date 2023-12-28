@@ -6,6 +6,7 @@ from django.core.validators import RegexValidator
 from usuario.models import User
 from usuario.domain.repositories import user_repository
 from usuario.domain.services import user_service
+import time
 
 def password_pattern() -> RegexValidator:
     return RegexValidator(
@@ -107,13 +108,12 @@ class CustomSetPasswordForm(SetPasswordForm):
         )
 
 class CustomResetPasswordForm(ResetPasswordForm):
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-
-        try:
-            self.users = [user_repository.get_by_email_and_status(email)]
-        except User.DoesNotExist:
-            raise forms.ValidationError(f'Usuário não encontrado com e-mail "{email}".')
+    def save(self, request, **kwargs):
+        email = self.cleaned_data["email"]
+        if not self.users:
+            time.sleep(2.6)
+        else:
+            self._send_password_reset_mail(request, email, self.users, **kwargs)
         return email
 
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):

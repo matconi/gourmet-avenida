@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% load i18n %}
 {% load account socialaccount %}
 {% load crispy_forms_tags %}
@@ -36,9 +37,15 @@
       <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
       {% endif %}
       
-      <form class="login" method="POST" action="{% url 'account_login' %}">
+      <form class="login" method="POST" action="{% url 'account_login' %}" >
         {% csrf_token %}
         {{ form|crispy }}
+        <div class="mb-3">
+          <button type="button" class="btn btn-light toogle-password">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          <p class="d-inline password-message">Mostrar senha</p>
+        </div>
         {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
@@ -52,3 +59,7 @@
     </div>
   </div>
 {% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript" src="{% static 'js/usuario/toogle-password.js' %}"></script>
+{% endblock scripts %}

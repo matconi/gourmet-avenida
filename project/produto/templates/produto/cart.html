@@ -79,10 +79,10 @@
 {% endblock main %}
 
 {% if perms.produto.increment_cart or perms.produto.decrement_cart or perms.produto.clean_cart or perms.produto.remove_from_cart %}
-    {% block footerscript %}
+    {% block scripts %}
         {{ json_data|json_script:"json-data" }}
         <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
         <script type="text/javascript" src="{% static 'js/produto/cart-forms.js' %}"></script>
-    {% endblock footerscript %}
+    {% endblock scripts %}
 {% endif %}

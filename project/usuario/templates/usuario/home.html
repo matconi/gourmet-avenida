@@ -90,11 +90,11 @@
     </div>
 {% endblock main %}
 
-{% block footerscript %}
+{% block scripts %}
     <script type="text/javascript" src="{% static 'js/produto/product-carousel.js' %}"></script>
     {{ json_data|json_script:"json-data" }}
     {% if perms.produto.add_to_cart %}
         <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
     {% endif %}
-{% endblock footerscript %}
+{% endblock scripts %}

@@ -12,12 +12,6 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
 
 password_reset_done = CustomPasswordResetDoneView.as_view()
 
-class CustomPasswordResetFromKeyDoneView(PasswordResetFromKeyDoneView):
-    def get(self, *args, **kwargs):
-        return redirect('account_login')
-
-password_reset_from_key_done = CustomPasswordResetFromKeyDoneView.as_view()
-
 class CustomLogoutView(LogoutView):
     def post(self, *args, **kwargs):
         cart = self.request.session.get('cart')
