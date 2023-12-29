@@ -25,5 +25,5 @@ def fill_customer_initial(user: User, form) -> None:
     if hasattr(user, 'user_customer'):
         form.initial.update({
             "gender": user.user_customer.gender,
-            "born": user.user_customer.born
+            "born_at": user.user_customer.born_at
         })

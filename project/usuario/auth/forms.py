@@ -108,10 +108,15 @@ class CustomSetPasswordForm(SetPasswordForm):
         )
 
 class CustomResetPasswordForm(ResetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
+        self.fields["email"].help_text = 'Confira o email digitado. Erros de digitação não serão avisados.'
+        self.fields["email"].widget.attrs.update({"class": "form-control-lg"})
+
     def save(self, request, **kwargs):
         email = self.cleaned_data["email"]
         if not self.users:
-            time.sleep(2.6)
+            time.sleep(2.7)
         else:
             self._send_password_reset_mail(request, email, self.users, **kwargs)
         return email

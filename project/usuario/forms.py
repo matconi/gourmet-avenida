@@ -41,7 +41,7 @@ class ProfileForm(forms.ModelForm):
         )
     )
     gender = forms.ChoiceField(choices=Customer.Gender.choices, label='Gênero')
-    born = forms.DateField(input_formats=['%d/%m/%Y'], label='Data de nascimento', required=True,
+    born_at = forms.DateField(input_formats=['%d/%m/%Y'], label='Data de nascimento', required=True,
         widget=forms.DateInput(
             attrs={
                 "placeholder": "DD/MM/AAAA",
@@ -63,7 +63,7 @@ class ProfileForm(forms.ModelForm):
         if hasattr(user, 'user_customer'):
             customer = user.user_customer
             customer.gender = self.cleaned_data["gender"]
-            customer.born = self.cleaned_data["born"]
+            customer.born_at = self.cleaned_data["born_at"]
             customer.save()
         return user
 

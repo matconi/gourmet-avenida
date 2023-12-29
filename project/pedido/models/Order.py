@@ -46,6 +46,6 @@ class Order(models.Model):
         db_table = 'pedido_orders'
         ordering = ["-date_time"]
         permissions = [
-            ("self_orders", "Can view self orders"),
-            ("cancel_book", "Can cancel booking")
+            ("self_orders", "Can view self orders",),
+            ("cancel_book", "Can cancel booking",)
         ]

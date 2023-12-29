@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from usuario.domain.services import messages_service
-from allauth.account.views import PasswordResetDoneView, PasswordResetFromKeyDoneView, LogoutView, _ajax_response
+from allauth.account.views import PasswordResetDoneView, LogoutView
 from produto.domain.services import CartService
 import copy
 

@@ -44,7 +44,7 @@ class CustomerAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CustomerAdminForm, self).__init__(*args, **kwargs)
         self.fields["bill"].help_text = 'Negativo indica "em haver".'
-        self.fields["born"].widget.attrs.update({"class": "date-input"})
+        self.fields["born_at"].widget.attrs.update({"class": "date-input"})
 
     def save(self, **kwargs):
         customer: Customer = super(CustomerAdminForm, self).save(**kwargs)

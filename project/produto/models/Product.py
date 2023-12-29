@@ -14,11 +14,7 @@ class Product(AbstractName):
     )
 
     def save(self):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        else:
-            self.slug = slugify(self.slug)
-
+        self.slug = slugify(self.name) if not self.slug else slugify(self.slug)
         super(Product, self).save()
 
     def __str__(self) -> str:
