@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.utils.html import format_html
 from django.urls import reverse
 from produto.models import Unit
-from usuario.models import Payment, Customer
+from usuario.models import Payment, Customer, User
 from django.conf import settings
 from produto.templatetags.produto_pipe import currencyformat
 
@@ -36,4 +36,22 @@ def update_pay_bill(request, customer: Customer, diff: float) -> str:
         ' do valor inicial para o editado: {}.<a href="{}">Alterar</a>', 
         customer.name, 'reduzida' if diff > 0 else 'acrescida', 
         currencyformat(abs(diff)), f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
+    )
+
+def added_role_without_customer(request, customer: Customer) -> None:
+    messages.success(request,
+        format_html('Um cliente foi criado com base na permissão de usuário.<a href="{}">Atualizar dados</a>', 
+        f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
+    )
+
+def added_customer_role(request, group, user: User) -> None:
+    messages.success(request,
+        format_html('A permissão "{}" foi adicionada ao usuário.<a href="{}">Conferir</a>', 
+        group, f'/{settings.ADMIN_PATH}usuario/user/{user.pk}/change/')
+    )
+
+def removed_customer_roles(request, user: User) -> None:
+    messages.success(request,
+        format_html('As permissões de cliente foram removidas do usuário.<a href="{}">Conferir</a>', 
+        f'/{settings.ADMIN_PATH}usuario/user/{user.pk}/change/')
     )

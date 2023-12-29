@@ -41,6 +41,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ["first_name", "password"]
 
     CUSTOMER_ROLE = 1
+    CUSTOMER_PREMIUM_ROLE = 2
 
     def __str__(self) -> str:
         return self.get_username()

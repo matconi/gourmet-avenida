@@ -6,7 +6,7 @@ def get_by_user(user: User) -> Customer:
     return Customer.objects.get(user=user)
 
 def create_by_user(user: User) -> None:
-    Customer.objects.create(name=user.get_name(), user=user)
+    return Customer.objects.create(name=user.get_name(), user=user, gender=Customer.Gender.MALE, born_at='2000-10-10')
 
 def add_favorite(customer: Customer, unit: Unit) -> None:
     customer.favorites.add(unit)
