@@ -149,7 +149,7 @@ $(document).ready(() => {
         }
 
         function renderFavoriteForm(unit) {
-            unit.is_favorite ? removeFavoriteForm() : addFavoriteForm();
+            unit.is_favorite ? removeFavoriteForm(jsonData) : addFavoriteForm(jsonData);
         }
 
         function renderImages(carousel, unit) {

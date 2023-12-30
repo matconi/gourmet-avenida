@@ -19,10 +19,10 @@ def password_reset_done(request) -> None:
     )
 
 def favorite_added(unit: Unit) -> str:
-   return f'"{unit.name}" adicionado aos favoritos.'
+   return format_html('"{}" adicionado aos favoritos. <a href="{}">Visualizar</a>', unit.name, reverse('usuario:favorites'))
 
 def favorite_removed(unit: Unit) -> str:
-   return f'"{unit.name}" removido dos favoritos.'
+    return format_html('"{}" removido dos favoritos. <a href="{}">Visualizar</a>', unit.name, reverse('usuario:favorites'))
 
 def pay_bill(request, customer: Customer) -> str:
     messages.success(request,

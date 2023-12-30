@@ -14,7 +14,7 @@ $(document).ready(() => {
             },
             headers: { 'X-CSRFToken': csrftoken },
             success: response => {
-               removeFavoriteForm();
+               removeFavoriteForm(jsonData);
                loadMessages(response.messages);
             }, 
             error: err => {
@@ -35,7 +35,7 @@ $(document).ready(() => {
             },
             headers: { 'X-CSRFToken': csrftoken },
             success: response => {
-               addFavoriteForm();
+               addFavoriteForm(jsonData);
                loadMessages(response.messages);
             }, 
             error: err => {
