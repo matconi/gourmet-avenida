@@ -13,6 +13,7 @@ def create_booking_units(order: Order, cart: dict) -> None:
         [
             OrderUnit(
                 quantity=unit["quantity"],
+                price=unit["price"],
                 order=order,
                 unit=unit_repository.get_by_id(unit["id"])
             ) for unit in cart.values()

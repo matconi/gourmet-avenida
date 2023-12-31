@@ -9,8 +9,10 @@ class UnitInline(admin.StackedInline):
     extra = 0
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category']
     inlines = [UnitInline]
+    list_display = ['name', 'category']
+    list_filter = ['category']
+    search_fields = ('name',)
     
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
@@ -35,20 +37,32 @@ class ProductAdmin(admin.ModelAdmin):
 class UnitAdmin(admin.ModelAdmin):
     form = UnitAdminForm
     list_display = ['name', 'get_price', 'stock', 'get_avaliable']
+    list_filter = ['product__category', 'showcase', 'released']
+    search_fields = ('name', 'product__name',)
 
     @admin.display(ordering='price', description='Preço')
-    def get_price(self, obj):
-        return currencyformat(obj.price)
+    def get_price(self, unit: Unit):
+        return currencyformat(unit.price)
 
     @admin.display(ordering='booked', description='Disponível')
-    def get_avaliable(self, obj):
-        return obj.avaliable()
+    def get_avaliable(self, unit: Unit):
+        return unit.avaliable()
 
 class VariationAdmin(admin.ModelAdmin):
     list_display = ['name', 'variety']
+    list_filter = ['variety']
+    search_fields = ('name',)
 
-admin.site.register(Category)
+class VarietyAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ('name',)
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ('name',)
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Unit, UnitAdmin)
-admin.site.register(Variety)
+admin.site.register(Variety, VarietyAdmin)
 admin.site.register(Variation, VariationAdmin)

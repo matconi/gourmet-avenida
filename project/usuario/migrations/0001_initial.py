@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Cliente',
                 'verbose_name_plural': 'Clientes',
                 'db_table': 'usuario_customers',
-                'permissions': [('payments', 'Can view self payments'), ('favorites', 'Can view self payments'), ('add_favorite', 'Can add favorite'), ('remove_favorite', 'Can remove favorite'), ('buy_in_term', 'Can buy in term')],
+                'permissions': [('payments', 'Can view self payments'), ('favorites', 'Can view favorites'), ('add_favorite', 'Can add favorite'), ('remove_favorite', 'Can remove favorite'), ('buy_in_term', 'Can buy in term')],
             },
         ),
         migrations.CreateModel(

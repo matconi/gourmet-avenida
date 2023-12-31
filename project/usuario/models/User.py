@@ -44,10 +44,10 @@ class User(AbstractUser):
     CUSTOMER_PREMIUM_ROLE = 2
 
     def __str__(self) -> str:
-        return self.get_username()
+        return self.get_full_name()
 
-    def get_name(self) -> str:
-        return self.get_full_name().replace("None", "") 
+    def get_full_name(self) -> str:
+        return super(User, self).get_full_name().replace("None", "") 
     
     class Meta:
         verbose_name = 'Usuário'

@@ -100,7 +100,7 @@ class PaymentAdminForm(forms.ModelForm):
 
     def save(self, **kwargs):
         customer: Customer = self.instance.customer
-        if customer.user is not None and customer.user.has_perm('buy_in_term'):
+        if customer.user is not None and customer.user.has_perm('usuario.buy_in_term'):
             if not self.instance.id:                   
                 customer: Customer = customer_repository.pay_bill(self.instance)
                 messages_service.pay_bill(self.request, customer)

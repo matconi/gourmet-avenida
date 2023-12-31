@@ -93,7 +93,7 @@ class OrderAdminForm(forms.ModelForm):
             messages_service.binded_order_payment(self.request, payment)
 
     def __not_premium_or_paid(self) -> bool:
-        return self.instance.customer.user is None or not self.instance.customer.user.has_perm('pedido.buy_in_term') or self.cleaned_data["is_paid"]
+        return self.instance.customer.user is None or not self.instance.customer.user.has_perm('usuario.buy_in_term') or self.cleaned_data["is_paid"]
 
     class Media:
         js = (

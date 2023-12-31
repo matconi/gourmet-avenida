@@ -42,7 +42,7 @@ class Customer(AbstractName):
         db_table = 'usuario_customers'
         permissions = [
             ("payments", "Can view self payments",),
-            ("favorites", "Can view self payments",),
+            ("favorites", "Can view favorites",),
             ("add_favorite", "Can add favorite",),
             ("remove_favorite", "Can remove favorite",),
             ("buy_in_term", "Can buy in term",)

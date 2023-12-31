@@ -4,12 +4,12 @@ import decimal
 
 class Order(models.Model):
     class Status(models.TextChoices):
-        FINISHED = ('F', 'Finalizado')
-        BOOKED = ('B', 'Reservado')
-        EXPIRED = ('E', 'Expirado')
-        REPROVED = ('R', 'Reprovado')
-        CONSUMED = ('C', 'Consumido')
-        ABANDONED = ('A', 'Cancelado')
+        FINISHED = ('F', 'Finalizado',)
+        BOOKED = ('B', 'Reservado',)
+        EXPIRED = ('E', 'Expirado',)
+        REPROVED = ('R', 'Reprovado',)
+        CONSUMED = ('C', 'Consumido',)
+        ABANDONED = ('A', 'Cancelado',)
 
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.FINISHED)
     date_time = models.DateTimeField("Data/Hora", default=timezone.now)
