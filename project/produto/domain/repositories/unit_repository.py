@@ -1,5 +1,5 @@
 from typing import List
-from produto.models.Unit import Unit
+from produto.models import Unit
 from django.shortcuts import get_object_or_404
 from datetime import timedelta
 from django.utils import timezone
@@ -10,7 +10,7 @@ from pedido.models import OrderUnit
 def get_showcase(kwargs: dict) -> List[Unit]:
     return (
         Unit.objects.filter(showcase=True, **kwargs)
-        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
+        .annotate(uid=F('id'), uprice=F('price'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .select_related('product__category')
     )
 
@@ -25,7 +25,7 @@ def get_index_category(category_slug: str, kwargs: dict={}) -> List[Unit]:
 def get_related_category(category_slug: str, product_id) -> List[Unit]:
     return (
         Unit.objects.filter(product__category__slug=category_slug)
-        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
+        .annotate(uid=F('id'), uprice=F('price'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .exclude(product__id=product_id)
     )
 
@@ -43,14 +43,14 @@ def get_releases() -> List[Unit]:
      
     return (
         Unit.objects.filter(showcase=True, released__gte=last_month)
-        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
-        .order_by('-released')[:10]
+        .annotate(uid=F('id'), uprice=F('price'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
+        .order_by('-released')[:CARDS_PER_SLIDE]
     )
 
 def get_customer_favorites(customer: Customer, kwargs: dict={}) -> List[Unit]:
     return (
         Unit.objects.filter(unit_favorite=customer, **kwargs)
-        .annotate(uid=F('id'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
+        .annotate(uid=F('id'), uprice=F('price'), category_slug=F('product__category__slug'), product_slug=F('product__slug'))
         .all()
     )
 
@@ -65,3 +65,4 @@ def down_booked(order_unit: OrderUnit) -> None:
     unit.save()
 
 CARDS_PER_VIEW = 12
+CARDS_PER_SLIDE = 8

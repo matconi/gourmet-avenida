@@ -47,7 +47,10 @@ class User(AbstractUser):
         return self.get_full_name()
 
     def get_full_name(self) -> str:
-        return super(User, self).get_full_name().replace("None", "") 
+        return super(User, self).get_full_name().replace("None", "")
+
+    def is_customer(self) -> bool:
+        return hasattr(self, 'user_customer')
     
     class Meta:
         verbose_name = 'Usuário'

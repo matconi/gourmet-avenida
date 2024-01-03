@@ -15,6 +15,7 @@ from django.views.decorators.http import require_GET, require_POST, require_http
 @login_required
 def profile(request):
     user = request.user
+    context = {"user": user}
     if request.method == 'GET':
         form = ProfileForm(
             initial={
@@ -25,19 +26,17 @@ def profile(request):
             }
         )
         user_service.fill_customer_initial(user, form)
-        
-        context = {
-            "form": form,
-            "user": user
-        }
-        return render(request, "usuario/profile.html", context)
+        context.update({"form": form})
 
+        return render(request, "usuario/profile.html", context)
     elif request.method == 'POST':
         form = ProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             messages_service.updated_profile(request)
-        return render(request,"usuario/profile.html", {"form": form})
+        context.update({"form": form})
+
+        return render(request,"usuario/profile.html", context)
 
 @require_GET
 def home(request):
@@ -56,7 +55,7 @@ def home(request):
         "json_data": json_data
     }
 
-    if request.user.has_perm('pedido.add_order'):
+    if request.user.is_customer():
         again = order_unit_repository.get_again(request.user.user_customer)
         context["again"] = again
 

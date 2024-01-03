@@ -22,7 +22,7 @@ def gmail_required(email: str) -> None:
             raise forms.ValidationError("Gmail obrigatório.")
 
 def fill_customer_initial(user: User, form) -> None:
-    if hasattr(user, 'user_customer'):
+    if user.is_customer():
         form.initial.update({
             "gender": user.user_customer.gender,
             "born_at": user.user_customer.born_at

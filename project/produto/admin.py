@@ -3,6 +3,7 @@ from .models import Category, Unit, Product, Variety, Variation
 from .admin_forms import UnitAdminForm
 from django import forms
 from .templatetags.produto_pipe import currencyformat
+from django.core.validators import ValidationError
 
 class UnitInline(admin.StackedInline):
     model = Unit
@@ -15,6 +16,9 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     
     def save_formset(self, request, form, formset, change):
+        if not formset.cleaned_data:
+            raise ValidationError("Por favor, adicione as unidades referentes ao produto.")
+            
         instances = formset.save(commit=False)
         for instance in instances:
             self.__set_images(formset, instance)

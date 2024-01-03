@@ -105,15 +105,19 @@
                 <section>
                     <h2 class="fs-3">Produtos relacionados</h2>
                     <div class="units-category-wrapper">
-                        <i id="left" class="arrow fa-solid fa-angle-left"></i>
-                            <ul class="units-category-carousel">
-                                {% for unit in units_category %}
-                                    <li class="units-category-card">
-                                        {% include 'components/product_card.html' %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                        {% if units_category|length > 2 %}
+                            <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                        {% endif %}
+                        <ul class="units-category-carousel">
+                            {% for unit in units_category %}
+                                <li class="units-category-card">
+                                    {% include 'components/product_card.html' %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if units_category|length > 2 %}
+                            <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                        {% endif %}
                     </div>
                 </section>
             {% endif %}

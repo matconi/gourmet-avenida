@@ -5,12 +5,6 @@
 {% endblock head %}
 
 {% block main %}
-    {% if not perms.pedido.add_order %}
-        <p>
-            <i class="fa-solid fa-circle-exclamation text-warning" title="Completar cadastro"></i>
-            <small class="text-danger">Entre em contato com o administrador para reservar produtos.</small>
-        </p>
-    {% endif %}
     <header>
         {% block breadcrumb %}
             <div class="row container">
