@@ -39,10 +39,10 @@ def binded_order_payment(request, payment: Payment) -> None:
         currencyformat(payment.amount), f'/{settings.ADMIN_PATH}usuario/payment/{payment.pk}/change/')
     )
 
-def changed_bill(request, customer: Customer) -> None:
+def buyed_bill(request, customer: Customer, total_price: float) -> None:
     messages.success(request,
-        format_html('A conta do cliente "{}" foi acrescida com sucesso.<a href="{}">Alterar</a>', 
-        customer.name, f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
+        format_html('A conta do cliente "{}" foi acrescida em {} com sucesso.<a href="{}">Alterar</a>', 
+        customer.name, currencyformat(total_price), f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
     )
 
 def increased_booking(request) -> None:

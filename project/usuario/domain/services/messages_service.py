@@ -38,12 +38,6 @@ def update_pay_bill(request, customer: Customer, diff: float) -> str:
         currencyformat(abs(diff)), f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
     )
 
-def added_role_without_customer(request, customer: Customer) -> None:
-    messages.success(request,
-        format_html('Um cliente foi criado com base na permissão de usuário.<a href="{}">Atualizar dados</a>', 
-        f'/{settings.ADMIN_PATH}usuario/customer/{customer.pk}/change/')
-    )
-
 def added_customer_role(request, group, user: User) -> None:
     messages.success(request,
         format_html('A permissão "{}" foi adicionada ao usuário.<a href="{}">Conferir</a>', 

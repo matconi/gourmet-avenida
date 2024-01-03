@@ -1,12 +1,12 @@
-from pedido.models.Order import Order
-from pedido.models.OrderUnit import OrderUnit
-from produto.models.Unit import Unit
+from pedido.models import Order, OrderUnit
+from produto.models import Unit
 from produto.domain.repositories import unit_repository
 from typing import List
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Sum, F
 from usuario.models.Customer import Customer
+from produto.templatetags.produto_pipe import currencyformat
 
 def create_booking_units(order: Order, cart: dict) -> None:
     OrderUnit.objects.bulk_create(
@@ -29,7 +29,7 @@ def get_week_trends() -> List[OrderUnit]:
             uid=F('unit__id'), 
             name=F('unit__name'), 
             image_sm=F('unit__image_sm'),  
-            price=F('unit__price'), 
+            uprice=F('unit__price'), 
             promotional=F('unit__promotional'),
             stock=F('unit__stock'),
             avaliable=F('unit__stock') - F('unit__booked'),
@@ -37,7 +37,7 @@ def get_week_trends() -> List[OrderUnit]:
             product_slug=F('unit__product__slug')
         )
         .annotate(total_sold=Sum('quantity'))
-        .order_by('-total_sold')[:10]
+        .order_by('-total_sold')[:unit_repository.CARDS_PER_SLIDE]
     )
 
 def get_again(customer: Customer) -> List[Unit]: 
@@ -48,8 +48,8 @@ def get_again(customer: Customer) -> List[Unit]:
         .values(
             uid=F('unit__id'), 
             name=F('unit__name'), 
-            image_sm=F('unit__image_sm'),  
-            price=F('unit__price'), 
+            image_sm=F('unit__image_sm'),
+            uprice=F('unit__price'), 
             promotional=F('unit__promotional'),
             stock=F('unit__stock'),
             avaliable=F('unit__stock') - F('unit__booked'),
@@ -57,7 +57,7 @@ def get_again(customer: Customer) -> List[Unit]:
             product_slug=F('unit__product__slug')
         )
         .annotate(total_sold=Sum('quantity'))
-        .order_by('-total_sold')[:10]
+        .order_by('-total_sold')[:unit_repository.CARDS_PER_SLIDE]
     )
 
 def get_by_order(order: Order) -> List[OrderUnit]:

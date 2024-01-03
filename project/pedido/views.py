@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from .domain.services import OrderService
-from .domain.services.OrderService import filter_orders
 from .domain.repositories import order_repository, order_unit_repository
 from produto.domain.repositories import unit_repository
 from django.contrib.auth.decorators import login_required, permission_required
@@ -15,7 +14,7 @@ from produto.templatetags import produto_pipe
 @login_required
 @permission_required('pedido.self_orders', raise_exception=True)
 def index(request):
-    kwargs = filter_orders(request)
+    kwargs = OrderService.filter_orders(request)
 
     orders = order_repository.get_user_orders(request.user, kwargs)
 
