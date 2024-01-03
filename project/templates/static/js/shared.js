@@ -1,5 +1,3 @@
-const jsonData = JSON.parse($('#json-data').text());
-
 function loadMessages(messages) {
     $('#toast-container').empty();
 
@@ -55,7 +53,7 @@ function showToast(confType, messageList) {
     }
 }
 
-function addFavoriteForm() {
+function addFavoriteForm(jsonData) {
     if (jsonData.permissions.add_favorite) {
         $('#favorite-form').attr('action', jsonData.urls.add_favorite).attr('title', 'Adicionar favorito');
         $('#favorite-form button').removeClass('btn-warning text-primary').addClass('btn-outline-warning');
@@ -64,7 +62,7 @@ function addFavoriteForm() {
     }
 }
 
-function removeFavoriteForm() {
+function removeFavoriteForm(jsonData) {
     if (jsonData.permissions.remove_favorite) {
         $('#favorite-form').attr('action', jsonData.urls.remove_favorite).attr('title', 'Remover favorito');
         $('#favorite-form button').removeClass('btn-outline-warning').addClass('btn-warning text-primary');
@@ -78,9 +76,14 @@ function changeTotalQuantity(response) {
 }
 
 function changeTotalPrice(response) {
-    $('.cart-total').text(priceFormat(response.refresh_cart.total_price_in_cart));
+    $('.cart-total').text(currencyFormat(response.refresh_cart.total_price_in_cart));
 }
 
-function priceFormat(srcValue) {
+function currencyFormat(srcValue) {
     return `R$ ${parseFloat(srcValue).toFixed(2).toString().replace('.', ',')}`;
 }
+
+// masks needs <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+$('.cel-input').mask('(00) 00000-0000');
+$('.date-input').mask('00/00/0000');
+$('#copy-date').click(() => $('#end-date').val($('#start-date').val()));

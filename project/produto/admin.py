@@ -1,38 +1,72 @@
 from django.contrib import admin
-from .models import Category
-from .models import Product
-from .models import Variety
-from .models import Variation
-from .models.Unit import Unit
+from .models import Category, Unit, Product, Variety, Variation
 from .admin_forms import UnitAdminForm
+from django import forms
+from .templatetags.produto_pipe import currencyformat
+from django.core.validators import ValidationError
 
 class UnitInline(admin.StackedInline):
     model = Unit
     extra = 0
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name']
     inlines = [UnitInline]
+    list_display = ['name', 'category']
+    list_filter = ['category']
+    search_fields = ('name',)
     
     def save_formset(self, request, form, formset, change):
-        initial_unit_form = formset[0].initial
+        if not formset.cleaned_data:
+            raise ValidationError("Por favor, adicione as unidades referentes ao produto.")
+            
         instances = formset.save(commit=False)
-        
         for instance in instances:
-            if isinstance(instance, Unit):
-                unit_form = UnitAdminForm(instance=instance, initial=initial_unit_form) 
+            self.__set_images(formset, instance)
+        formset.save_m2m()
 
-                setattr(unit_form, 'cleaned_data', formset.cleaned_data[0])
-                unit_form.cleaned_data["image_lg"] = instance.image_lg
-
+    def __set_images(self, formset, instance):
+        for inline_form in formset:
+            if 'image_lg' in inline_form.changed_data:
+                unit_form = UnitAdminForm(instance=instance)
+                cleaned_data = (
+                    list(filter(lambda attr: attr["id"] == instance, formset.cleaned_data))[0] 
+                    if instance.id else inline_form.cleaned_data
+                )
+                setattr(unit_form, 'cleaned_data', cleaned_data)
                 unit_form.thumb_images()
-            instance.save()
+                instance.save()
+                inline_form.changed_data.clear()
+                return
 
 class UnitAdmin(admin.ModelAdmin):
     form = UnitAdminForm
+    list_display = ['name', 'get_price', 'stock', 'get_avaliable']
+    list_filter = ['product__category', 'showcase', 'released']
+    search_fields = ('name', 'product__name',)
 
-admin.site.register(Category)
+    @admin.display(ordering='price', description='Preço')
+    def get_price(self, unit: Unit):
+        return currencyformat(unit.price)
+
+    @admin.display(ordering='booked', description='Disponível')
+    def get_avaliable(self, unit: Unit):
+        return unit.avaliable()
+
+class VariationAdmin(admin.ModelAdmin):
+    list_display = ['name', 'variety']
+    list_filter = ['variety']
+    search_fields = ('name',)
+
+class VarietyAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ('name',)
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ('name',)
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Unit, UnitAdmin)
-admin.site.register(Variety)
-admin.site.register(Variation)
+admin.site.register(Variety, VarietyAdmin)
+admin.site.register(Variation, VariationAdmin)

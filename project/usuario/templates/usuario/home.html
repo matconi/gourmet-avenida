@@ -3,7 +3,7 @@
 {% load usuario_pipe %}
 
 {% block head %}
-    <title>Início - Gourmet Avenida</title>
+    <title>Início | Gourmet Avenida</title>
     <!-- carousel source credit: https://www.codingnepalweb.com/draggable-card-slider-html-css-javascript/ -->
     <link rel="stylesheet" href="{% static 'css/product-carousel.css' %}"></link>
 {% endblock head %}
@@ -26,9 +26,11 @@
     <section>
         <h1>Em Alta</h1>
         {% if week_trends %}
-            <p class="lead">Os 10 mais vendidos da semana.</p>
+            <p class="lead">Os {{ week_trends|length }} mais vendidos da semana.</p>
             <div class="trends-wrapper">
-                <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                {% if week_trends|length > 2 %}
+                    <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                {% endif %}
                 <ul class="trends-carousel">
                     {% for unit in week_trends %}
                         <li class="trends-card">
@@ -37,7 +39,9 @@
                         </li>
                     {% endfor %}
                 </ul>
-                <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                {% if week_trends|length > 2 %}
+                    <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                {% endif %}
             </div>
         {% else %}
             <p class="lead">Nenhum produto vendido na semana.</p>
@@ -47,9 +51,11 @@
     <section>
         <h1>Novo</h1>
         {% if releases %}
-            <p class="lead">Lançados no último mês.</p>
+            <p class="lead">Os {{ releases|length }} lançados no último mês.</p>
             <div class="releases-wrapper">
-                <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                {% if releases|length > 2 %}
+                    <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                {% endif %}
                 <ul class="releases-carousel">
                     {% for unit in releases %}
                         <li class="releases-card">
@@ -57,7 +63,9 @@
                         </li>
                     {% endfor %}
                 </ul>
-                <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                {% if releases|length > 2 %}
+                    <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                {% endif %}
             </div>
         {% else %}
             <p class="lead">Nenhum produto lançado no último mês.</p>
@@ -68,9 +76,11 @@
         <section>
             <h1>Aproveitar Novamente</h1>
             {% if again %}
-                <p class="lead">Os mais consumidos por você nos últimos 45 dias.</p>
+                <p class="lead">Os {{ again|length }} mais consumidos por você nos últimos 45 dias.</p>
                 <div class="again-wrapper">
-                    <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                    {% if again|length > 2 %}
+                        <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                    {% endif %}
                     <ul class="again-carousel">
                         {% for unit in again %}
                             <li class="again-card">
@@ -78,7 +88,9 @@
                             </li>
                         {% endfor %}
                     </ul>
-                    <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                    {% if again|length > 2 %}
+                        <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                    {% endif %}
                 </div>
             {% else %}
                 <p class="lead">Nenhum produto consumido por você nos últimos 45 dias.</p>
@@ -90,11 +102,12 @@
     </div>
 {% endblock main %}
 
-{% block footerscript %}
+{% block scripts %}
     <script type="text/javascript" src="{% static 'js/produto/product-carousel.js' %}"></script>
     {{ json_data|json_script:"json-data" }}
     {% if perms.produto.add_to_cart %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
     {% endif %}
-{% endblock footerscript %}
+{% endblock scripts %}

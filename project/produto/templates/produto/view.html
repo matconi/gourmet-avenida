@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-    <title>{{ product.name }} - Gourmet Avenida</title>
+    <title>{{ product.name }} | Gourmet Avenida</title>
     <link rel="stylesheet" href="{% static 'css/product-carousel.css' %}">
 {% endblock head %}
 
@@ -105,15 +105,19 @@
                 <section>
                     <h2 class="fs-3">Produtos relacionados</h2>
                     <div class="units-category-wrapper">
-                        <i id="left" class="arrow fa-solid fa-angle-left"></i>
-                            <ul class="units-category-carousel">
-                                {% for unit in units_category %}
-                                    <li class="units-category-card">
-                                        {% include 'components/product_card.html' %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                        {% if units_category|length > 2 %}
+                            <i id="left" class="arrow fa-solid fa-angle-left"></i>
+                        {% endif %}
+                        <ul class="units-category-carousel">
+                            {% for unit in units_category %}
+                                <li class="units-category-card">
+                                    {% include 'components/product_card.html' %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if units_category|length > 2 %}
+                            <i id="right" class="arrow fa-solid fa-angle-right"></i>
+                        {% endif %}
                     </div>
                 </section>
             {% endif %}
@@ -124,8 +128,9 @@
     </div>
 {% endblock main %}
 
-{% block footerscript %}
+{% block scripts %}
     {{ json_data|json_script:"json-data" }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
     <script src="{% static 'js/produto/view-product.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/produto/product-carousel.js' %}"></script>
@@ -134,4 +139,4 @@
         <script type="text/javascript" src="{% static 'js/produto/index-forms.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/produto/view-forms.js' %}"></script>
     {% endif %}
-{% endblock footerscript %}
+{% endblock scripts %}

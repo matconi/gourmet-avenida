@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse
 from usuario.domain.services import messages_service
-from allauth.account.views import PasswordResetDoneView, PasswordResetFromKeyDoneView, LogoutView, _ajax_response
+from allauth.account.views import PasswordResetDoneView, LogoutView
 from produto.domain.services import CartService
 import copy
 
@@ -11,12 +11,6 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
         return redirect('account_login')
 
 password_reset_done = CustomPasswordResetDoneView.as_view()
-
-class CustomPasswordResetFromKeyDoneView(PasswordResetFromKeyDoneView):
-    def get(self, *args, **kwargs):
-        return redirect('account_login')
-
-password_reset_from_key_done = CustomPasswordResetFromKeyDoneView.as_view()
 
 class CustomLogoutView(LogoutView):
     def post(self, *args, **kwargs):

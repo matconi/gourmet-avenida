@@ -2,7 +2,7 @@
 {% load static %}
 {% load produto_pipe %}
 {% block head %}
-    <title>Pedidos - Gourmet Avenida</title>
+    <title>Pedidos | Gourmet Avenida</title>
 {% endblock head %}
 
 {% block main %}
@@ -25,7 +25,7 @@
                                         <input type="text" class="form-control" name="unit" id="unit" placeholder="Pesquisar..." value="{{ request.GET.unit }}">
                                         <label for="start-date" class="form-label">De:</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="start_date" id="start-date" placeholder="DD/MM/AAAA" value="{{ request.GET.start_date }}">
+                                            <input type="text" class="form-control date-input" name="start_date" id="start-date" placeholder="DD/MM/AAAA" value="{{ request.GET.start_date }}">
                                             <button class="btn btn-sm btn-outline-primary" type="button" id="copy-date" title="Mesmo dia">
                                                 <i class="fa-solid fa-clone"></i>
                                             </button>
@@ -41,7 +41,7 @@
                                             <option value="R" {% if request.GET.status == 'R' %}selected{% endif %}>Reprovado</option>
                                         </select>
                                         <label for="end-date" class="form-label">Até:</label>
-                                        <input type="text" class="form-control" name="end_date" id="end-date" placeholder="DD/MM/AAAA" value="{{ request.GET.end_date }}">
+                                        <input type="text" class="form-control date-input" name="end_date" id="end-date" placeholder="DD/MM/AAAA" value="{{ request.GET.end_date }}">
                                     </div>
                                 </div>
                                 <button class="btn btn-primary w-25 mt-3" id="filter-btn" type="submit">Filtrar</button>
@@ -174,8 +174,10 @@
     </div>
 {% endblock main %}
 
-{% if perms.pedido.cancel_book %}
-    {% block footerscript %}
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="{% static 'js/shared.js' %}"></script>
+    {% if perms.pedido.cancel_book %}
         <script type="text/javascript" src="{% static 'js/pedido/index-modal.js' %}"></script>
-    {% endblock footerscript %}
-{% endif %}
+    {% endif %}
+{% endblock scripts %}

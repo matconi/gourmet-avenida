@@ -1,11 +1,11 @@
 from django import forms
-from .models.Customer import Customer
 from django.core.validators import ValidationError
-from .models.User import User
+from .models import User, Customer
 from .domain.repositories import user_repository
 from .domain.services import user_service
+from usuario.auth.forms import phone_pattern
 
-class ProfileForm(forms.ModelForm):   
+class ProfileForm(forms.ModelForm):
     email = forms.CharField(max_length=320, label='Email', required=True,
         help_text='Gmail obrigatório.<br>Pelo email, é possível entrar com um clique pelo Google,'
         ' recuperar senhas e ter um canal de contato.',
@@ -15,7 +15,6 @@ class ProfileForm(forms.ModelForm):
             }
         )
     )
-
     first_name = forms.CharField(max_length=50, label='Primeiro nome', required=True,
         widget=forms.TextInput(
             attrs={
@@ -32,21 +31,43 @@ class ProfileForm(forms.ModelForm):
     )
     phone = forms.CharField(max_length=14, label='Celular', required=True,
         help_text='Digite apenas números.<br>Com o número de telefone podemos identificá-lo(a) mais facilmente'
-        ' e estabelecer uma comunicação mais direta.',
+        ' e estabelecer<br> uma comunicação mais direta.',
+        validators=[phone_pattern()],
         widget=forms.TextInput(
             attrs={
-                "placeholder": "(12)12345-1234"
+                "placeholder": "(12)12345-1234",
+                "class": "w-50 cel-input"
+            }
+        )
+    )
+    gender = forms.ChoiceField(choices=Customer.Gender.choices, label='Gênero')
+    born_at = forms.DateField(input_formats=['%d/%m/%Y'], label='Data de nascimento', required=True,
+        widget=forms.DateInput(
+            attrs={
+                "placeholder": "DD/MM/AAAA",
+                "class": "date-input"
             }
         )
     )
 
     def clean_email(self):
-        email = self.cleaned_data.get('email')
-        
+        email = self.cleaned_data.get('email')  
         if email != self.instance.email:
             user_service.email_in_use(email)
+
+        user_service.gmail_required(email)
         return email
+
+    def save(self):
+        user = super(ProfileForm, self).save()
+        if user.is_customer():
+            customer = user.user_customer
+            customer.gender = self.cleaned_data["gender"]
+            customer.born_at = self.cleaned_data["born_at"]
+            customer.save()
+        return user
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'phone')
+        fields = ('email', 'first_name', 'last_name', 'phone',) 
+

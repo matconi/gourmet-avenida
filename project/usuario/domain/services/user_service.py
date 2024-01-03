@@ -16,3 +16,14 @@ def block_user_by_password_err(email: str) -> None:
 def email_in_use(email: str) -> None:
     if user_repository.exists_by_email(email):
         raise forms.ValidationError('Um usuário já foi registrado com este endereço de e-mail.')
+
+def gmail_required(email: str) -> None:
+    if not email.endswith('@gmail.com'):
+            raise forms.ValidationError("Gmail obrigatório.")
+
+def fill_customer_initial(user: User, form) -> None:
+    if user.is_customer():
+        form.initial.update({
+            "gender": user.user_customer.gender,
+            "born_at": user.user_customer.born_at
+        })

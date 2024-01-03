@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 import os
 
 def main():
-    os.getenv('DJANGO_SETTINGS_MODULE')
+    os.environ.get('DJANGO_SETTINGS_MODULE') or os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gourmetavenida.settings')
     setup()
 
     User = get_user_model()
@@ -14,6 +14,7 @@ def main():
             password = 'admin'
             admin = User.objects._create_superuser(email, first_name, password, phone='(12)12345-1234')
             print(f'Created user for {admin.get_short_name()} ({email}).')
-
+    else:
+        print("All admin users were created.")
 if __name__ == '__main__':
     main()

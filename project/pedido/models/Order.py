@@ -4,12 +4,12 @@ import decimal
 
 class Order(models.Model):
     class Status(models.TextChoices):
-        FINISHED = ('F', 'Finalizado')
-        BOOKED = ('B', 'Reservado')
-        EXPIRED = ('E', 'Expirado')
-        REPROVED = ('R', 'Reprovado')
-        CONSUMED = ('C', 'Consumido')
-        ABANDONED = ('A', 'Cancelado')
+        FINISHED = ('F', 'Finalizado',)
+        BOOKED = ('B', 'Reservado',)
+        EXPIRED = ('E', 'Expirado',)
+        REPROVED = ('R', 'Reprovado',)
+        CONSUMED = ('C', 'Consumido',)
+        ABANDONED = ('A', 'Cancelado',)
 
     status = models.CharField("Status", max_length=1, choices=Status.choices, default=Status.FINISHED)
     date_time = models.DateTimeField("Data/Hora", default=timezone.now)
@@ -32,7 +32,7 @@ class Order(models.Model):
         return decimal.Decimal(self.total_price) - decimal.Decimal(self.discount)
 
     def set_total_price(self, order_units) -> float:
-        self.total_price = sum([order_unit.unit.quantity_price(order_unit.quantity) for order_unit in order_units])
+        self.total_price = sum([order_unit.quantity_price() for order_unit in order_units])
 
     def set_total_quantity(self, order_units) -> int:
         self.total_quantity = sum([order_unit.quantity for order_unit in order_units])
@@ -46,6 +46,6 @@ class Order(models.Model):
         db_table = 'pedido_orders'
         ordering = ["-date_time"]
         permissions = [
-            ("self_orders", "Can view self orders"),
-            ("cancel_book", "Can cancel booking")
+            ("self_orders", "Can view self orders",),
+            ("cancel_book", "Can cancel booking",)
         ]

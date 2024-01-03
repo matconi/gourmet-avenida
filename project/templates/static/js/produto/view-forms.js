@@ -1,4 +1,4 @@
-$(this).ready(() => {
+$(document).ready(() => {
     const favoriteForm = $('#favorite-form');
     const addToCartForm = $('#add-to-cart-form');
     const jsonData = JSON.parse($('#json-data').text());
@@ -14,7 +14,7 @@ $(this).ready(() => {
             },
             headers: { 'X-CSRFToken': csrftoken },
             success: response => {
-               removeFavoriteForm();
+               removeFavoriteForm(jsonData);
                loadMessages(response.messages);
             }, 
             error: err => {
@@ -35,7 +35,7 @@ $(this).ready(() => {
             },
             headers: { 'X-CSRFToken': csrftoken },
             success: response => {
-               addFavoriteForm();
+               addFavoriteForm(jsonData);
                loadMessages(response.messages);
             }, 
             error: err => {
