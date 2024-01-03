@@ -2,11 +2,63 @@ from django.contrib import admin
 from .models import User, Customer, Payment
 from .admin_forms import UserAdminForm, CustomerAdminForm, PaymentAdminForm
 from .templatetags.usuario_pipe import get_bill, currencyformat
+from django.db.models import Q
+from typing import List
+
+class CustomerGroupFilter(admin.SimpleListFilter):
+    title = 'Grupo'
+    parameter_name = 'group'
+    
+    def lookups(self, request, model_admin):
+        return [
+            ("u", "Possui usuário"),
+            ("pu", "Possui usuário Premium"),
+            ("nu", "Não possui usuário"),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == "u":
+            return queryset.filter(
+                Q(user__groups__in=[User.CUSTOMER_ROLE]) |
+                Q(user__is_superuser=True)
+            )
+        if self.value() == "pu":
+            return queryset.filter(
+                Q(user__groups__in=[User.CUSTOMER_PREMIUM_ROLE]) | 
+                Q(user__is_superuser=True)
+            )
+        if self.value() == "nu":
+            return queryset.filter(user=None)
+
+class UserGroupFilter(admin.SimpleListFilter):
+    title = 'Grupo'
+    parameter_name = 'group'
+    
+    def lookups(self, request, model_admin):
+        return [
+            ("c", "Cliente"),
+            ("pc", "Cliente Premium"),
+            ("nc", "Não possui cliente"),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == "c":
+            return queryset.filter(
+                Q(groups__in=[User.CUSTOMER_ROLE]) |
+                Q(is_superuser=True)
+            )
+        if self.value() == "pc":
+            return queryset.filter(
+                Q(groups__in=[User.CUSTOMER_PREMIUM_ROLE]) | 
+                Q(is_superuser=True)
+            )
+        if self.value() == "nc":
+            return queryset.filter(groups=None)
 
 class UserAdmin(admin.ModelAdmin):
     form = UserAdminForm
     list_display = ['first_name', 'email', 'phone']
-    list_filter = ['is_active', 'is_staff', 'is_superuser']
+    list_filter = ['is_active', 'is_staff', 'is_superuser', UserGroupFilter]
     search_fields = ('first_name', 'email', 'phone',)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -20,7 +72,7 @@ class UserAdmin(admin.ModelAdmin):
 class CustomerAdmin(admin.ModelAdmin):
     form = CustomerAdminForm
     list_display = ['name', 'get_phone', 'get_bill', 'get_limit']
-    list_filter = ['gender']
+    list_filter = ['gender', CustomerGroupFilter]
     search_fields = ('name', 'user__email', 'user__phone',)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -40,13 +92,11 @@ class CustomerAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='bill', description='Conta')
     def get_bill(self, customer: Customer):
-        user = customer.user
-        return get_bill(customer.bill) if user and user.has_perm('usuario.buy_in_term') else None
+        return get_bill(customer.bill) if customer.is_premium() else None
 
     @admin.display(ordering='limit', description='Limite')
     def get_limit(self, customer: Customer):
-        user = customer.user
-        return currencyformat(customer.limit) if user and user.has_perm('usuario.buy_in_term') else None
+        return currencyformat(customer.limit) if customer.is_premium() else None
 
 class PaymentAdmin(admin.ModelAdmin):
     form = PaymentAdminForm 

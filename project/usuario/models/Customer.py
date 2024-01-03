@@ -5,6 +5,8 @@ from . import User
 from usuario.domain.repositories import role_repository
 from django.utils import timezone
 from datetime import date
+from usuario.domain.services import messages_service
+from typing import List
 
 class Customer(AbstractName):
     class Gender(models.TextChoices):
@@ -26,11 +28,23 @@ class Customer(AbstractName):
     def get_age(self) -> int:
         today = date.today()
         age = today.year - self.born_at.year - ((today.month, today.day) < (self.born_at.month, self.born_at.day))
+    
+    def has_user(self) -> bool:
+        return self.user is not None
+
+    def is_premium(self) -> bool:
+        return self.has_user() and self.user.has_perm('usuario.buy_in_term')
+
+    @staticmethod
+    def get_customer_roles_ids() -> List[int]:
+        return [User.CUSTOMER_ROLE, User.CUSTOMER_PREMIUM_ROLE]
 
     def delete(self):
-        if self.user:
-            self.user.is_active = False
-            self.user.save()
+        if self.has_user():
+            customer_roles_ids = Customer.get_customer_roles_ids()
+            roles = role_repository.get_by_ids(customer_roles_ids)
+            for role in roles:
+                role_repository.remove(self.user, role)
         super(Customer, self).delete()
 
     def __str__(self) -> str:

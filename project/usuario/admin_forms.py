@@ -3,39 +3,39 @@ from django.contrib.auth.models import Group
 from django.core.validators import ValidationError
 from .domain.repositories import customer_repository, user_repository, role_repository
 from .models import User, Customer, Payment
-from .domain.services import messages_service
+from .domain.services import messages_service, customer_service
 from typing import List
 
 class UserAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
-        self.customer_roles_ids = [User.CUSTOMER_ROLE, User.CUSTOMER_PREMIUM_ROLE]
+        self.customer_roles_ids = Customer.get_customer_roles_ids()
         super(UserAdminForm, self).__init__(*args, **kwargs)
         self.fields["phone"].widget.attrs.update({"class": "cel-input"})
 
-    def save(self, **kwargs):
-        user: User = super(UserAdminForm, self).save(**kwargs)
+    def clean(self):
+        self.cleaned_data = super(UserAdminForm, self).clean()
         customer_roles = role_repository.get_by_ids(self.customer_roles_ids)
+        self.__validate_added_role_without_customer(customer_roles)
+        self.__validate_customer_without_added_role(customer_roles)
 
-        if self.__added_role_without_customer(user, customer_roles):
-            customer = customer_repository.create_by_user(user)
-            messages_service.added_role_without_customer(self.request, customer)
-        elif self.__customer_without_added_role(user, customer_roles):
-            raise forms.ValidationError(f'Para retirar os grupos de cliente é necessário excluir ou desvincular o cliente deste usuário.')
-        return user
+    def __validate_added_role_without_customer(self, customer_roles: List[Group]) -> None:
+        if self.__added_role_without_customer(self.instance, customer_roles):
+            raise ValidationError('Para adicionar uma permissão de cliente ao usuário, é necessário criar o cliente.')
 
-    def __is_customer(self, user: User) -> bool:
-        return hasattr(user, 'user_customer')
+    def __validate_customer_without_added_role(self, customer_roles: List[Group]) -> None:
+        if self.__customer_without_added_role(self.instance, customer_roles):
+            raise ValidationError('Para retirar os grupos de cliente, é necessário excluir ou desvincular o cliente deste usuário.')
 
-    def __added_role_without_customer(self, user, customer_roles: List[Group]) -> bool:
-        if not self.__is_customer(user):
+    def __added_role_without_customer(self, user: User, customer_roles: List[Group]) -> bool:
+        if not user.is_customer():
             for customer_role in customer_roles:
                 if customer_role in self.cleaned_data["groups"]:
                     return True
         return False
 
-    def __customer_without_added_role(self, user, customer_roles: List[Group]) -> bool:
-        if self.__is_customer(user):
+    def __customer_without_added_role(self, user: User, customer_roles: List[Group]) -> bool:
+        if user.is_customer():
             for customer_role in customer_roles:
                 if customer_role not in self.cleaned_data["groups"]:
                     return True
@@ -54,15 +54,19 @@ class UserAdminForm(forms.ModelForm):
 class CustomerAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
-        self.customer_roles_ids = [User.CUSTOMER_ROLE, User.CUSTOMER_PREMIUM_ROLE]
+        self.customer_roles_ids = Customer.get_customer_roles_ids()
         super(CustomerAdminForm, self).__init__(*args, **kwargs)
         self.fields["bill"].help_text = 'Negativo indica "em haver".'
         self.fields["born_at"].widget.attrs.update({"class": "date-input"})
 
+    def clean(self):
+        self.cleaned_data = super(CustomerAdminForm, self).clean()
+        customer_service.validate_limit(self.cleaned_data)
+
     def save(self, **kwargs):
         customer: Customer = super(CustomerAdminForm, self).save(**kwargs)
 
-        if customer.user:
+        if customer.has_user():
             customer_roles = role_repository.get_customer_by_user(customer.user, self.customer_roles_ids)
             self.__add_role(customer_roles, customer.user)
         elif self.__user_was_removed():
@@ -98,9 +102,13 @@ class PaymentAdminForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         super(PaymentAdminForm, self).__init__(*args, **kwargs)
 
+    def clean(self):
+        self.cleaned_data = super(PaymentAdminForm).clean()
+        customer_service.validate_limit(self.cleaned_data)
+        
     def save(self, **kwargs):
         customer: Customer = self.instance.customer
-        if customer.user is not None and customer.user.has_perm('usuario.buy_in_term'):
+        if customer.is_premium():
             if not self.instance.id:                   
                 customer: Customer = customer_repository.pay_bill(self.instance)
                 messages_service.pay_bill(self.request, customer)
@@ -108,7 +116,6 @@ class PaymentAdminForm(forms.ModelForm):
                 diff = self.initial["amount"] - self.cleaned_data["amount"]
                 customer: Customer = customer_repository.pay_bill(self.instance, diff)
                 messages_service.update_pay_bill(self.request, customer, diff)
-
         return super(PaymentAdminForm, self).save(**kwargs)
 
     class Media:

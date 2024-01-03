@@ -60,7 +60,7 @@ class ProfileForm(forms.ModelForm):
 
     def save(self):
         user = super(ProfileForm, self).save()
-        if hasattr(user, 'user_customer'):
+        if user.is_customer():
             customer = user.user_customer
             customer.gender = self.cleaned_data["gender"]
             customer.born_at = self.cleaned_data["born_at"]
